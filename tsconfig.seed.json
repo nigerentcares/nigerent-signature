@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "lib": ["esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "esModuleInterop": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "target": "ES2020",
+    "outDir": ".prisma-seed-dist",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["prisma/seed.ts"],
+  "exclude": ["node_modules"]
+}

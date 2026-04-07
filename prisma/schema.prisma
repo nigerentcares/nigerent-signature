@@ -1,0 +1,437 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "darwin-arm64"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────
+// USERS & AUTH
+// ─────────────────────────────
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  name              String
+  phone             String?
+  city              String    @default("Lagos")
+  preferences       String[]  @default([])
+  avatarUrl         String?
+  inviteToken       String?   @unique
+  inviteActivatedAt DateTime?
+  invitedBy         String?
+  role              UserRole  @default(member)
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  membership        UserMembership?
+  wallet            Wallet?
+  pointsLedger      PointsLedger[]
+  conciergeRequests ConciergeRequest[]
+  diningRequests    DiningRequest[]
+  chatMessages      ChatMessage[]
+  notifications     Notification[]
+  savedItems        SavedItem[]
+  bookings          Booking[]
+  walletTxns        WalletTransaction[]
+  offerRedemptions  OfferRedemption[]
+}
+
+enum UserRole {
+  member
+  concierge
+  admin
+}
+
+model InviteLink {
+  id        String    @id @default(cuid())
+  token     String    @unique @default(cuid())
+  email     String
+  usedAt    DateTime?
+  expiresAt DateTime
+  createdBy String
+  createdAt DateTime  @default(now())
+}
+
+// ─────────────────────────────
+// MEMBERSHIP & TIERS
+// ─────────────────────────────
+
+model MembershipTier {
+  id              String           @id @default(cuid())
+  name            String           @unique
+  slug            String           @unique
+  pointsThreshold Int
+  earnMultiplier  Float            @default(1.0)
+  benefits        Json
+  displayOrder    Int
+  createdAt       DateTime         @default(now())
+
+  memberships     UserMembership[]
+}
+
+model UserMembership {
+  id               String         @id @default(cuid())
+  userId           String         @unique
+  tierId           String
+  memberNumber     String         @unique @default(cuid())
+  assignedAt       DateTime       @default(now())
+  isManualOverride Boolean        @default(false)
+  overrideReason   String?
+  overrideBy       String?
+
+  user             User           @relation(fields: [userId], references: [id])
+  tier             MembershipTier @relation(fields: [tierId], references: [id])
+}
+
+// ─────────────────────────────
+// WALLET & TRANSACTIONS
+// ─────────────────────────────
+
+model Wallet {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model WalletTransaction {
+  id            String    @id @default(cuid())
+  userId        String
+  type          TxnType
+  amount        Int
+  status        TxnStatus @default(PENDING)
+  description   String
+  paymentMethod String?
+  paystackRef   String?   @unique
+  metadata      Json?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id])
+}
+
+enum TxnType {
+  LOAD
+  SPEND
+  REFUND
+  ADJUSTMENT
+}
+
+enum TxnStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+// ─────────────────────────────
+// POINTS & REWARDS
+// ─────────────────────────────
+
+model PointsLedger {
+  id           String       @id @default(cuid())
+  userId       String
+  actionType   PointsAction
+  points       Int
+  balanceAfter Int
+  referenceId  String?
+  campaignId   String?
+  expiresAt    DateTime?
+  adminNote    String?
+  createdBy    String?
+  createdAt    DateTime     @default(now())
+
+  user         User         @relation(fields: [userId], references: [id])
+}
+
+enum PointsAction {
+  WELCOME_BONUS
+  STAY_BOOKING
+  WALLET_LOAD
+  OFFER_REDEMPTION
+  DINING_CONFIRMED
+  REFERRAL
+  CAMPAIGN_BONUS
+  MANUAL_AWARD
+  MANUAL_DEDUCT
+}
+
+// ─────────────────────────────
+// PARTNERS & OFFERS
+// ─────────────────────────────
+
+model Partner {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  category    String
+  city        String
+  area        String?
+  description String?
+  imageUrl    String?
+  contactInfo Json?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  offers      Offer[]
+}
+
+model Offer {
+  id              String         @id @default(cuid())
+  partnerId       String
+  title           String
+  description     String
+  shortDesc       String         @db.VarChar(120)
+  category        String
+  city            String
+  area            String?
+  tierEligibility String[]
+  pointsEligible  Boolean        @default(false)
+  pointsAward     Int?
+  redemptionType  RedemptionType @default(SHOW_ON_SCREEN)
+  redemptionCode  String?
+  redemptionSteps Json
+  termsConditions String?
+  imageUrl        String?
+  validFrom       DateTime
+  validTo         DateTime?
+  status          OfferStatus    @default(DRAFT)
+  displayOrder    Int?
+  isFeatured      Boolean        @default(false)
+  viewCount       Int            @default(0)
+  saveCount       Int            @default(0)
+  redemptionCount Int            @default(0)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  partner         Partner        @relation(fields: [partnerId], references: [id])
+  redemptions     OfferRedemption[]
+  savedBy         SavedItem[]
+}
+
+enum RedemptionType {
+  SHOW_ON_SCREEN
+  CODE
+  CONCIERGE_CONFIRM
+}
+
+enum OfferStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  ARCHIVED
+}
+
+model OfferRedemption {
+  id         String   @id @default(cuid())
+  userId     String
+  offerId    String
+  pointsUsed Int?
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+  offer      Offer    @relation(fields: [offerId], references: [id])
+}
+
+// ─────────────────────────────
+// RESTAURANTS & DINING
+// ─────────────────────────────
+
+model Restaurant {
+  id               String          @id @default(cuid())
+  name             String          @unique
+  cuisine          String
+  city             String
+  area             String
+  description      String?
+  imageUrls        String[]
+  ambianceTags     String[]
+  memberBenefit    String?
+  priceLevel       Int
+  openingHours     Json
+  reservationNotes String?
+  mapLink          String?
+  isActive         Boolean         @default(true)
+  isFeatured       Boolean         @default(false)
+  createdAt        DateTime        @default(now())
+
+  diningRequests   DiningRequest[]
+}
+
+model DiningRequest {
+  id              String       @id @default(cuid())
+  userId          String
+  restaurantId    String
+  preferredDate   DateTime
+  preferredTime   String
+  partySize       Int
+  occasion        String?
+  dietaryNotes    String?
+  seatingPref     String?
+  contactPref     String       @default("app")
+  additionalNotes String?
+  status          DiningStatus @default(RECEIVED)
+  adminNotes      String?
+  assignedTo      String?
+  confirmedAt     DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  user            User         @relation(fields: [userId], references: [id])
+  restaurant      Restaurant   @relation(fields: [restaurantId], references: [id])
+  messages        ChatMessage[] @relation("DiningChat")
+}
+
+enum DiningStatus {
+  RECEIVED
+  IN_PROGRESS
+  CONFIRMED
+  DECLINED
+  COMPLETED
+  CANCELLED
+}
+
+// ─────────────────────────────
+// CONCIERGE & CHAT
+// ─────────────────────────────
+
+model ConciergeRequest {
+  id          String        @id @default(cuid())
+  userId      String
+  category    String
+  description String?
+  status      RequestStatus @default(RECEIVED)
+  priority    Priority      @default(STANDARD)
+  assignedTo  String?
+  resolvedAt  DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  user        User          @relation(fields: [userId], references: [id])
+  messages    ChatMessage[] @relation("RequestChat")
+}
+
+model ChatThread {
+  id        String        @id @default(cuid())
+  userId    String        @unique
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  messages  ChatMessage[]
+}
+
+model ChatMessage {
+  id                 String            @id @default(cuid())
+  threadId           String
+  userId             String
+  senderRole         SenderRole
+  body               String
+  readAt             DateTime?
+  diningRequestId    String?
+  conciergeRequestId String?
+  createdAt          DateTime          @default(now())
+
+  thread             ChatThread        @relation(fields: [threadId], references: [id])
+  user               User              @relation(fields: [userId], references: [id])
+  diningRequest      DiningRequest?    @relation("DiningChat", fields: [diningRequestId], references: [id])
+  conciergeRequest   ConciergeRequest? @relation("RequestChat", fields: [conciergeRequestId], references: [id])
+}
+
+enum SenderRole {
+  MEMBER
+  CONCIERGE
+  SYSTEM
+}
+
+enum RequestStatus {
+  RECEIVED
+  IN_PROGRESS
+  AWAITING_UPDATE
+  COMPLETED
+  CANCELLED
+}
+
+enum Priority {
+  STANDARD
+  URGENT
+}
+
+// ─────────────────────────────
+// SUPPORTING TABLES
+// ─────────────────────────────
+
+model Booking {
+  id         String   @id @default(cuid())
+  userId     String
+  property   String
+  checkIn    DateTime
+  checkOut   DateTime
+  amount     Int
+  status     String
+  externalId String?
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model SavedItem {
+  id          String   @id @default(cuid())
+  userId      String
+  contentType String
+  contentId   String
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id])
+  offer       Offer?   @relation(fields: [contentId], references: [id])
+
+  @@unique([userId, contentType, contentId])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  body      String
+  readAt    DateTime?
+  ctaUrl    String?
+  metadata  Json?
+  createdAt DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id])
+}
+
+model AdminUser {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String
+  role      AdminRole
+  isActive  Boolean   @default(true)
+  lastLogin DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  adminId    String
+  action     String
+  entityType String
+  entityId   String
+  oldValue   Json?
+  newValue   Json?
+  createdAt  DateTime @default(now())
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  CONCIERGE_AGENT
+  OFFERS_MANAGER
+  PARTNER_MANAGER
+  SUPPORT_ADMIN
+}
