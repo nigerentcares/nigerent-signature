@@ -107,7 +107,7 @@ html, body {
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: rgba(201,206,214,.28);
+  color: rgba(201,206,214,.5);
   transition: color .2s;
 }
 .ni.on .ni-lbl { color: var(--teal); }

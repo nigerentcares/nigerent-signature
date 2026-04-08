@@ -22,6 +22,8 @@ interface AIResult {
     priceLevel?:    number
     memberBenefit?: string | null
     ambianceTags?:  string[]
+    imageUrls?:     string[]
+    imageUrl?:      string | null
     shortDesc?:     string
     partnerName?:   string
     category?:      string
@@ -446,15 +448,29 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
                         #{i + 1}
                       </div>
 
-                      {/* Icon */}
-                      <div style={{
-                        width: 48, height: 48, borderRadius: 14, flexShrink: 0,
-                        background: `${color}12`, border: `1px solid ${color}25`,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 22, marginTop: 4,
-                      }}>
-                        {emoji}
-                      </div>
+                      {/* Image thumbnail */}
+                      {(() => {
+                        const imgSrc = isRest
+                          ? (r.data.imageUrls?.[0] || null)
+                          : (r.data.imageUrl || null)
+                        return imgSrc ? (
+                          <div style={{
+                            width: 56, height: 56, borderRadius: 14, flexShrink: 0,
+                            backgroundImage: `url(${imgSrc})`,
+                            backgroundSize: 'cover', backgroundPosition: 'center',
+                            border: `1px solid ${color}25`, marginTop: 2,
+                          }} />
+                        ) : (
+                          <div style={{
+                            width: 56, height: 56, borderRadius: 14, flexShrink: 0,
+                            background: `${color}12`, border: `1px solid ${color}25`,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: 22, marginTop: 2,
+                          }}>
+                            {emoji}
+                          </div>
+                        )
+                      })()}
 
                       {/* Content */}
                       <div style={{ flex: 1, minWidth: 0 }}>

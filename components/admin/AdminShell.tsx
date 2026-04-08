@@ -10,7 +10,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 
-type NavKey = 'dashboard' | 'members' | 'offers' | 'restaurants' | 'concierge' | 'wallet' | 'invites' | 'partners' | 'reports' | 'rewards' | 'profile'
+type NavKey = 'dashboard' | 'members' | 'offers' | 'restaurants' | 'reservations' | 'concierge' | 'wallet' | 'invites' | 'partners' | 'reports' | 'rewards' | 'profile'
 
 // Primary bottom-bar tabs (max 5)
 const PRIMARY_TABS: { key: NavKey; label: string; path: string; icon: JSX.Element }[] = [
@@ -34,6 +34,7 @@ const PRIMARY_TABS: { key: NavKey; label: string; path: string; icon: JSX.Elemen
 
 // Items in the "More" sheet
 const MORE_ITEMS: { key: NavKey; label: string; path: string; icon: string }[] = [
+  { key: 'reservations', label: 'Reservations', path: '/admin/dining',     icon: '🍽️' },
   { key: 'partners',   label: 'Partners',     path: '/admin/partners',   icon: '🤝' },
   { key: 'concierge',  label: 'Concierge',    path: '/admin/concierge',  icon: '💬' },
   { key: 'wallet',     label: 'Wallet',       path: '/admin/wallet',     icon: '💳' },

@@ -43,15 +43,15 @@ export async function POST(request: NextRequest) {
         select: {
           id: true, name: true, cuisine: true, city: true, area: true,
           priceLevel: true, memberBenefit: true, ambianceTags: true,
-          description: true,
+          description: true, imageUrls: true,
         },
       }),
       prisma.offer.findMany({
         where: { status: 'ACTIVE' },
         select: {
           id: true, title: true, shortDesc: true, category: true,
-          city: true,
-          partner: { select: { name: true, category: true, area: true, city: true } },
+          city: true, imageUrl: true,
+          partner: { select: { name: true, category: true, area: true, city: true, imageUrl: true } },
         },
         take: 60,
       }),
@@ -103,10 +103,10 @@ OFFERS:\n${offers
     const enriched = results.slice(0, 5).map(r => {
       if (r.type === 'restaurant') {
         const rest = restaurants.find(x => x.id === r.id)
-        if (rest) return { ...r, data: { name: rest.name, cuisine: rest.cuisine, area: rest.area, city: rest.city, priceLevel: rest.priceLevel, memberBenefit: rest.memberBenefit, ambianceTags: rest.ambianceTags } }
+        if (rest) return { ...r, data: { name: rest.name, cuisine: rest.cuisine, area: rest.area, city: rest.city, priceLevel: rest.priceLevel, memberBenefit: rest.memberBenefit, ambianceTags: rest.ambianceTags, imageUrls: rest.imageUrls } }
       } else {
         const offer = offers.find(x => x.id === r.id)
-        if (offer) return { ...r, data: { title: offer.title, shortDesc: offer.shortDesc, partnerName: offer.partner.name, category: offer.partner.category, area: offer.partner.area, city: offer.partner.city ?? offer.city } }
+        if (offer) return { ...r, data: { title: offer.title, shortDesc: offer.shortDesc, partnerName: offer.partner.name, category: offer.partner.category, area: offer.partner.area, city: offer.partner.city ?? offer.city, imageUrl: offer.imageUrl ?? offer.partner.imageUrl } }
       }
       return null
     }).filter(Boolean)

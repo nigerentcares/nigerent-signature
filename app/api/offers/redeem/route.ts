@@ -85,23 +85,28 @@ export async function POST(req: NextRequest) {
     // Award points if eligible (via central engine — applies tier multiplier + tier-upgrade)
     let pointsAwarded = 0
     if (offer.pointsEligible && offer.pointsAward && offer.pointsAward > 0) {
-      const entry = await awardPoints({
-        userId:      user.id,
-        actionType:  'OFFER_REDEMPTION',
-        points:      offer.pointsAward,
-        referenceId: redemption.id,
-      })
-      pointsAwarded = entry.points
+      try {
+        const entry = await awardPoints({
+          userId:      user.id,
+          actionType:  'OFFER_REDEMPTION',
+          points:      offer.pointsAward,
+          referenceId: redemption.id,
+        })
+        pointsAwarded = entry.points
 
-      await prisma.notification.create({
-        data: {
-          userId: user.id,
-          type:   'POINTS_EARNED',
-          title:  `+${pointsAwarded} points earned!`,
-          body:   `You earned ${pointsAwarded} points for redeeming "${offer.title}".`,
-          ctaUrl: '/rewards',
-        },
-      })
+        await prisma.notification.create({
+          data: {
+            userId: user.id,
+            type:   'POINTS_EARNED',
+            title:  `+${pointsAwarded} points earned!`,
+            body:   `You earned ${pointsAwarded} points for redeeming "${offer.title}".`,
+            ctaUrl: '/rewards',
+          },
+        })
+      } catch (pointsErr) {
+        console.error('Points awarding failed (redemption still valid):', pointsErr)
+        // Redemption succeeded — points failure is non-blocking
+      }
     }
 
     return NextResponse.json({
