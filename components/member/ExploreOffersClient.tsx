@@ -90,10 +90,16 @@ const CAT_COLOR: Record<string, string> = {
   'Nightlife':          '#8e44ad',
 }
 
+// New order: Experiences first, then Wellness, then Dining (with banner), then rest
 const SECTION_ORDER = [
-  'Restaurant', 'Wellness & Spa', 'Arts & Culture', 'Entertainment',
-  'Nature & Adventure', 'Nightlife', 'Supermarket', 'Pharmacy', 'Hospital & Medical',
+  'Arts & Culture', 'Entertainment', 'Nature & Adventure',
+  'Wellness & Spa',
+  'Restaurant',
+  'Nightlife', 'Supermarket', 'Pharmacy', 'Hospital & Medical',
 ]
+
+// How many items to show per section before "View All"
+const SECTION_LIMIT = 4
 
 // ── Real Unsplash photo IDs per category ─────────────────────────────────────
 // Multiple per category so adjacent cards look distinct
@@ -391,6 +397,28 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
         </div>
       )}
 
+      {/* ── Curated Dining banner (after featured, not at top) ── */}
+      {!query && !activeKey && (
+        <div
+          className="din-banner"
+          style={{ textDecoration: 'none', display: 'block', cursor: 'pointer', margin: '0 20px 4px' }}
+          onClick={() => router.push('/dining')}
+        >
+          <div className="din-banner-bg" />
+          <div className="din-banner-orb" />
+          <div className="din-banner-in">
+            <div className="din-banner-left">
+              <div className="din-banner-em">🍽️</div>
+              <div>
+                <div className="din-banner-title">Curated Dining</div>
+                <div className="din-banner-sub">Reserve tables at Lagos&apos;s finest restaurants</div>
+              </div>
+            </div>
+            <div className="din-banner-cta">Book Now →</div>
+          </div>
+        </div>
+      )}
+
       {/* ── Search result count ── */}
       {(query || activeKey) && !noResults && (
         <div style={{ padding: '12px 20px 4px', fontSize: 11, color: 'var(--muted)', fontWeight: 600 }}>
@@ -413,13 +441,17 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
               </div>
               <div className="sh2-t">Restaurants</div>
             </div>
-            <div className="sh2-l" style={{ fontSize: 11 }}>
-              {filteredRestaurants.length} restaurant{filteredRestaurants.length !== 1 ? 's' : ''}
+            <div
+              className="sh2-l"
+              style={{ fontSize: 11, cursor: 'pointer' }}
+              onClick={() => router.push('/dining')}
+            >
+              View All →
             </div>
           </div>
 
           <div className="og">
-            {filteredRestaurants.map(r => (
+            {filteredRestaurants.slice(0, SECTION_LIMIT).map(r => (
               <div
                 key={r.id}
                 className="oc"
@@ -429,7 +461,7 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
                 <div
                   className="oc-img"
                   style={{
-                    height: 120,
+                    height: 110,
                     backgroundImage: `url(${restaurantImgUrl(r)})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
@@ -492,6 +524,20 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
               </div>
             ))}
           </div>
+
+          {filteredRestaurants.length > SECTION_LIMIT && (
+            <button
+              onClick={() => router.push('/dining')}
+              style={{
+                width: '100%', marginTop: 12, padding: '11px', borderRadius: 12,
+                background: 'rgba(212,135,15,.06)', border: '1px solid rgba(212,135,15,.2)',
+                color: '#d4870f', fontSize: 12, fontWeight: 700, cursor: 'pointer',
+                fontFamily: 'Urbanist, sans-serif',
+              }}
+            >
+              View All {filteredRestaurants.length} Restaurants →
+            </button>
+          )}
         </div>
       )}
 
@@ -503,6 +549,8 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
           const emoji = CAT_EMOJI[catKey] ?? '✦'
           const color = CAT_COLOR[catKey] ?? 'var(--teal)'
           const isGrid = ['Restaurant', 'Wellness & Spa', 'Arts & Culture', 'Entertainment', 'Nightlife', 'Nature & Adventure'].includes(catKey)
+          const visibleOffers = catOffers.slice(0, SECTION_LIMIT)
+          const hasMore = catOffers.length > SECTION_LIMIT
 
           return (
             <div key={catKey} className="sec">
@@ -524,76 +572,86 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
                 </div>
               </div>
 
-              {/* ── 2-col photo grid (dining, wellness, nightlife, etc.) ── */}
+              {/* ── 2-col photo grid (wellness, nightlife, experiences, etc.) ── */}
               {isGrid && (
-                <div className="og">
-                  {catOffers.slice(0, 6).map((o, i) => {
-                    const imgUrl = offerImageUrl(o, i)
-                    return (
-                      <div key={o.id} className="oc" style={{ cursor: 'pointer' }} onClick={() => setSelected(o)}>
-                        {/* Card image */}
-                        <div
-                          className="oc-img"
-                          style={{
-                            height: 120,
-                            backgroundImage: imgUrl ? `url(${imgUrl})` : undefined,
-                            background: imgUrl ? undefined : `linear-gradient(135deg, ${color}20, ${color}40)`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            position: 'relative',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          {/* Scrim for text legibility */}
-                          <div style={{
-                            position: 'absolute', inset: 0,
-                            background: imgUrl
-                              ? 'linear-gradient(to bottom, rgba(0,0,0,.04) 0%, rgba(0,0,0,.58) 100%)'
-                              : 'none',
-                          }} />
-                          {/* Emoji fallback when no photo */}
-                          {!imgUrl && (
-                            <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 26 }}>{emoji}</span>
-                          )}
-                          {/* Location pill */}
-                          <div style={{
-                            position: 'absolute', bottom: 8, left: 8, zIndex: 1,
-                            background: imgUrl ? 'rgba(0,0,0,.45)' : `${color}22`,
-                            backdropFilter: imgUrl ? 'blur(3px)' : undefined,
-                            border: `1px solid ${imgUrl ? 'rgba(255,255,255,.14)' : `${color}40`}`,
-                            borderRadius: 5, padding: '2px 7px',
-                            fontSize: 8, fontWeight: 700,
-                            textTransform: 'uppercase', letterSpacing: '0.8px',
-                            color: imgUrl ? '#fff' : color,
-                          }}>
-                            {o.partner.area ?? o.partner.city}
-                          </div>
-                        </div>
-                        {/* Card body */}
-                        <div className="oc-body">
-                          <div className="oc-ptnr" style={{ color }}>
-                            {o.partner.name}
-                          </div>
-                          <div className="oc-ttl">{o.title}</div>
-                          <div className="oc-ft">
+                <>
+                  <div className="og">
+                    {visibleOffers.map((o, i) => {
+                      const imgUrl = offerImageUrl(o, i)
+                      return (
+                        <div key={o.id} className="oc" style={{ cursor: 'pointer' }} onClick={() => setSelected(o)}>
+                          <div
+                            className="oc-img"
+                            style={{
+                              height: 110,
+                              backgroundImage: imgUrl ? `url(${imgUrl})` : undefined,
+                              background: imgUrl ? undefined : `linear-gradient(135deg, ${color}20, ${color}40)`,
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                              position: 'relative',
+                              overflow: 'hidden',
+                            }}
+                          >
                             <div style={{
-                              fontSize: 9, fontWeight: 700, color,
-                              background: `${color}12`, borderRadius: 4,
-                              padding: '2px 6px', border: `1px solid ${color}20`,
+                              position: 'absolute', inset: 0,
+                              background: imgUrl
+                                ? 'linear-gradient(to bottom, rgba(0,0,0,.04) 0%, rgba(0,0,0,.58) 100%)'
+                                : 'none',
+                            }} />
+                            {!imgUrl && (
+                              <span style={{ position: 'absolute', top: 10, right: 10, fontSize: 26 }}>{emoji}</span>
+                            )}
+                            <div style={{
+                              position: 'absolute', bottom: 8, left: 8, zIndex: 1,
+                              background: imgUrl ? 'rgba(0,0,0,.45)' : `${color}22`,
+                              backdropFilter: imgUrl ? 'blur(3px)' : undefined,
+                              border: `1px solid ${imgUrl ? 'rgba(255,255,255,.14)' : `${color}40`}`,
+                              borderRadius: 5, padding: '2px 7px',
+                              fontSize: 8, fontWeight: 700,
+                              textTransform: 'uppercase', letterSpacing: '0.8px',
+                              color: imgUrl ? '#fff' : color,
                             }}>
-                              Member Perk
+                              {o.partner.area ?? o.partner.city}
                             </div>
-                            <div className="bm">
-                              <svg width="14" height="14" viewBox="0 0 16 16">
-                                <polygon className="bmd" points="8,1 15,8 8,15 1,8"/>
-                              </svg>
+                          </div>
+                          <div className="oc-body">
+                            <div className="oc-ptnr" style={{ color }}>
+                              {o.partner.name}
+                            </div>
+                            <div className="oc-ttl">{o.title}</div>
+                            <div className="oc-ft">
+                              <div style={{
+                                fontSize: 9, fontWeight: 700, color,
+                                background: `${color}12`, borderRadius: 4,
+                                padding: '2px 6px', border: `1px solid ${color}20`,
+                              }}>
+                                Member Perk
+                              </div>
+                              <div className="bm">
+                                <svg width="14" height="14" viewBox="0 0 16 16">
+                                  <polygon className="bmd" points="8,1 15,8 8,15 1,8"/>
+                                </svg>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    )
-                  })}
-                </div>
+                      )
+                    })}
+                  </div>
+                  {hasMore && (
+                    <button
+                      onClick={() => setActiveKey(catKey)}
+                      style={{
+                        width: '100%', marginTop: 12, padding: '11px', borderRadius: 12,
+                        background: `${color}08`, border: `1px solid ${color}25`,
+                        color, fontSize: 12, fontWeight: 700, cursor: 'pointer',
+                        fontFamily: 'Urbanist, sans-serif',
+                      }}
+                    >
+                      View All {catOffers.length} {catKey} Benefits →
+                    </button>
+                  )}
+                </>
               )}
 
               {/* ── List rows (pharmacies, hospitals, supermarkets) ── */}

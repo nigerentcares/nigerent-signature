@@ -250,7 +250,7 @@ export default function DiningClient({ restaurants }: Props) {
             </div>
           )}
 
-          {/* ── All Restaurants ── */}
+          {/* ── All Restaurants — 2-column grid ── */}
           {rest.length > 0 && (
             <div className="sec">
               <div className="sh">
@@ -258,57 +258,89 @@ export default function DiningClient({ restaurants }: Props) {
                 <div className="sh-l">{rest.length} venues</div>
               </div>
 
-              {rest.map((r, i) => {
-                const photoUrl = r.imageUrls[0] ?? restaurantPhotoUrl(r.cuisine, i)
-                return (
-                <div
-                  key={r.id}
-                  className="drc"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => router.push(`/dining/${r.id}`)}
-                >
-                  <div
-                    className="drc-img"
-                    style={{
-                      backgroundImage: `url(${photoUrl})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      position: 'relative',
-                    }}
-                  >
-                    {/* Photo scrim */}
-                    <div style={{
-                      position: 'absolute', inset: 0,
-                      background: 'linear-gradient(to bottom, rgba(0,0,0,.05) 0%, rgba(0,0,0,.55) 100%)',
-                      borderRadius: 'inherit',
-                    }} />
-                    <div className="drc-tags" style={{ position: 'relative', zIndex: 1 }}>
-                      {r.memberBenefit && <div className="drc-tag m">Member Perk</div>}
-                    </div>
-                  </div>
-                  <div className="drc-body">
-                    <div className="drc-top">
-                      <div>
-                        <div className="drc-name">{r.name}</div>
-                        <div className="drc-cuisine">{r.cuisine} · {r.area}</div>
-                      </div>
-                      <div className="drc-price">{PRICE_LABEL[r.priceLevel] ?? '₦₦'}</div>
-                    </div>
-                    <div className="drc-foot">
-                      <div className="drc-meta">
-                        <div className="drc-m"><span>📍</span><span>{r.area}</span></div>
-                        {r.ambianceTags[0] && (
-                          <div className="drc-m"><span>✨</span><span>{r.ambianceTags[0]}</span></div>
+              <div className="og">
+                {rest.map((r, i) => {
+                  const photoUrl = r.imageUrls[0] ?? restaurantPhotoUrl(r.cuisine, i)
+                  return (
+                    <div
+                      key={r.id}
+                      className="oc"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => router.push(`/dining/${r.id}`)}
+                    >
+                      <div
+                        className="oc-img"
+                        style={{
+                          height: 110,
+                          backgroundImage: `url(${photoUrl})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                          position: 'relative',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <div style={{
+                          position: 'absolute', inset: 0,
+                          background: 'linear-gradient(to bottom, rgba(0,0,0,.04) 0%, rgba(0,0,0,.58) 100%)',
+                        }} />
+                        {r.isFeatured && (
+                          <div style={{
+                            position: 'absolute', top: 8, right: 8, zIndex: 1,
+                            background: 'rgba(212,135,15,.85)', borderRadius: 4,
+                            padding: '2px 6px', fontSize: 8, fontWeight: 700,
+                            color: '#fff', letterSpacing: '0.5px', textTransform: 'uppercase',
+                          }}>
+                            Featured
+                          </div>
                         )}
+                        {r.memberBenefit && (
+                          <div style={{
+                            position: 'absolute', top: 8, left: 8, zIndex: 1,
+                            background: 'rgba(212,175,55,.8)', borderRadius: 4,
+                            padding: '2px 6px', fontSize: 8, fontWeight: 700,
+                            color: '#1a0e00', letterSpacing: '0.5px', textTransform: 'uppercase',
+                          }}>
+                            Perk
+                          </div>
+                        )}
+                        <div style={{
+                          position: 'absolute', bottom: 8, left: 8, zIndex: 1,
+                          background: 'rgba(0,0,0,.45)', backdropFilter: 'blur(3px)',
+                          border: '1px solid rgba(255,255,255,.14)',
+                          borderRadius: 5, padding: '2px 7px',
+                          fontSize: 8, fontWeight: 700,
+                          textTransform: 'uppercase', letterSpacing: '0.8px', color: '#fff',
+                        }}>
+                          {r.area}
+                        </div>
                       </div>
-                      {r.memberBenefit && (
-                        <div className="drc-benefit">{r.memberBenefit}</div>
-                      )}
+                      <div className="oc-body">
+                        <div className="oc-ptnr" style={{ color: '#d4870f' }}>
+                          {r.cuisine} · {PRICE_LABEL[r.priceLevel] ?? '₦₦'}
+                        </div>
+                        <div className="oc-ttl">{r.name}</div>
+                        <div className="oc-ft">
+                          {r.memberBenefit ? (
+                            <div style={{
+                              fontSize: 9, fontWeight: 700, color: '#1fa3a6',
+                              background: 'rgba(31,163,166,.08)', borderRadius: 4,
+                              padding: '2px 6px', border: '1px solid rgba(31,163,166,.15)',
+                              overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80%',
+                            }}>
+                              {r.memberBenefit}
+                            </div>
+                          ) : (
+                            <div style={{ fontSize: 9, color: 'var(--muted)', fontWeight: 500 }}>
+                              {r.city}
+                            </div>
+                          )}
+                          <div style={{ fontSize: 11, color: 'var(--muted)', fontWeight: 600 }}>→</div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
           )}
 

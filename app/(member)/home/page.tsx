@@ -170,6 +170,20 @@ const EXP_EMOJI: Record<string, string> = {
 const DISC_CARD_CLASSES = ['db1', 'db2', 'db3'] as const
 const EXP_CARD_CLASSES  = ['ei1', 'ei2', 'ei3'] as const
 
+// Unsplash photos for experience categories
+const EXP_PHOTOS: Record<string, string[]> = {
+  'Arts & Culture':     ['photo-1518998053901-5348d3961a04', 'photo-1510525009579-5bd35e6dc5d2', 'photo-1571115764595-644a1f56a55c'],
+  'Entertainment':      ['photo-1489599849927-2ee91cede3ba', 'photo-1536440136628-849c177e76a1', 'photo-1574267432553-4b4628081c31'],
+  'Nature & Adventure': ['photo-1441974231531-c6227db76b6e', 'photo-1507525428034-b723cf961d3e', 'photo-1506905925346-21bda4d32df4'],
+  'Nightlife':          ['photo-1566417713940-fe7c737a9ef2', 'photo-1514525253161-7a46d19cd819', 'photo-1572116469696-31de0f17cc34'],
+  'Fitness & Sports':   ['photo-1571019614242-c5c5dee9f50b', 'photo-1544161515-4ab6ce6db874', 'photo-1540555700478-4be289fbecef'],
+}
+function expPhotoUrl(category: string, index: number): string | null {
+  const ids = EXP_PHOTOS[category]
+  if (!ids) return null
+  return `https://images.unsplash.com/${ids[index % ids.length]}?w=400&q=75&auto=format&fit=crop`
+}
+
 function formatExpiry(d: Date | null): string {
   if (!d) return 'Ongoing'
   return `Ends ${d.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}`
@@ -192,11 +206,12 @@ function getInitials(name: string): string {
 
 // ── Curated "Places to Visit" with Unsplash photos ─────────────────────────
 const PLACES_TO_VISIT = [
-  { title: 'Lekki Conservation Centre', area: 'Lekki, Lagos', img: 'photo-1516026672322-bc52d61a55d5', tag: 'Nature' },
-  { title: 'Nike Art Gallery', area: 'Lekki, Lagos', img: 'photo-1577720643272-265f09367456', tag: 'Arts' },
-  { title: 'Jabi Lake', area: 'Abuja', img: 'photo-1507525428034-b723cf961d3e', tag: 'Leisure' },
-  { title: 'Olumo Rock', area: 'Abeokuta', img: 'photo-1501785888041-af3ef285b470', tag: 'Adventure' },
-  { title: 'Tarkwa Bay Beach', area: 'Lagos Island', img: 'photo-1519046904884-53103b34b206', tag: 'Beach' },
+  { title: 'Lekki Conservation Centre', area: 'Lekki, Lagos',    img: 'photo-1441974231531-c6227db76b6e', tag: 'Nature' },
+  { title: 'Nike Art Gallery',          area: 'Lekki, Lagos',    img: 'photo-1518998053901-5348d3961a04', tag: 'Arts' },
+  { title: 'Tarkwa Bay Beach',          area: 'Lagos Island',    img: 'photo-1507525428034-b723cf961d3e', tag: 'Beach' },
+  { title: 'Jabi Lake Mall',            area: 'Abuja',           img: 'photo-1552083375-1447ce886485', tag: 'Leisure' },
+  { title: 'Olumo Rock',                area: 'Abeokuta',        img: 'photo-1464822759023-fed622ff2c3b', tag: 'Adventure' },
+  { title: 'Elegushi Royal Beach',      area: 'Ikate, Lagos',    img: 'photo-1519046904884-53103b34b206', tag: 'Beach' },
 ]
 
 // ── Curated "Things to Do" ─────────────────────────────────────────────────
@@ -396,13 +411,30 @@ export default async function HomePage() {
             </div>
           ) : (
             experienceOffers.slice(0, 4).map((offer, i) => {
-              const tagInfo = CAT_TAG[offer.category] ?? { label: offer.category, cls: 'stb' }
+              const tagInfo  = CAT_TAG[offer.category] ?? { label: offer.category, cls: 'stb' }
+              const photoUrl = expPhotoUrl(offer.category, i)
               return (
                 <Link key={offer.id} href="/explore" style={{ textDecoration: 'none' }}>
                   <div className="ecard">
-                    <div className={`ecard-img ${EXP_CARD_CLASSES[i % 3]}`}>
-                      <div className="e-em">{EXP_EMOJI[offer.category] ?? '&#10022;'}</div>
-                      <div className="e-dc">{formatEventDate(offer.validFrom)}</div>
+                    <div
+                      className={`ecard-img ${photoUrl ? '' : EXP_CARD_CLASSES[i % 3]}`}
+                      style={photoUrl ? {
+                        backgroundImage: `url(${photoUrl})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        position: 'relative',
+                      } : undefined}
+                    >
+                      {photoUrl && (
+                        <div style={{
+                          position: 'absolute', inset: 0,
+                          background: 'linear-gradient(to bottom, rgba(0,0,0,.1) 0%, rgba(0,0,0,.55) 100%)',
+                        }} />
+                      )}
+                      {!photoUrl && <div className="e-em">{EXP_EMOJI[offer.category] ?? '✦'}</div>}
+                      <div className="e-dc" style={{ position: 'relative', zIndex: 1 }}>
+                        {formatEventDate(offer.validFrom)}
+                      </div>
                     </div>
                     <div className="ecard-body">
                       <div className="ec-t">{offer.title}</div>

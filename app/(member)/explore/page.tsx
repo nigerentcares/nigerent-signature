@@ -8,7 +8,6 @@
 import { redirect }          from 'next/navigation'
 import { createClient }       from '@/lib/supabase/server'
 import { prisma }             from '@/lib/prisma'
-import Link                   from 'next/link'
 import ExploreOffersClient    from '@/components/member/ExploreOffersClient'
 
 
@@ -152,23 +151,8 @@ export default async function ExplorePage() {
         <div className="pt">Your City, <span className="pti">Elevated</span></div>
       </div>
 
-      {/* ── Dining Entry Banner ── */}
-      <Link href="/dining" className="din-banner" style={{ textDecoration: 'none', display: 'block' }}>
-        <div className="din-banner-bg" />
-        <div className="din-banner-orb" />
-        <div className="din-banner-in">
-          <div className="din-banner-left">
-            <div className="din-banner-em">🍽️</div>
-            <div>
-              <div className="din-banner-title">Curated Dining</div>
-              <div className="din-banner-sub">Reserve tables at Lagos&apos;s finest restaurants</div>
-            </div>
-          </div>
-          <div className="din-banner-cta">Book Now →</div>
-        </div>
-      </Link>
-
       {/* ── Interactive offer sections (stats, featured, categories, emergency) ── */}
+      {/* Dining banner is now inside ExploreOffersClient after Featured Offers */}
       <ExploreOffersClient offers={serializedOffers} totalPartners={totalPartners} restaurants={serializedRestaurants} />
 
     </>

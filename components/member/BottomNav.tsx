@@ -44,13 +44,16 @@ const NAV_ITEMS = [
     ),
   },
   {
-    key:   'notifications',
-    path:  '/notifications',
-    label: 'Alerts',
+    key:   'calendar',
+    path:  '/calendar',
+    label: 'Calendar',
     icon:  (
       <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+        <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.8"/>
+        <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+        <circle cx="8" cy="16" r="1" fill="currentColor"/>
+        <circle cx="12" cy="16" r="1" fill="currentColor"/>
+        <circle cx="16" cy="16" r="1" fill="currentColor"/>
       </svg>
     ),
   },
@@ -87,7 +90,7 @@ export default function BottomNav() {
     <nav className="nav">
       {NAV_ITEMS.map((item) => {
         const active  = isActive(item.path)
-        const badge   = item.key === 'notifications' && unread > 0
+        const badge   = false && unread > 0 // notifications moved to header bell
         return (
           <div
             key={item.key}
