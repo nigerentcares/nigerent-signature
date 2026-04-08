@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     const verifySb = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      { cookies: { get: (name) => cookieStore.get(name)?.value, set: () => {}, remove: () => {} } }
+      { cookies: { get: (name: string) => cookieStore.get(name)?.value, set: () => {}, remove: () => {} } }
     )
     const { error: signInErr } = await verifySb.auth.signInWithPassword({
       email:    user.email!,

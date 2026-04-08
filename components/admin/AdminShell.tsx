@@ -7,15 +7,18 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-type NavKey = 'dashboard' | 'members' | 'offers' | 'restaurants' | 'concierge' | 'wallet' | 'invites'
+type NavKey = 'dashboard' | 'members' | 'offers' | 'restaurants' | 'concierge' | 'wallet' | 'invites' | 'partners' | 'reports' | 'rewards'
 
 const NAV: { key: NavKey; label: string; path: string; icon: string }[] = [
   { key: 'dashboard',   label: 'Dashboard',   path: '/admin',                icon: '⬛' },
   { key: 'members',     label: 'Members',      path: '/admin/members',        icon: '👥' },
   { key: 'offers',      label: 'Offers',       path: '/admin/offers',         icon: '✦'  },
   { key: 'restaurants', label: 'Restaurants',  path: '/admin/restaurants',    icon: '🍽️' },
+  { key: 'partners',    label: 'Partners',     path: '/admin/partners',       icon: '🤝' },
   { key: 'concierge',   label: 'Concierge',    path: '/admin/concierge',      icon: '💬' },
   { key: 'wallet',      label: 'Wallet',       path: '/admin/wallet',         icon: '💳' },
+  { key: 'rewards',     label: 'Rewards',      path: '/admin/rewards',        icon: '⭐' },
+  { key: 'reports',     label: 'Reports',      path: '/admin/reports',        icon: '📊' },
   { key: 'invites',     label: 'Invites',      path: '/admin/invites',        icon: '✉️' },
 ]
 

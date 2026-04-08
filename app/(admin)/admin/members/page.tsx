@@ -8,6 +8,8 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import AdminShell from '@/components/admin/AdminShell'
 import AdminMembersClient from '@/components/admin/AdminMembersClient'
+import CreateUserButton from '@/components/admin/CreateUserButton'
+import CreateUserButton from '@/components/admin/CreateUserButton'
 
 async function getMembers() {
   const members = await prisma.user.findMany({
@@ -65,6 +67,7 @@ export default async function MembersPage() {
           <div className="adm-pg-eye">Management</div>
           <div className="adm-pg-title">Members</div>
         </div>
+        <CreateUserButton />
       </div>
 
       {/* Stats row */}
