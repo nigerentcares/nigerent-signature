@@ -2,6 +2,7 @@
  * POST /api/chat/send
  * Member sends a message to their concierge thread.
  * After saving the message, triggers the AI concierge to respond.
+ * Uses Anthropic prompt caching to reduce cost on repeated system context.
  */
 
 import { NextResponse, type NextRequest } from 'next/server'
@@ -13,32 +14,14 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 })
 
-const SYSTEM_PROMPT = `You are the Nigerent Signature Lifestyle concierge. You speak in a warm, elevated, and personal tone — never robotic or generic. You know the member by name and tier. You have access to our curated restaurant list and partner offers.
-
-If the member is asking a general question, answer it using the context provided.
-If the member is making a booking request (dining, transport, service), extract: service type, date, time, party size, and any special notes — then confirm back to them warmly and create a booking record.
-Never mention you are an AI unless directly asked.
-Keep responses concise and elegant — this is a luxury experience.
-
-IMPORTANT: When you detect a booking request, you MUST include a JSON block at the very end of your response, after your natural language reply, in this exact format:
-
+/* ── Static system prompt (cached — stays the same across all members) ─────── */
+const STATIC_SYSTEM = `You are the Nigerent Signature Lifestyle concierge — warm, personal, concise, elegant. Never robotic. Address the member by name. Never say you are an AI unless asked.
+All booking requests are NEW unless the member explicitly asks about a past or old reservation.
+When you detect a new booking request, append a JSON block AFTER your reply:
 \`\`\`booking
-{
-  "type": "dining" | "concierge",
-  "category": "Dining" | "Transport" | "Events" | "Gifts" | "Recommendations" | "Stay Support" | "Errands" | "Custom",
-  "restaurantName": "name if dining, null otherwise",
-  "date": "YYYY-MM-DD or null",
-  "time": "HH:MM or null",
-  "partySize": number or null,
-  "occasion": "string or null",
-  "dietaryNotes": "string or null",
-  "seatingPref": "string or null",
-  "specialNotes": "string or null",
-  "description": "brief summary of the request"
-}
+{"type":"dining"|"concierge","category":"Dining"|"Transport"|"Events"|"Gifts"|"Recommendations"|"Stay Support"|"Errands"|"Custom","restaurantName":"name or null","date":"YYYY-MM-DD or null","time":"HH:MM or null","partySize":number|null,"occasion":"str or null","dietaryNotes":"str or null","seatingPref":"str or null","specialNotes":"str or null","description":"brief summary"}
 \`\`\`
-
-Only include the booking block if the member is clearly making a request. Do not include it for general questions, greetings, or follow-ups on existing requests.`
+Only include the booking block for clear requests, not greetings or questions.`
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -107,8 +90,14 @@ export async function POST(request: NextRequest) {
   } | null = null
 
   try {
-    // Fetch member context in parallel
-    const [member, conciergeReqs, diningReqs, restaurants, offers, recentMessages] =
+    // Check if user is asking about past/old reservations
+    const lowerBody = body.trim().toLowerCase()
+    const wantsPastReservations =
+      /\b(old|past|previous|earlier|history|last time|before)\b/.test(lowerBody) &&
+      /\b(reserv|book|request|order|dining)\b/.test(lowerBody)
+
+    // Fetch member context in parallel (trimmed for cost)
+    const [member, restaurants, offers, recentMessages, ...pastReqs] =
       await Promise.all([
         prisma.user.findUnique({
           where: { id: user.id },
@@ -120,42 +109,50 @@ export async function POST(request: NextRequest) {
             },
           },
         }),
-        prisma.conciergeRequest.findMany({
-          where: { userId: user.id },
-          orderBy: { createdAt: 'desc' },
-          take: 5,
-          select: { category: true, description: true, status: true, createdAt: true },
-        }),
-        prisma.diningRequest.findMany({
-          where: { userId: user.id },
-          orderBy: { createdAt: 'desc' },
-          take: 5,
-          include: { restaurant: { select: { name: true } } },
-        }),
         prisma.restaurant.findMany({
           where: { isActive: true },
           select: {
             id: true, name: true, cuisine: true, city: true, area: true,
-            description: true, memberBenefit: true, priceLevel: true,
-            openingHours: true, ambianceTags: true, reservationNotes: true,
+            memberBenefit: true, priceLevel: true, ambianceTags: true,
           },
+          take: 10,
         }),
         prisma.offer.findMany({
           where: { status: 'ACTIVE' },
           select: {
-            title: true, description: true, shortDesc: true,
+            title: true, shortDesc: true,
             category: true, city: true, tierEligibility: true,
             partner: { select: { name: true } },
           },
-          take: 30,
+          take: 10,
         }),
         prisma.chatMessage.findMany({
           where: { threadId: thread!.id },
           orderBy: { createdAt: 'desc' },
-          take: 10,
+          take: 6,
           select: { senderRole: true, body: true, createdAt: true },
         }),
+        // Only fetch past requests if user explicitly asks
+        ...(wantsPastReservations
+          ? [
+              prisma.conciergeRequest.findMany({
+                where: { userId: user.id },
+                orderBy: { createdAt: 'desc' },
+                take: 5,
+                select: { category: true, description: true, status: true, createdAt: true },
+              }),
+              prisma.diningRequest.findMany({
+                where: { userId: user.id },
+                orderBy: { createdAt: 'desc' },
+                take: 5,
+                include: { restaurant: { select: { name: true } } },
+              }),
+            ]
+          : []),
       ])
+
+    const conciergeReqs = wantsPastReservations ? (pastReqs[0] ?? []) : []
+    const diningReqs = wantsPastReservations ? (pastReqs[1] ?? []) : []
 
     if (member) {
       const walletBalance = computeWalletBalance(
@@ -163,40 +160,29 @@ export async function POST(request: NextRequest) {
       )
       const tierName = member.membership?.tier?.name ?? 'Signature'
 
-      // Build context strings
-      const memberContext = `
-MEMBER PROFILE:
-- Name: ${member.name}
-- Tier: ${tierName}
-- City: ${member.city}
-- Wallet Balance: ₦${Math.floor(walletBalance / 100).toLocaleString()}
-- Preferences: ${member.preferences.length > 0 ? member.preferences.join(', ') : 'Not set'}
+      // Build context strings (trimmed for cost)
+      const memberContext = `MEMBER: ${member.name} | ${tierName} | ${member.city} | ₦${Math.floor(walletBalance / 100).toLocaleString()} wallet
+TODAY: ${new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}`
 
-RECENT REQUESTS (last 5):
-${conciergeReqs
-  .map((r: { status: string; category: string; description: string | null; createdAt: Date }) =>
-    `- [${r.status}] ${r.category}: ${r.description ?? 'No details'} (${r.createdAt.toLocaleDateString()})`)
-  .join('\n')}
-${diningReqs
-  .map((r: { status: string; restaurant: { name: string }; partySize: number; preferredDate: Date; preferredTime: string }) =>
-    `- [${r.status}] Dining at ${r.restaurant.name}: ${r.partySize} guests on ${r.preferredDate.toLocaleDateString()} at ${r.preferredTime}`)
-  .join('\n')}
+      // Only include past reservations if user asked for them
+      const pastContext = wantsPastReservations
+        ? `\nPAST REQUESTS:\n${(conciergeReqs as Array<{ status: string; category: string; description: string | null; createdAt: Date }>)
+            .map((r) => `- [${r.status}] ${r.category}: ${r.description ?? 'N/A'}`)
+            .join('\n')}
+${(diningReqs as Array<{ status: string; restaurant: { name: string }; partySize: number; preferredDate: Date; preferredTime: string }>)
+            .map((r) => `- [${r.status}] ${r.restaurant.name}: ${r.partySize}pax ${r.preferredDate.toLocaleDateString()} ${r.preferredTime}`)
+            .join('\n')}`
+        : ''
 
-TODAY'S DATE: ${new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}`.trim()
+      const restaurantContext = `RESTAURANTS:\n${restaurants
+  .map((r: { name: string; cuisine: string; area: string; city: string; priceLevel: number; memberBenefit: string | null; ambianceTags: string[] }) =>
+    `- ${r.name} (${r.cuisine}, ${r.area}) ${'₦'.repeat(r.priceLevel)}${r.memberBenefit ? ' — ' + r.memberBenefit : ''}`)
+  .join('\n')}`
 
-      const restaurantContext = `
-CURATED RESTAURANT LIST:
-${restaurants
-  .map((r: { name: string; cuisine: string; area: string; city: string; priceLevel: number; memberBenefit: string | null; ambianceTags: string[]; reservationNotes: string | null }) =>
-    `- ${r.name} (${r.cuisine}, ${r.area}, ${r.city}) — Price Level: ${'₦'.repeat(r.priceLevel)} | Member Benefit: ${r.memberBenefit ?? 'None'} | Ambiance: ${r.ambianceTags.join(', ') || 'N/A'} | Notes: ${r.reservationNotes ?? 'None'}`)
-  .join('\n')}`.trim()
-
-      const offersContext = `
-ACTIVE PARTNER OFFERS:
-${offers
-  .map((o: { title: string; partner: { name: string }; category: string; city: string; shortDesc: string; tierEligibility: string[] }) =>
-    `- ${o.title} at ${o.partner.name} (${o.category}, ${o.city}) — ${o.shortDesc} [Eligible: ${o.tierEligibility.join(', ')}]`)
-  .join('\n')}`.trim()
+      const offersContext = `OFFERS:\n${offers
+  .map((o: { title: string; partner: { name: string }; category: string; shortDesc: string }) =>
+    `- ${o.title} at ${o.partner.name} — ${o.shortDesc}`)
+  .join('\n')}`
 
       // Build conversation messages
       const conversationMessages: Array<{ role: 'user' | 'assistant'; content: string }> = []
@@ -222,11 +208,23 @@ ${offers
         }
       }
 
-      // Call Claude
+      // Call Claude with prompt caching — static prompt is cached (90% cheaper)
+      const dynamicContext = `${memberContext}${pastContext}\n${restaurantContext}\n${offersContext}`
+
       const claudeResponse = await anthropic.messages.create({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 600,
-        system: `${SYSTEM_PROMPT}\n\n${memberContext}\n\n${restaurantContext}\n\n${offersContext}`,
+        max_tokens: 400,
+        system: [
+          {
+            type: 'text' as const,
+            text: STATIC_SYSTEM,
+            cache_control: { type: 'ephemeral' as const },
+          },
+          {
+            type: 'text' as const,
+            text: dynamicContext,
+          },
+        ],
         messages: deduped.length > 0 ? deduped : [{ role: 'user', content: body.trim() }],
       })
 
