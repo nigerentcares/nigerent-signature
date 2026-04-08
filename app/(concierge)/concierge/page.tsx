@@ -1,23 +1,23 @@
 /**
- * /concierge — Concierge Staff Portal
+ * /concierge — Requests tab (default)
  *
  * Server Component: fetches all open dining + concierge requests.
- * Passes data to ConciergePortal (client) for interactive handling.
+ * Passes data to RequestsView (client) for interactive mobile handling.
  */
 
 import { redirect }    from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { prisma }       from '@/lib/prisma'
-import ConciergePortal  from '@/components/concierge/ConciergePortal'
+import RequestsView, { type RequestItem } from '@/components/concierge/RequestsView'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function formatTime(date: Date): string {
   const now  = new Date()
   const diff = Math.floor((now.getTime() - date.getTime()) / 1000)
-  if (diff < 60)   return 'just now'
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`
-  if (diff < 86400)return `${Math.floor(diff / 3600)}h ago`
+  if (diff < 60)    return 'just now'
+  if (diff < 3600)  return `${Math.floor(diff / 60)}m ago`
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
   return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
 }
 
@@ -28,19 +28,16 @@ export default async function ConciergePage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login?reason=session_expired')
 
-  // ── Fetch all concierge requests (open + recent) ──
   const [conciergeReqs, diningReqs] = await Promise.all([
     prisma.conciergeRequest.findMany({
-      where: {
-        status: { in: ['RECEIVED', 'IN_PROGRESS', 'AWAITING_UPDATE'] },
-      },
+      where:   { status: { in: ['RECEIVED', 'IN_PROGRESS', 'AWAITING_UPDATE'] } },
       include: {
         user: {
           include: {
             membership: { include: { tier: true } },
             walletTxns: {
-              where:   { status: 'COMPLETED', type: { in: ['LOAD', 'REFUND', 'ADJUSTMENT'] } },
-              select:  { amount: true },
+              where:  { status: 'COMPLETED', type: { in: ['LOAD', 'REFUND', 'ADJUSTMENT'] } },
+              select: { amount: true },
             },
             bookings: {
               orderBy: { checkIn: 'desc' },
@@ -49,25 +46,20 @@ export default async function ConciergePage() {
             },
           },
         },
-        messages: {
-          orderBy: { createdAt: 'asc' },
-          take:    50,
-        },
+        messages: { orderBy: { createdAt: 'asc' }, take: 50 },
       },
       orderBy: { createdAt: 'desc' },
     }),
 
     prisma.diningRequest.findMany({
-      where: {
-        status: { in: ['RECEIVED', 'IN_PROGRESS'] },
-      },
+      where:   { status: { in: ['RECEIVED', 'IN_PROGRESS'] } },
       include: {
         user: {
           include: {
             membership: { include: { tier: true } },
             walletTxns: {
-              where:   { status: 'COMPLETED', type: { in: ['LOAD', 'REFUND', 'ADJUSTMENT'] } },
-              select:  { amount: true },
+              where:  { status: 'COMPLETED', type: { in: ['LOAD', 'REFUND', 'ADJUSTMENT'] } },
+              select: { amount: true },
             },
             bookings: {
               orderBy: { checkIn: 'desc' },
@@ -77,50 +69,11 @@ export default async function ConciergePage() {
           },
         },
         restaurant: { select: { name: true, cuisine: true } },
-        messages:   {
-          orderBy: { createdAt: 'asc' },
-          take:    50,
-        },
+        messages:   { orderBy: { createdAt: 'asc' }, take: 50 },
       },
       orderBy: { createdAt: 'desc' },
     }),
   ])
-
-  // ── Normalise into a single shape ──
-  type BookingItem = {
-    id:       string
-    property: string
-    checkIn:  string
-    checkOut: string
-    status:   string
-  }
-
-  type RequestItem = {
-    id:          string
-    type:        'concierge' | 'dining'
-    category:    string
-    description: string
-    status:      string
-    priority:    string
-    isUrgent:    boolean
-    timeAgo:     string
-    createdAt:   string
-    member: {
-      id:        string
-      name:      string
-      email:     string
-      tier:      string
-      walletNgn: number
-      bookings:  BookingItem[]
-    }
-    extra: Record<string, string | number | undefined>
-    messages: {
-      id:         string
-      senderRole: string
-      body:       string
-      createdAt:  string
-    }[]
-  }
 
   const items: RequestItem[] = [
     ...conciergeReqs.map(r => {
@@ -149,7 +102,7 @@ export default async function ConciergePage() {
             status:   b.status,
           })),
         },
-        extra: {},
+        extra:    {},
         messages: r.messages.map(m => ({
           id:         m.id,
           senderRole: m.senderRole,
@@ -186,14 +139,14 @@ export default async function ConciergePage() {
           })),
         },
         extra: {
-          restaurant:    r.restaurant.name,
-          cuisine:       r.restaurant.cuisine ?? '',
-          date:          r.preferredDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
-          time:          r.preferredTime,
-          partySize:     r.partySize,
-          occasion:      r.occasion ?? '',
-          dietaryNotes:  r.dietaryNotes ?? '',
-          seatingPref:   r.seatingPref ?? '',
+          restaurant:   r.restaurant.name,
+          cuisine:      r.restaurant.cuisine ?? '',
+          date:         r.preferredDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+          time:         r.preferredTime,
+          partySize:    r.partySize,
+          occasion:     r.occasion ?? '',
+          dietaryNotes: r.dietaryNotes ?? '',
+          seatingPref:  r.seatingPref ?? '',
         },
         messages: r.messages.map(m => ({
           id:         m.id,
@@ -205,13 +158,12 @@ export default async function ConciergePage() {
     }),
   ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
-  // ── Stats for header ──
   const stats = {
-    total:    items.length,
-    urgent:   items.filter(i => i.isUrgent).length,
-    dining:   items.filter(i => i.type === 'dining').length,
-    concierge:items.filter(i => i.type === 'concierge').length,
+    total:     items.length,
+    urgent:    items.filter(i => i.isUrgent).length,
+    dining:    items.filter(i => i.type === 'dining').length,
+    concierge: items.filter(i => i.type === 'concierge').length,
   }
 
-  return <ConciergePortal items={items} stats={stats} agentId={user.id} />
+  return <RequestsView items={items} stats={stats} agentId={user.id} />
 }
