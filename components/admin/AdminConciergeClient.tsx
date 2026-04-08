@@ -8,7 +8,7 @@
  * - Optimistic status updates; router.refresh() syncs server state after mutations
  */
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -98,6 +98,7 @@ export default function AdminConciergeClient({ initialRequests }: Props) {
 
   const [requests,    setRequests]    = useState<SerializedConciergeReq[]>(initialRequests)
   const [filter,      setFilter]      = useState<Filter>('all')
+  const [query,       setQuery]       = useState('')
   const [expandedId,  setExpandedId]  = useState<string | null>(null)
   const [panel,       setPanel]       = useState<Record<string, 'thread' | 'reply' | 'resolve'>>({})
   const [replyText,   setReplyText]   = useState<Record<string, string>>({})
@@ -117,9 +118,19 @@ export default function AdminConciergeClient({ initialRequests }: Props) {
     COMPLETED:      requests.filter(r => r.status === 'COMPLETED').length,
   }
 
-  const visible = filter === 'all'
-    ? requests
-    : requests.filter(r => r.status === filter)
+  const visible = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    return requests.filter(r => {
+      if (filter !== 'all' && r.status !== filter) return false
+      if (!q) return true
+      return (
+        r.user.name.toLowerCase().includes(q)        ||
+        r.user.email.toLowerCase().includes(q)       ||
+        r.category.toLowerCase().includes(q)         ||
+        r.description.toLowerCase().includes(q)
+      )
+    })
+  }, [requests, filter, query])
 
   // ── Flash helper ────────────────────────────────────────────────────────────
 
@@ -275,6 +286,30 @@ export default function AdminConciergeClient({ initialRequests }: Props) {
           <div className="adm-mini-lbl">Resolved</div>
         </div>
       </div>
+
+      {/* ── Search bar ── */}
+      <div className="adm-search-bar" style={{ display: 'flex', alignItems: 'center', marginBottom: 14 }}>
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style={{ flexShrink: 0, marginRight: 6 }}>
+          <circle cx="11" cy="11" r="8" stroke="var(--muted)" strokeWidth="2"/>
+          <path d="m21 21-4.35-4.35" stroke="var(--muted)" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+        <input
+          type="search"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          placeholder="Search by member name, email, category…"
+          style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: 'var(--cream)', fontSize: 13, fontFamily: 'Urbanist, sans-serif' }}
+        />
+        {query && (
+          <button onClick={() => setQuery('')} style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', fontSize: 16, lineHeight: 1, padding: '0 2px' }}>×</button>
+        )}
+      </div>
+
+      {query && (
+        <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 10, fontWeight: 600 }}>
+          {visible.length} request{visible.length !== 1 ? 's' : ''} matching &ldquo;{query}&rdquo;
+        </div>
+      )}
 
       {/* ── Filter tabs ── */}
       <div className="adm-status-filter" style={{ marginBottom: 20 }}>

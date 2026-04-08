@@ -18,9 +18,9 @@ const MAX_AMOUNT    = 2_000_000
 // ── Bank account details (update to real account) ────────────────────────────
 const BANK_DETAILS = {
   accountName:   'Nigerent Lifestyle Ltd',
-  accountNumber: '0123456789',
-  bankName:      'Guaranty Trust Bank (GTB)',
-  bankCode:      '058',
+  accountNumber: '1308665551',
+  bankName:      'Providus Bank',
+  bankCode:      '101',
 }
 
 type Step = 'amount' | 'transfer' | 'success'

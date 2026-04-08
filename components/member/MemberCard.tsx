@@ -109,12 +109,13 @@ export default function MemberCard({
           <div className="lo2x" />
           <div className="ll" />
           <div className="lin">
-            {/* ── Row 1: UBA logo left · Card number right ── */}
+            {/* ── Row 1: Brand mark left · Member ID right ── */}
             <div className="mc-top">
-              {/* UBA logo */}
-              <div className="mc-uba-text">UBA</div>
-              {/* Virtual card number */}
-              <div className="mc-cardno">5399 &nbsp;28●● &nbsp;●●●● &nbsp;7041</div>
+              <div className="mc-uba-text">NSL</div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2 }}>
+                <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.12em', color: 'rgba(201,206,214,.45)', textTransform: 'uppercase' }}>Member ID</div>
+                <div className="mc-cardno" style={{ fontSize: 13, letterSpacing: '0.08em' }}>{memberNumber}</div>
+              </div>
             </div>
 
             {/* ── Row 2: Name left · Tier badge right ── */}
@@ -127,18 +128,6 @@ export default function MemberCard({
               <div className="tbadge">
                 <span style={{ color: 'var(--gold)', fontSize: 11 }}>✦</span>
                 <span className="tbadge-lbl">{tierName}</span>
-              </div>
-            </div>
-
-            {/* ── Row 3: Exp date + CVV ── */}
-            <div className="mc-card-meta">
-              <div className="mc-meta-item">
-                <div className="mc-meta-lbl">EXP</div>
-                <div className="mc-meta-val">09/28</div>
-              </div>
-              <div className="mc-meta-item">
-                <div className="mc-meta-lbl">CVV</div>
-                <div className="mc-meta-val">●●●</div>
               </div>
             </div>
 

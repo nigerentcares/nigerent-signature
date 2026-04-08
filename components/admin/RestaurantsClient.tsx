@@ -3,7 +3,7 @@
  * RestaurantsClient — interactive restaurants table with add/edit modal.
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import RestaurantModal from './RestaurantModal'
 
 interface Restaurant {
@@ -34,6 +34,24 @@ const PRICE = ['', '₦', '₦₦', '₦₦₦', '₦₦₦₦']
 export default function RestaurantsClient({ initialRestaurants }: Props) {
   const [restaurants, setRestaurants] = useState(initialRestaurants)
   const [modal, setModal]             = useState<'create' | Restaurant | null>(null)
+  const [query, setQuery]             = useState('')
+  const [statusFilter, setStatus]     = useState<'All' | 'Active' | 'Inactive'>('All')
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    return restaurants.filter(r => {
+      if (statusFilter === 'Active'   && !r.isActive) return false
+      if (statusFilter === 'Inactive' &&  r.isActive) return false
+      if (!q) return true
+      return (
+        r.name.toLowerCase().includes(q)    ||
+        r.cuisine.toLowerCase().includes(q) ||
+        r.area.toLowerCase().includes(q)    ||
+        r.city.toLowerCase().includes(q)    ||
+        r.ambianceTags.some(t => t.toLowerCase().includes(q))
+      )
+    })
+  }, [restaurants, query, statusFilter])
 
   const refresh = useCallback(async () => {
     try {
@@ -71,12 +89,51 @@ export default function RestaurantsClient({ initialRestaurants }: Props) {
         </div>
       </div>
 
-      {/* Add button */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
-        <button onClick={() => setModal('create')} className="adm-btn-primary" style={{ cursor: 'pointer' }}>
+      {/* Search + status filter + add button */}
+      <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
+        <div className="adm-search-bar" style={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 200 }}>
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style={{ flexShrink: 0, marginRight: 6 }}>
+            <circle cx="11" cy="11" r="8" stroke="var(--muted)" strokeWidth="2"/>
+            <path d="m21 21-4.35-4.35" stroke="var(--muted)" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+          <input
+            type="search"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="Search by name, cuisine, area…"
+            style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: 'var(--cream)', fontSize: 13, fontFamily: 'Urbanist, sans-serif' }}
+          />
+          {query && (
+            <button onClick={() => setQuery('')} style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', fontSize: 16, lineHeight: 1, padding: '0 2px' }}>×</button>
+          )}
+        </div>
+        <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+          {(['All', 'Active', 'Inactive'] as const).map(s => (
+            <button
+              key={s}
+              onClick={() => setStatus(s)}
+              style={{
+                padding: '5px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700,
+                fontFamily: 'Urbanist, sans-serif', cursor: 'pointer', transition: 'all .15s',
+                background: statusFilter === s ? 'rgba(31,163,166,.18)' : 'rgba(201,206,214,.06)',
+                border: statusFilter === s ? '1px solid rgba(31,163,166,.35)' : '1px solid rgba(201,206,214,.1)',
+                color: statusFilter === s ? 'var(--teal)' : 'rgba(201,206,214,.5)',
+              }}
+            >{s}</button>
+          ))}
+        </div>
+        <button onClick={() => setModal('create')} className="adm-btn-primary" style={{ cursor: 'pointer', flexShrink: 0 }}>
           + Add Restaurant
         </button>
       </div>
+
+      {(query || statusFilter !== 'All') && (
+        <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 12, fontWeight: 600 }}>
+          {filtered.length} restaurant{filtered.length !== 1 ? 's' : ''}
+          {query ? ` matching "${query}"` : ''}
+          {statusFilter !== 'All' ? ` · ${statusFilter}` : ''}
+        </div>
+      )}
 
       {/* Table */}
       <div className="adm-card">
@@ -104,7 +161,14 @@ export default function RestaurantsClient({ initialRestaurants }: Props) {
                 </tr>
               </thead>
               <tbody>
-                {restaurants.map(r => (
+                {filtered.length === 0 && (
+                  <tr>
+                    <td colSpan={7} style={{ textAlign: 'center', padding: '32px', color: 'rgba(201,206,214,.3)', fontSize: 13 }}>
+                      No restaurants match your search.
+                    </td>
+                  </tr>
+                )}
+                {filtered.map(r => (
                   <tr key={r.id}>
                     <td>
                       <div className="adm-cell-name">{r.name}</div>

@@ -524,7 +524,7 @@ function OnboardingFlow() {
           onNext={handleStep2Next}
           onBack={handleBack}
           error={error}
-          loading={false}
+          loading={loading}
         />
       )}
 

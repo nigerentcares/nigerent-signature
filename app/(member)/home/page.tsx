@@ -45,7 +45,8 @@ type DashRestaurant = {
 // ─── Data helpers ─────────────────────────────────────────────────────────────
 
 async function getMemberData(userId: string) {
-  const [dbUser, pointsAgg, walletLoads, walletSpend, savedCount, unreadCount] =
+  const now = new Date()
+  const [dbUser, pointsAgg, walletLoads, walletSpend, savedCount, unreadCount, upcomingDining] =
     await Promise.all([
       prisma.user.findUnique({
         where:   { id: userId },
@@ -65,6 +66,11 @@ async function getMemberData(userId: string) {
       }),
       prisma.savedItem.count({ where: { userId } }),
       prisma.notification.count({ where: { userId, readAt: null } }),
+      prisma.diningRequest.findFirst({
+        where:   { userId, status: 'CONFIRMED', preferredDate: { gte: now } },
+        orderBy: { preferredDate: 'asc' },
+        include: { restaurant: { select: { name: true, area: true, city: true } } },
+      }),
     ])
 
   if (!dbUser) return null
@@ -74,7 +80,7 @@ async function getMemberData(userId: string) {
     ((walletLoads._sum.amount ?? 0) - (walletSpend._sum.amount ?? 0)) / 100
   )
 
-  return { dbUser, points, walletBalance, savedCount, unreadCount }
+  return { dbUser, points, walletBalance, savedCount, unreadCount, upcomingDining }
 }
 
 async function getDashboardContent(city: string) {
@@ -236,7 +242,7 @@ export default async function HomePage() {
   const data = await getMemberData(user.id)
   if (!data) redirect('/login?reason=session_expired')
 
-  const { dbUser, points, walletBalance, savedCount, unreadCount } = data
+  const { dbUser, points, walletBalance, savedCount, unreadCount, upcomingDining } = data
   const tier         = dbUser.membership?.tier
   const tierName     = tier?.name ?? 'Signature'
   const memberNumber = dbUser.membership?.memberNumber ?? '—'
@@ -259,26 +265,33 @@ export default async function HomePage() {
         unreadCount={unreadCount}
       />
 
-      {/* ══ UPCOMING STAY ══ */}
-      <div className="sec">
-        <div className="res-card">
-          <div className="res-g" />
-          <div className="res-top">
-            <div className="res-st">
-              <div className="res-dot" />
-              <span className="res-lbl">Upcoming Stay</span>
+      {/* ══ UPCOMING RESERVATION ══ (only shown when a confirmed dining request exists) */}
+      {upcomingDining && (
+        <div className="sec">
+          <div className="res-card">
+            <div className="res-g" />
+            <div className="res-top">
+              <div className="res-st">
+                <div className="res-dot" />
+                <span className="res-lbl">Upcoming Reservation</span>
+              </div>
+              <div className="res-dt">
+                {upcomingDining.preferredDate.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}
+                {' · '}{upcomingDining.preferredTime}
+              </div>
             </div>
-            <div className="res-dt">Apr 12 – 16</div>
-          </div>
-          <div className="res-pr">The Meridian Suite, Victoria Island</div>
-          <div className="res-de">Studio Premier · 4 nights · 2 guests</div>
-          <div className="res-ac">
-            <Link href="/bookings" className="rb rb-p" style={{ textDecoration: 'none', display: 'inline-block' }}>View Details</Link>
-            <Link href="/bookings" className="rb rb-g" style={{ textDecoration: 'none', display: 'inline-block' }}>Modify</Link>
-            <Link href="/chat"     className="rb rb-g" style={{ textDecoration: 'none', display: 'inline-block' }}>Concierge</Link>
+            <div className="res-pr">{upcomingDining.restaurant.name}</div>
+            <div className="res-de">
+              {upcomingDining.restaurant.area}, {upcomingDining.restaurant.city}
+              {upcomingDining.partySize > 1 ? ` · ${upcomingDining.partySize} guests` : ''}
+            </div>
+            <div className="res-ac">
+              <Link href="/dining" className="rb rb-p" style={{ textDecoration: 'none', display: 'inline-block' }}>View Details</Link>
+              <Link href="/chat"   className="rb rb-g" style={{ textDecoration: 'none', display: 'inline-block' }}>Concierge</Link>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* ══ RESTAURANTS NEAR YOU ══ */}
       <div className="sec">
