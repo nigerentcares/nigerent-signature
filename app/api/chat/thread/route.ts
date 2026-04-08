@@ -1,6 +1,7 @@
 /**
  * GET /api/chat/thread
- * Returns the current member's chat thread + last 50 messages.
+ * Returns the current member's chat thread + last 100 messages.
+ * Includes AI message metadata (booking info) for status pills.
  */
 
 import { NextResponse } from 'next/server'
@@ -38,6 +39,7 @@ export async function GET() {
       body:       m.body,
       createdAt:  m.createdAt.toISOString(),
       readAt:     m.readAt?.toISOString() ?? null,
+      metadata:   m.metadata ?? null,
     })),
   })
 }

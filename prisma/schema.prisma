@@ -353,6 +353,7 @@ model ChatMessage {
   readAt             DateTime?
   diningRequestId    String?
   conciergeRequestId String?
+  metadata           Json?
   createdAt          DateTime          @default(now())
 
   thread             ChatThread        @relation(fields: [threadId], references: [id])
@@ -365,6 +366,7 @@ enum SenderRole {
   MEMBER
   CONCIERGE
   SYSTEM
+  AI
 }
 
 enum RequestStatus {

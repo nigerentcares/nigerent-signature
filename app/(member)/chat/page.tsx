@@ -16,11 +16,18 @@ import Link from 'next/link'
 type View    = 'chat' | 'req' | 'book'
 type BookTab = 'dining' | 'stays' | 'concierge'
 
+interface BookingMeta {
+  bookingType: string
+  bookingId:   string
+  bookingRef:  string
+}
+
 interface Message {
   id:         string
-  senderRole: 'MEMBER' | 'CONCIERGE' | 'SYSTEM'
+  senderRole: 'MEMBER' | 'CONCIERGE' | 'SYSTEM' | 'AI'
   body:       string
   createdAt:  string
+  metadata?:  BookingMeta | null
 }
 
 interface ApiBooking {
@@ -448,6 +455,7 @@ export default function ChatPage() {
   const [messages,    setMessages]    = useState<Message[]>([])
   const [inputVal,    setInputVal]    = useState('')
   const [sending,     setSending]     = useState(false)
+  const [aiTyping,    setAiTyping]    = useState(false)
   const [loading,     setLoading]     = useState(true)
   const [selCat,      setSelCat]      = useState<(typeof REQUEST_CATS)[0] | null>(null)
   const [reqDetails,  setReqDetails]  = useState('')
@@ -511,7 +519,7 @@ export default function ChatPage() {
   const scrollBottom = useCallback(() => {
     setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 50)
   }, [])
-  useEffect(() => { if (view === 'chat') scrollBottom() }, [messages, view, scrollBottom])
+  useEffect(() => { if (view === 'chat') scrollBottom() }, [messages, view, scrollBottom, aiTyping])
 
   // ── Send message ──
   async function sendMsg(text?: string) {
@@ -521,11 +529,30 @@ export default function ChatPage() {
     setMessages(prev => [...prev, opt])
     setInputVal('')
     setSending(true)
+    setAiTyping(true)
     if (textareaRef.current) textareaRef.current.style.height = 'auto'
     try {
       const res = await fetch('/api/chat/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ body }) })
-      if (res.ok) { const msg = await res.json(); setMessages(prev => prev.map(m => m.id === opt.id ? msg : m)) }
-    } finally { setSending(false) }
+      if (res.ok) {
+        const data = await res.json()
+        // Replace optimistic message with confirmed one
+        setMessages(prev => prev.map(m => m.id === opt.id ? { id: data.id, senderRole: data.senderRole, body: data.body, createdAt: data.createdAt } : m))
+        // Append AI response if present
+        if (data.aiResponse) {
+          setMessages(prev => [...prev, {
+            id:         data.aiResponse.id,
+            senderRole: data.aiResponse.senderRole,
+            body:       data.aiResponse.body,
+            createdAt:  data.aiResponse.createdAt,
+            metadata:   data.aiResponse.booking ? {
+              bookingType: data.aiResponse.booking.type,
+              bookingId:   data.aiResponse.booking.id,
+              bookingRef:  data.aiResponse.booking.ref,
+            } : null,
+          }])
+        }
+      }
+    } finally { setSending(false); setAiTyping(false) }
   }
 
   // ── Submit request ──
@@ -619,20 +646,62 @@ export default function ChatPage() {
                     return <div key={msg.id} className="sys-note"><div className="sys-note-txt">{msg.body}</div></div>
                   }
                   const isMember   = msg.senderRole === 'MEMBER'
+                  const isAI       = msg.senderRole === 'AI'
                   const prevMsg    = group.msgs[i - 1]
-                  const showSender = !isMember && (i === 0 || prevMsg?.senderRole !== 'CONCIERGE')
+                  const showSender = !isMember && (i === 0 || (prevMsg?.senderRole !== 'CONCIERGE' && prevMsg?.senderRole !== 'AI'))
                   return (
                     <div key={msg.id} className={`msg-group ${isMember ? 'out' : 'in'}`}>
-                      {showSender && <div className="msg-sender">Nigerent Concierge</div>}
-                      <div className={`msg ${isMember ? 'out' : 'in'}`}>
+                      {showSender && (
+                        <div className="msg-sender" style={isAI ? { display: 'flex', alignItems: 'center', gap: 6 } : undefined}>
+                          {isAI && <span style={{ width: 6, height: 6, borderRadius: 3, background: '#1fa3a6', display: 'inline-block' }} />}
+                          Nigerent Concierge
+                        </div>
+                      )}
+                      <div className={`msg ${isMember ? 'out' : 'in'}`} style={isAI ? { borderLeft: '2px solid rgba(31,163,166,.4)' } : undefined}>
                         <div className="msg-txt">{msg.body}</div>
                         <div className="msg-time">{formatTime(msg.createdAt)}{isMember ? ' · Sent' : ''}</div>
                       </div>
+                      {/* Booking status pill */}
+                      {isAI && msg.metadata && (msg.metadata as BookingMeta).bookingRef && (
+                        <div style={{
+                          display: 'inline-flex', alignItems: 'center', gap: 8,
+                          margin: '6px 0 4px 0', padding: '8px 14px',
+                          borderRadius: 20,
+                          background: 'linear-gradient(135deg, rgba(212,175,55,.12) 0%, rgba(31,163,166,.12) 100%)',
+                          border: '1px solid rgba(212,175,55,.25)',
+                          fontSize: 11, fontWeight: 800, letterSpacing: '.3px',
+                        }}>
+                          <span style={{
+                            width: 8, height: 8, borderRadius: 4,
+                            background: '#d4af37',
+                            boxShadow: '0 0 6px rgba(212,175,55,.5)',
+                            animation: 'pulse 2s ease-in-out infinite',
+                          }} />
+                          <span style={{ color: '#d4af37' }}>Request Received</span>
+                          <span style={{ color: 'rgba(201,206,214,.4)' }}>—</span>
+                          <span style={{ color: 'rgba(201,206,214,.6)' }}>our team will confirm shortly</span>
+                        </div>
+                      )}
                     </div>
                   )
                 })}
               </div>
             ))}
+
+            {/* AI typing indicator */}
+            {aiTyping && (
+              <div className="msg-group in" style={{ padding: '4px 16px 8px' }}>
+                <div className="msg-sender" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ width: 6, height: 6, borderRadius: 3, background: '#1fa3a6', display: 'inline-block' }} />
+                  Nigerent Concierge
+                </div>
+                <div className="msg in" style={{ borderLeft: '2px solid rgba(31,163,166,.4)', display: 'inline-flex', alignItems: 'center', gap: 4, padding: '12px 16px' }}>
+                  <span className="typing-dot" style={{ width: 6, height: 6, borderRadius: 3, background: 'rgba(31,163,166,.7)', animation: 'typingBounce 1.4s ease-in-out infinite', animationDelay: '0s' }} />
+                  <span className="typing-dot" style={{ width: 6, height: 6, borderRadius: 3, background: 'rgba(31,163,166,.7)', animation: 'typingBounce 1.4s ease-in-out infinite', animationDelay: '0.2s' }} />
+                  <span className="typing-dot" style={{ width: 6, height: 6, borderRadius: 3, background: 'rgba(31,163,166,.7)', animation: 'typingBounce 1.4s ease-in-out infinite', animationDelay: '0.4s' }} />
+                </div>
+              </div>
+            )}
 
             <div ref={chatEndRef} />
           </div>

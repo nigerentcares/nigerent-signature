@@ -3437,3 +3437,13 @@ html, body {
   font-size: 30px;
   color: rgba(212,175,55,.85);
 }
+
+/* ── AI Concierge Typing Indicator ────────────────────────────── */
+@keyframes typingBounce {
+  0%, 60%, 100% { opacity: .3; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-4px); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .4; }
+}
