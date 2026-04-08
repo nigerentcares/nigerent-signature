@@ -149,12 +149,16 @@ const CATEGORY_PHOTOS: Record<string, string[]> = {
 
 const UNSPLASH = 'https://images.unsplash.com'
 
-/** Return a curated Unsplash image URL for an offer, cycling through the pool */
+/** Return a curated Unsplash image URL for an offer, cycling through the pool.
+ *  Prefer curated Unsplash photos for categories that have them — DB imageUrls
+ *  can be stale/broken, and the curated pool always looks correct. */
 function offerImageUrl(o: Offer, index: number): string | null {
-  if (o.imageUrl) return o.imageUrl
   const ids = CATEGORY_PHOTOS[o.partner.category]
-  if (!ids || ids.length === 0) return null
-  return `${UNSPLASH}/${ids[index % ids.length]}?w=400&q=75&auto=format&fit=crop`
+  if (ids && ids.length > 0) {
+    return `${UNSPLASH}/${ids[index % ids.length]}?w=400&q=75&auto=format&fit=crop`
+  }
+  if (o.imageUrl) return o.imageUrl
+  return null
 }
 
 function ratingStr(ci: unknown) {
@@ -281,7 +285,7 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
 
       {/* ── Filters ── */}
       <div style={{ padding: '14px 20px 0' }}>
-        <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.3)', marginBottom: 8 }}>Filter by City</div>
+        <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 8 }}>Filter by City</div>
         <div style={{ display: 'flex', gap: 8, marginBottom: 0 }}>
           {(['All', 'Lagos', 'Abuja'] as const).map(city => (
             <button
@@ -289,9 +293,9 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
               onClick={() => setCityFilter(city)}
               style={{
                 padding: '6px 16px', borderRadius: 20, fontSize: 11, fontWeight: 700,
-                border: cityFilter === city ? '1px solid var(--teal)' : '1px solid rgba(201,206,214,.1)',
-                background: cityFilter === city ? 'rgba(31,163,166,.1)' : 'rgba(255,255,255,.03)',
-                color: cityFilter === city ? 'var(--teal)' : 'rgba(201,206,214,.4)',
+                border: cityFilter === city ? '1px solid var(--teal)' : '1px solid rgba(28,28,28,.15)',
+                background: cityFilter === city ? 'rgba(31,163,166,.1)' : 'rgba(28,28,28,.05)',
+                color: cityFilter === city ? 'var(--teal)' : 'var(--muted)',
                 cursor: 'pointer', fontFamily: 'Urbanist, sans-serif', transition: 'all .15s',
               }}
             >
@@ -567,8 +571,12 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
                   </div>
                   <div className="sh2-t">{catKey}</div>
                 </div>
-                <div className="sh2-l" style={{ fontSize: 11 }}>
-                  {catOffers.length} benefit{catOffers.length !== 1 ? 's' : ''}
+                <div
+                  className="sh2-l"
+                  style={{ fontSize: 11, cursor: catKey === 'Arts & Culture' ? 'pointer' : undefined }}
+                  onClick={catKey === 'Arts & Culture' ? () => router.push('/arts-culture') : undefined}
+                >
+                  {catKey === 'Arts & Culture' ? 'View All →' : `${catOffers.length} benefit${catOffers.length !== 1 ? 's' : ''}`}
                 </div>
               </div>
 
@@ -640,7 +648,7 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
                   </div>
                   {hasMore && (
                     <button
-                      onClick={() => setActiveKey(catKey)}
+                      onClick={() => catKey === 'Arts & Culture' ? router.push('/arts-culture') : setActiveKey(catKey)}
                       style={{
                         width: '100%', marginTop: 12, padding: '11px', borderRadius: 12,
                         background: `${color}08`, border: `1px solid ${color}25`,
