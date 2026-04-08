@@ -91,7 +91,9 @@ export default function AdminShell({
 
       {/* ── Main content ── */}
       <main className="adm-body">
-        {children}
+        <div className="adm-content">
+          {children}
+        </div>
       </main>
 
       {/* ── Bottom Navigation ── */}

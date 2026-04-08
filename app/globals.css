@@ -2334,8 +2334,8 @@ html, body {
 .adm-member-link:hover { color: rgba(201,206,214,.7); border-color: rgba(201,206,214,.2); }
 
 /* Main content area */
-.adm-body { flex: 1; overflow-x: hidden; padding-bottom: 90px; }
-.adm-content { padding: 28px 24px 60px; max-width: 1100px; }
+.adm-body { flex: 1; overflow-x: hidden; }
+.adm-content { padding: 28px 28px 100px; max-width: 1100px; }
 
 /* ── Admin Bottom Navigation ── */
 .adm-bnav {
@@ -2604,7 +2604,7 @@ html, body {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .adm-content { padding: 24px 20px 60px; }
+  .adm-content { padding: 24px 24px 100px; }
   .adm-stats-grid { grid-template-columns: 1fr 1fr; }
   .adm-two-col { grid-template-columns: 1fr; }
   .adm-quick-grid { grid-template-columns: 1fr 1fr; }
