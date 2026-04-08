@@ -68,6 +68,17 @@ export default function RestaurantsClient({ initialRestaurants }: Props) {
     refresh()
   }
 
+  async function handleDelete(r: Restaurant) {
+    const msg = r._count.diningRequests > 0
+      ? `"${r.name}" has ${r._count.diningRequests} linked booking(s). It will be deactivated instead of permanently deleted.\n\nProceed?`
+      : `Permanently delete "${r.name}"?\n\nThis cannot be undone.`
+    if (!confirm(msg)) return
+    try {
+      const res = await fetch(`/api/admin/restaurants/${r.id}`, { method: 'DELETE' })
+      if (res.ok) refresh()
+    } catch { /* ignore */ }
+  }
+
   const active   = restaurants.filter(r => r.isActive).length
   const featured = restaurants.filter(r => r.isFeatured).length
 
@@ -191,8 +202,15 @@ export default function RestaurantsClient({ initialRestaurants }: Props) {
                       </div>
                     </td>
                     <td>
-                      <div className="adm-row-actions">
+                      <div className="adm-row-actions" style={{ gap: 6 }}>
                         <button className="adm-row-btn" onClick={() => setModal(r)} style={{ cursor: 'pointer' }}>Edit</button>
+                        <button
+                          className="adm-row-btn"
+                          onClick={() => handleDelete(r)}
+                          style={{ cursor: 'pointer', color: '#ff7070', borderColor: 'rgba(255,80,80,.2)', background: 'rgba(255,80,80,.06)' }}
+                        >
+                          Delete
+                        </button>
                       </div>
                     </td>
                   </tr>

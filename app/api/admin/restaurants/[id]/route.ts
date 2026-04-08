@@ -47,3 +47,34 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
   return NextResponse.json({ success: true, restaurant })
 }
+
+/**
+ * DELETE /api/admin/restaurants/[id]
+ */
+export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user || !isAdmin(user)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+
+  // Check for linked dining requests first
+  const linkedRequests = await prisma.diningRequest.count({
+    where: { restaurantId: params.id },
+  })
+
+  if (linkedRequests > 0) {
+    // Soft-delete: deactivate instead of hard-deleting to preserve booking history
+    await prisma.restaurant.update({
+      where: { id: params.id },
+      data: { isActive: false },
+    })
+    return NextResponse.json({
+      success: true,
+      softDeleted: true,
+      message: `Restaurant deactivated (has ${linkedRequests} linked booking${linkedRequests > 1 ? 's' : ''})`,
+    })
+  }
+
+  // Hard delete if no linked bookings
+  await prisma.restaurant.delete({ where: { id: params.id } })
+  return NextResponse.json({ success: true, deleted: true })
+}

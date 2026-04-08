@@ -88,12 +88,12 @@ const TONE_S: Record<Tone, React.CSSProperties> = {
   ok:   { background: 'rgba(30,168,106,.12)',  color: '#1ea86a',  border: '1px solid rgba(30,168,106,.2)' },
   warn: { background: 'rgba(212,175,55,.12)',  color: '#d4af37',  border: '1px solid rgba(212,175,55,.2)' },
   err:  { background: 'rgba(255,80,80,.12)',   color: '#ff7070',  border: '1px solid rgba(255,80,80,.2)' },
-  mute: { background: 'rgba(201,206,214,.07)', color: 'rgba(201,206,214,.4)', border: '1px solid rgba(201,206,214,.1)' },
+  mute: { background: 'rgba(201,206,214,.07)', color: 'rgba(201,206,214,.65)', border: '1px solid rgba(201,206,214,.15)' },
   teal: { background: 'rgba(31,163,166,.12)',  color: '#1fa3a6',  border: '1px solid rgba(31,163,166,.2)' },
 }
 
 const PRIORITY_S: Record<string, React.CSSProperties> = {
-  URGENT: { color: '#ff7070' }, HIGH: { color: '#d4af37' }, STANDARD: { color: 'rgba(201,206,214,.35)' },
+  URGENT: { color: '#ff7070' }, HIGH: { color: '#d4af37' }, STANDARD: { color: 'rgba(201,206,214,.65)' },
 }
 
 const CAT_EMOJI: Record<string, string> = {
@@ -166,7 +166,7 @@ function StayCard({ s }: { s: ApiBooking }) {
           <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(212,175,55,.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>🏨</div>
           <div>
             <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--cream)', lineHeight: 1.3 }}>{s.property}</div>
-            <div style={{ fontSize: 12, color: 'rgba(201,206,214,.6)', marginTop: 3 }}>
+            <div style={{ fontSize: 12, color: 'rgba(201,206,214,.8)', marginTop: 3 }}>
               {nights} night{nights !== 1 ? 's' : ''} · <span style={{ color: 'rgba(212,175,55,.9)', fontWeight: 700 }}>{fmtNGN(s.amount)}</span>
             </div>
           </div>
@@ -177,15 +177,15 @@ function StayCard({ s }: { s: ApiBooking }) {
       {/* Date bar */}
       <div style={{ display: 'flex', background: 'rgba(0,0,0,.25)', borderRadius: 12, overflow: 'hidden', marginBottom: active ? 12 : 0 }}>
         <div style={{ flex: 1, padding: '10px 14px', borderRight: '1px solid rgba(201,206,214,.1)' }}>
-          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.45)', marginBottom: 4 }}>Check-in</div>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.75)', marginBottom: 4 }}>Check-in</div>
           <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--cream)' }}>{fmtShort(s.checkIn)}</div>
         </div>
         <div style={{ flex: 1, padding: '10px 14px', borderRight: '1px solid rgba(201,206,214,.1)' }}>
-          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.45)', marginBottom: 4 }}>Check-out</div>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.75)', marginBottom: 4 }}>Check-out</div>
           <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--cream)' }}>{fmtShort(s.checkOut)}</div>
         </div>
         <div style={{ flex: 1, padding: '10px 14px' }}>
-          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.45)', marginBottom: 4 }}>Nights</div>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.75)', marginBottom: 4 }}>Nights</div>
           <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--cream)' }}>{nights}</div>
         </div>
       </div>
@@ -222,7 +222,7 @@ function DiningCard({ d }: { d: ApiDining }) {
           <div>
             <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--cream)', lineHeight: 1.3 }}>{d.restaurantName}</div>
             {d.occasion && (
-              <div style={{ fontSize: 11, color: 'rgba(212,135,15,.8)', fontWeight: 700, marginTop: 2 }}>{d.occasion}</div>
+              <div style={{ fontSize: 11, color: 'rgba(212,135,15,.95)', fontWeight: 700, marginTop: 2 }}>{d.occasion}</div>
             )}
           </div>
         </div>
@@ -232,15 +232,15 @@ function DiningCard({ d }: { d: ApiDining }) {
       {/* Details row */}
       <div style={{ display: 'flex', background: 'rgba(0,0,0,.25)', borderRadius: 12, overflow: 'hidden', marginBottom: active ? 12 : 0 }}>
         <div style={{ flex: 1.2, padding: '10px 12px', borderRight: '1px solid rgba(201,206,214,.1)' }}>
-          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.45)', marginBottom: 4 }}>Date</div>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.75)', marginBottom: 4 }}>Date</div>
           <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--cream)' }}>{fmtShort(d.preferredDate)}</div>
         </div>
         <div style={{ flex: 1, padding: '10px 12px', borderRight: '1px solid rgba(201,206,214,.1)' }}>
-          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.45)', marginBottom: 4 }}>Time</div>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.75)', marginBottom: 4 }}>Time</div>
           <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--cream)' }}>{d.preferredTime}</div>
         </div>
         <div style={{ flex: 0.8, padding: '10px 12px' }}>
-          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.45)', marginBottom: 4 }}>Guests</div>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.75)', marginBottom: 4 }}>Guests</div>
           <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--cream)' }}>{d.partySize}</div>
         </div>
       </div>
@@ -284,8 +284,8 @@ function ConciergeCard({ c }: { c: ApiConcierge }) {
               <span style={{ fontSize: 10, fontWeight: 800, ...PRIORITY_S[c.priority] }}>
                 {c.priority.charAt(0) + c.priority.slice(1).toLowerCase()}
               </span>
-              <span style={{ fontSize: 10, color: 'rgba(201,206,214,.35)' }}>·</span>
-              <span style={{ fontSize: 10, color: 'rgba(201,206,214,.5)' }}>{fmtDate(c.createdAt)}</span>
+              <span style={{ fontSize: 10, color: 'rgba(201,206,214,.65)' }}>·</span>
+              <span style={{ fontSize: 10, color: 'rgba(201,206,214,.75)' }}>{fmtDate(c.createdAt)}</span>
             </div>
           </div>
         </div>
@@ -294,7 +294,7 @@ function ConciergeCard({ c }: { c: ApiConcierge }) {
 
       {c.description && (
         <div style={{
-          fontSize: 12, color: 'rgba(201,206,214,.7)', lineHeight: 1.6,
+          fontSize: 12, color: 'rgba(201,206,214,.85)', lineHeight: 1.6,
           background: 'rgba(0,0,0,.2)', borderRadius: 10,
           padding: '10px 12px', marginBottom: active ? 12 : 0,
           borderLeft: `2px solid ${accentColor}`,
