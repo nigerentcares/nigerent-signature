@@ -106,7 +106,7 @@ export default function RestaurantDetailClient({ restaurant: r }: { restaurant: 
 
   const today    = todayDayKey()
   const todayHrs = r.openingHours?.[today]
-  const isOpenToday = todayHrs && typeof todayHrs !== 'string' && todayHrs !== 'closed'
+  const isOpenToday = todayHrs && typeof todayHrs !== 'string'
 
   return (
     <div style={{ background: '#080f0f', minHeight: '100dvh', paddingBottom: 120 }}>
