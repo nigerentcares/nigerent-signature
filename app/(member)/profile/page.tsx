@@ -173,7 +173,7 @@ export default function ProfilePage() {
     <div className="pg" style={{ background: '#0f1a1a', minHeight: '100dvh', paddingBottom: 100 }}>
 
       {/* ── Header ── */}
-      <div style={{ padding: '28px 20px 0', display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
+      <div style={{ padding: 'max(28px, calc(env(safe-area-inset-top) + 10px)) 20px 0', display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
         <button
           onClick={() => editing ? setEditing(false) : router.back()}
           style={{ background: 'rgba(201,206,214,.06)', border: 'none', borderRadius: 10, width: 36, height: 36, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(201,206,214,.5)', flexShrink: 0 }}

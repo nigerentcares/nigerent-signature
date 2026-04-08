@@ -110,7 +110,7 @@ export default function NotificationsPage() {
     <div style={{ background: '#0f1a1a', minHeight: '100dvh', paddingBottom: 100 }}>
 
       {/* ── Header ── */}
-      <div style={{ padding: '28px 20px 0', marginBottom: 24 }}>
+      <div style={{ padding: 'max(28px, calc(env(safe-area-inset-top) + 10px)) 20px 0', marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
           <Link href="/home" style={{ background: 'rgba(201,206,214,.06)', border: 'none', borderRadius: 10, width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(201,206,214,.5)', textDecoration: 'none', flexShrink: 0 }}>
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>

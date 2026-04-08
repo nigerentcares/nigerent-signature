@@ -128,7 +128,7 @@ export default function RestaurantDetailClient({ restaurant: r }: { restaurant: 
         <button
           onClick={() => router.back()}
           style={{
-            position: 'absolute', top: 52, left: 20, zIndex: 10,
+            position: 'absolute', top: 'max(52px, calc(env(safe-area-inset-top) + 10px))', left: 20, zIndex: 10,
             width: 40, height: 40, borderRadius: 12,
             background: 'rgba(8,15,15,.6)', backdropFilter: 'blur(8px)',
             border: '1px solid rgba(255,255,255,.12)', cursor: 'pointer',

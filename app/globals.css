@@ -114,7 +114,7 @@ html, body {
 /* ── SHARED HEADER ── */
 .hdr {
   background: var(--dark);
-  padding: 15px 20px 0;
+  padding: max(15px, calc(env(safe-area-inset-top) + 10px)) 20px 0;
 }
 .brand-row {
   display: flex;
@@ -187,6 +187,7 @@ html, body {
   background: var(--dark);
   position: relative;
   overflow: hidden;
+  padding-top: env(safe-area-inset-top);
 }
 .ob-step {
   min-height: 100vh;
@@ -1940,7 +1941,7 @@ html, body {
 .adm-logout-btn:hover { color: #ff6b6b; background: rgba(255,80,80,.14); border-color: rgba(255,80,80,.3); }
 
 /* Mobile topbar (hidden on desktop) */
-.adm-topbar { display: none; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--dark); border-bottom: 1px solid rgba(201,206,214,.08); }
+.adm-topbar { display: none; align-items: center; justify-content: space-between; padding: max(16px, calc(env(safe-area-inset-top) + 10px)) 20px 16px; background: var(--dark); border-bottom: 1px solid rgba(201,206,214,.08); }
 .adm-topbar-nav { display: flex; gap: 6px; }
 .adm-topbar-item { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; color: rgba(201,206,214,.4); }
 .adm-topbar-item.on { background: rgba(31,163,166,.15); color: var(--teal); }
@@ -2287,6 +2288,7 @@ html, body {
   overflow: hidden;
   background: #f5f2ef;
   font-family: 'Urbanist', sans-serif;
+  padding-top: env(safe-area-inset-top);
 }
 
 /* ── Left Sidebar ── */
