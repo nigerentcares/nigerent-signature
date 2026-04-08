@@ -2975,8 +2975,6 @@ html, body {
 .cp-detail-title { font-size: 17px; font-weight: 800; color: #1c1c1c; margin-bottom: 4px; }
 .cp-detail-meta  { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: rgba(28,28,28,.45); flex-wrap: wrap; }
 .cp-dot          { color: rgba(28,28,28,.2); }
-.cp-member-app-link { font-size: 11px; font-weight: 700; color: rgba(28,28,28,.4); text-decoration: none; border: 1px solid #ede9e4; padding: 6px 12px; border-radius: 10px; transition: all .15s; }
-.cp-member-app-link:hover { border-color: var(--teal); color: var(--teal); }
 
 /* Two-column body */
 .cp-detail-body {

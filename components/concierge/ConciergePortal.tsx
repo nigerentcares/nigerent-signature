@@ -415,7 +415,6 @@ export default function ConciergePortal({
             </div>
             <div className="cp-detail-hdr-right">
               <StatusBadge status={selected.status} />
-              <a href="/home" className="cp-member-app-link">← Member App</a>
             </div>
           </div>
 
