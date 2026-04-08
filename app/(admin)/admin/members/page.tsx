@@ -9,7 +9,6 @@ import { prisma } from '@/lib/prisma'
 import AdminShell from '@/components/admin/AdminShell'
 import AdminMembersClient from '@/components/admin/AdminMembersClient'
 import CreateUserButton from '@/components/admin/CreateUserButton'
-import CreateUserButton from '@/components/admin/CreateUserButton'
 
 async function getMembers() {
   const members = await prisma.user.findMany({
