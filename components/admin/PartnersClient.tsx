@@ -86,13 +86,13 @@ export default function PartnersClient({ partners: initial }: { partners: Partne
     setErr(''); setBusy(true)
     const payload = {
       name: form.name.trim(), category: form.category, city: form.city,
-      area: form.area.trim() || undefined, description: form.description.trim() || undefined,
-      imageUrl: form.imageUrl.trim() || undefined,
+      area: form.area.trim() || null, description: form.description.trim() || null,
+      imageUrl: form.imageUrl.trim() || null,
       contactInfo: {
-        phone:   form.phone.trim()   || undefined,
-        email:   form.email.trim()   || undefined,
-        website: form.website.trim() || undefined,
-        address: form.address.trim() || undefined,
+        phone:   form.phone.trim()   || '',
+        email:   form.email.trim()   || '',
+        website: form.website.trim() || '',
+        address: form.address.trim() || '',
       },
     }
     try {
