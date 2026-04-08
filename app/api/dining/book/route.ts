@@ -3,6 +3,42 @@ import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 
+// ── Opening-hours validator ───────────────────────────────────────────────────
+
+const DAYS = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday']
+
+function timeToMinutes(t: string): number {
+  const [h, m] = t.split(':').map(Number)
+  return (h ?? 0) * 60 + (m ?? 0)
+}
+
+function validateTimeSlot(
+  openingHours: Record<string, { open: string; close: string } | string> | null,
+  dateStr: string,
+  timeStr: string
+): string | null {
+  if (!openingHours) return null // no hours defined — allow booking
+
+  const dayKey = DAYS[new Date(dateStr).getDay()]
+  const dayHrs = openingHours[dayKey]
+
+  if (!dayHrs || dayHrs === 'closed' || typeof dayHrs === 'string') {
+    return `The restaurant is closed on ${dayKey.charAt(0).toUpperCase() + dayKey.slice(1)}s. Please choose a different date.`
+  }
+
+  const { open, close } = dayHrs as { open: string; close: string }
+  const slotMins  = timeToMinutes(timeStr)
+  const openMins  = timeToMinutes(open)
+  // Subtract 30 min from close so last slot is at least 30 min before closing
+  const closeMins = timeToMinutes(close) - 30
+
+  if (slotMins < openMins || slotMins > closeMins) {
+    return `The restaurant is open ${open}–${close} on that day. Please pick a time within those hours.`
+  }
+
+  return null
+}
+
 const BookSchema = z.object({
   restaurantId:   z.string().min(1),
   preferredDate:  z.string().min(1),   // ISO date string
@@ -37,6 +73,16 @@ export async function POST(req: NextRequest) {
     })
     if (!restaurant || !restaurant.isActive) {
       return NextResponse.json({ error: 'Restaurant not found or inactive.' }, { status: 404 })
+    }
+
+    // Validate time slot against opening hours
+    const hoursError = validateTimeSlot(
+      restaurant.openingHours as Record<string, { open: string; close: string } | string> | null,
+      data.preferredDate,
+      data.preferredTime
+    )
+    if (hoursError) {
+      return NextResponse.json({ error: hoursError }, { status: 422 })
     }
 
     // Ensure user has a DB record

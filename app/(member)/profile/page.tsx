@@ -49,6 +49,15 @@ export default function ProfilePage() {
   const [saveErr, setSaveErr] = useState('')
   const [saveOk, setSaveOk]   = useState(false)
 
+  // Password change state
+  const [pwSection, setPwSection]     = useState(false)
+  const [currentPw, setCurrentPw]     = useState('')
+  const [newPw,     setNewPw]         = useState('')
+  const [confirmPw, setConfirmPw]     = useState('')
+  const [pwBusy,    setPwBusy]        = useState(false)
+  const [pwErr,     setPwErr]         = useState('')
+  const [pwOk,      setPwOk]          = useState(false)
+
   // Edit form state
   const [editName,   setEditName]   = useState('')
   const [editPhone,  setEditPhone]  = useState('')
@@ -111,6 +120,30 @@ export default function ProfilePage() {
     setLogoutBusy(true)
     await fetch('/api/auth/logout', { method: 'POST' })
     window.location.href = '/login'
+  }
+
+  async function handlePasswordChange(e: React.FormEvent) {
+    e.preventDefault()
+    setPwErr('')
+    if (newPw.length < 8) { setPwErr('New password must be at least 8 characters.'); return }
+    if (newPw !== confirmPw) { setPwErr('Passwords do not match.'); return }
+    setPwBusy(true)
+    try {
+      const res = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword: currentPw, newPassword: newPw }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setPwErr(data.error ?? 'Could not change password.'); return }
+      setPwOk(true)
+      setCurrentPw(''); setNewPw(''); setConfirmPw('')
+      setTimeout(() => { setPwSection(false); setPwOk(false) }, 1500)
+    } catch {
+      setPwErr('Network error. Please try again.')
+    } finally {
+      setPwBusy(false)
+    }
   }
 
   /* ── derived values ── */
@@ -294,6 +327,66 @@ export default function ProfilePage() {
                 </div>
               </div>
             )}
+
+            {/* ── Password Change ── */}
+            <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(201,206,214,.08)', borderRadius: 20, overflow: 'hidden', marginBottom: 14 }}>
+              <button
+                onClick={() => { setPwSection(s => !s); setPwErr(''); setPwOk(false) }}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
+              >
+                <div style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(201,206,214,.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>🔐</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--cream)' }}>Change Password</div>
+                  {!pwSection && <div style={{ fontSize: 10, color: 'rgba(201,206,214,.3)', marginTop: 1 }}>Update your login password</div>}
+                </div>
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" style={{ transform: pwSection ? 'rotate(90deg)' : 'none', transition: 'transform .2s' }}>
+                  <path d="M9 5l7 7-7 7" stroke="rgba(201,206,214,.25)" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </button>
+
+              {pwSection && (
+                <form onSubmit={handlePasswordChange} style={{ padding: '0 18px 18px', borderTop: '1px solid rgba(201,206,214,.06)' }}>
+                  {[
+                    { label: 'Current Password', value: currentPw, setter: setCurrentPw },
+                    { label: 'New Password',      value: newPw,     setter: setNewPw },
+                    { label: 'Confirm New Password', value: confirmPw, setter: setConfirmPw },
+                  ].map(({ label, value, setter }) => (
+                    <div key={label} style={{ marginTop: 12 }}>
+                      <label style={{ fontSize: 10, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase' as const, color: 'rgba(201,206,214,.35)', marginBottom: 5, display: 'block' }}>
+                        {label}
+                      </label>
+                      <input
+                        type="password"
+                        value={value}
+                        onChange={e => setter(e.target.value)}
+                        required
+                        minLength={label === 'Current Password' ? 1 : 8}
+                        style={{ width: '100%', background: 'rgba(255,255,255,.05)', border: '1px solid rgba(201,206,214,.12)', borderRadius: 12, padding: '11px 14px', color: 'var(--cream)', fontSize: 13, fontFamily: 'Urbanist, sans-serif', outline: 'none', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  ))}
+
+                  {pwErr && (
+                    <div style={{ marginTop: 10, padding: '8px 12px', background: 'rgba(255,80,80,.08)', border: '1px solid rgba(255,80,80,.2)', borderRadius: 10, fontSize: 12, color: 'rgba(255,110,110,.9)' }}>
+                      {pwErr}
+                    </div>
+                  )}
+                  {pwOk && (
+                    <div style={{ marginTop: 10, padding: '8px 12px', background: 'rgba(30,168,106,.08)', border: '1px solid rgba(30,168,106,.2)', borderRadius: 10, fontSize: 12, color: '#1ea86a' }}>
+                      ✓ Password updated successfully!
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={pwBusy || pwOk}
+                    style={{ marginTop: 14, width: '100%', padding: '12px', borderRadius: 12, background: pwOk ? '#1ea86a' : 'var(--teal)', border: 'none', color: '#fff', fontSize: 13, fontWeight: 800, cursor: pwBusy ? 'not-allowed' : 'pointer', fontFamily: 'Urbanist, sans-serif', opacity: pwBusy ? 0.7 : 1 }}
+                  >
+                    {pwBusy ? 'Updating…' : pwOk ? '✓ Done' : 'Update Password'}
+                  </button>
+                </form>
+              )}
+            </div>
 
             {/* Navigation shortcuts */}
             <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(201,206,214,.08)', borderRadius: 20, overflow: 'hidden', marginBottom: 14 }}>

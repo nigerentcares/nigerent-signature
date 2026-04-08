@@ -262,6 +262,22 @@ model Restaurant {
   createdAt        DateTime        @default(now())
 
   diningRequests   DiningRequest[]
+  menuItems        MenuItem[]
+}
+
+model MenuItem {
+  id           String     @id @default(cuid())
+  restaurantId String
+  category     String     // e.g. "Starters", "Mains", "Desserts", "Drinks"
+  name         String
+  description  String?
+  price        Int        // in kobo (₦100 = 10000)
+  imageUrl     String?
+  isAvailable  Boolean    @default(true)
+  displayOrder Int        @default(0)
+  createdAt    DateTime   @default(now())
+
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
 }
 
 model DiningRequest {

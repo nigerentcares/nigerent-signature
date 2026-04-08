@@ -153,12 +153,14 @@ export default function ExploreOffersClient({ offers, totalPartners }: Props) {
   const [selected,  setSelected]  = useState<Offer | null>(null)
   const [query,     setQuery]     = useState('')
   const [activeKey, setActiveKey] = useState<string | null>(null)
+  const [cityFilter, setCityFilter] = useState<'All' | 'Lagos' | 'Abuja'>('All')
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     return offers.filter(o => {
-      const matchesCat = !activeKey || o.partner.category === activeKey
-      if (!matchesCat) return false
+      const matchesCat  = !activeKey || o.partner.category === activeKey
+      const matchesCity = cityFilter === 'All' || o.partner.city === cityFilter
+      if (!matchesCat || !matchesCity) return false
       if (!q) return true
       return (
         o.title.toLowerCase().includes(q)            ||
@@ -168,7 +170,7 @@ export default function ExploreOffersClient({ offers, totalPartners }: Props) {
         o.shortDesc.toLowerCase().includes(q)
       )
     })
-  }, [offers, query, activeKey])
+  }, [offers, query, activeKey, cityFilter])
 
   const grouped = useMemo(() => {
     const m = new Map<string, Offer[]>()
@@ -215,6 +217,25 @@ export default function ExploreOffersClient({ offers, totalPartners }: Props) {
             >×</button>
           )}
         </div>
+      </div>
+
+      {/* ── City filter ── */}
+      <div style={{ display: 'flex', gap: 8, padding: '10px 20px 0' }}>
+        {(['All', 'Lagos', 'Abuja'] as const).map(city => (
+          <button
+            key={city}
+            onClick={() => setCityFilter(city)}
+            style={{
+              padding: '6px 16px', borderRadius: 20, fontSize: 11, fontWeight: 700,
+              border: cityFilter === city ? '1px solid var(--teal)' : '1px solid rgba(201,206,214,.1)',
+              background: cityFilter === city ? 'rgba(31,163,166,.1)' : 'rgba(255,255,255,.03)',
+              color: cityFilter === city ? 'var(--teal)' : 'rgba(201,206,214,.4)',
+              cursor: 'pointer', fontFamily: 'Urbanist, sans-serif', transition: 'all .15s',
+            }}
+          >
+            {city === 'All' ? '🌍 All Cities' : city === 'Lagos' ? '🏙️ Lagos' : '🏛️ Abuja'}
+          </button>
+        ))}
       </div>
 
       {/* ── Category pills ── */}

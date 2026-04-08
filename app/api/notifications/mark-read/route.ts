@@ -1,9 +1,8 @@
 /**
- * POST /api/notifications/mark-read
- * Marks all (or specific) notifications as read.
- * Body: { ids?: string[] }  — omit `ids` to mark all unread.
+ * DEPRECATED — use POST /api/notifications/read instead.
+ * This endpoint is kept only to avoid 404s from any cached clients.
+ * It proxies to the canonical endpoint.
  */
-
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { prisma }       from '@/lib/prisma'
@@ -24,5 +23,5 @@ export async function POST(req: NextRequest) {
     data: { readAt: new Date() },
   })
 
-  return NextResponse.json({ marked: count })
+  return NextResponse.json({ success: true, marked: count })
 }

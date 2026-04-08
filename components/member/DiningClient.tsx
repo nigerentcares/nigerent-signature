@@ -1,11 +1,11 @@
 'use client'
 /**
  * DiningClient — owns search, occasion filter, and restaurant list interactivity.
- * Opens DiningBookSheet when a restaurant is tapped.
+ * Tapping a card navigates to /dining/[id] for the full detail page.
  */
 
 import { useState, useMemo } from 'react'
-import DiningBookSheet from './DiningBookSheet'
+import { useRouter }          from 'next/navigation'
 
 interface Restaurant {
   id:           string
@@ -83,7 +83,7 @@ function cuisineIcon(c: string) {
 }
 
 export default function DiningClient({ restaurants }: Props) {
-  const [selected, setSelected]   = useState<Restaurant | null>(null)
+  const router                    = useRouter()
   const [query,    setQuery]      = useState('')
   const [occasion, setOccasion]   = useState<string>('All')
 
@@ -216,7 +216,7 @@ export default function DiningClient({ restaurants }: Props) {
                   backgroundPosition: 'center',
                   position: 'relative',
                 }}
-                onClick={() => setSelected(featured)}
+                onClick={() => router.push(`/dining/${featured.id}`)}
               >
                 {/* Photo scrim — darker than the decorative blobs */}
                 <div style={{
@@ -238,11 +238,11 @@ export default function DiningClient({ restaurants }: Props) {
                       )}
                     </div>
                     <button
-                      onClick={e => { e.stopPropagation(); setSelected(featured) }}
+                      onClick={e => { e.stopPropagation(); router.push(`/dining/${featured.id}`) }}
                       className="hr-cta"
                       style={{ cursor: 'pointer', border: 'none', fontFamily: 'Urbanist, sans-serif' }}
                     >
-                      Reserve
+                      View &amp; Reserve
                     </button>
                   </div>
                 </div>
@@ -265,7 +265,7 @@ export default function DiningClient({ restaurants }: Props) {
                   key={r.id}
                   className="drc"
                   style={{ cursor: 'pointer' }}
-                  onClick={() => setSelected(r)}
+                  onClick={() => router.push(`/dining/${r.id}`)}
                 >
                   <div
                     className="drc-img"
@@ -321,13 +321,6 @@ export default function DiningClient({ restaurants }: Props) {
         </>
       )}
 
-      {/* Booking sheet */}
-      {selected && (
-        <DiningBookSheet
-          restaurant={selected}
-          onClose={() => setSelected(null)}
-        />
-      )}
     </>
   )
 }

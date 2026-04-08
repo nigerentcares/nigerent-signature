@@ -308,7 +308,7 @@ export default async function HomePage() {
             restaurants.map((r, i) => {
               const photoUrl = dashRestaurantPhoto(r, i)
               return (
-              <Link key={r.id} href="/dining" style={{ textDecoration: 'none' }}>
+              <Link key={r.id} href={`/dining/${r.id}`} style={{ textDecoration: 'none' }}>
                 <div className="rcard">
                   <div
                     className="rcard-img"
