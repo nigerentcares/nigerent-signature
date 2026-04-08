@@ -297,7 +297,7 @@ export default async function HomePage() {
       <div className="sec">
         <div className="sh2">
           <div className="sh2-t">Restaurants Near You</div>
-          <Link href="/dining" className="sh2-l" style={{ textDecoration: 'none' }}>See All →</Link>
+          <Link href="/dining" className="sh2-l" style={{ textDecoration: 'none' }}>View All →</Link>
         </div>
         <div className="hscr">
           {restaurants.length === 0 ? (
@@ -392,7 +392,7 @@ export default async function HomePage() {
       <div className="sec">
         <div className="sh2">
           <div className="sh2-t">What&apos;s On This Weekend</div>
-          <Link href="/explore" className="sh2-l" style={{ textDecoration: 'none' }}>See All →</Link>
+          <Link href="/explore" className="sh2-l" style={{ textDecoration: 'none' }}>View All →</Link>
         </div>
         <div className="hscr">
           {experienceOffers.length === 0 ? (

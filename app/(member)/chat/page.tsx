@@ -50,7 +50,7 @@ const REQUEST_CATS = [
   { key: 'custom',    emoji: '💬', label: 'Custom',          sub: 'Anything else on your mind — just ask' },
 ]
 
-const QUICK_REPLIES = ['Any updates?', 'Confirm booking', 'Escalate', 'Thank you']
+const QUICK_REPLIES = ['Any updates?', 'Confirm my booking', 'Need this urgently', 'Thank you']
 
 // ─── Status / badge helpers ───────────────────────────────────────────────────
 

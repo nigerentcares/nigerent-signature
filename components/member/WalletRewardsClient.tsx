@@ -147,11 +147,13 @@ function WalletTab({ d }: { d: WalletData }) {
                 <div className="wcs2-v">{formatNGN(d.monthLoaded)}</div>
                 <div className="wcs2-s">this month</div>
               </div>
-              <div className="wcs2">
-                <div className="wcs2-l">Pts earned</div>
-                <div className="wcs2-v">{d.walletPts}</div>
-                <div className="wcs2-s">from loads</div>
-              </div>
+              {d.walletPts > 0 && (
+                <div className="wcs2">
+                  <div className="wcs2-l">Pts earned</div>
+                  <div className="wcs2-v">{d.walletPts}</div>
+                  <div className="wcs2-s">reward pts</div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -169,16 +171,15 @@ function WalletTab({ d }: { d: WalletData }) {
           <div className="wa-lbl-d">Transactions</div>
           <div className="wa-sub-d">View history</div>
         </Link>
-        <div className="wa wa-g" style={{ opacity: .5 }}>
-          <div className="wa-ico wa-ico-d">
+        <Link href="/explore" className="wa wa-g" style={{ textDecoration: 'none' }}>
+          <div className="wa-ico wa-ico-t">
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
-              <rect x="2" y="5" width="20" height="14" rx="2" stroke="#4a5568" strokeWidth="1.5"/>
-              <path d="M2 10h20" stroke="#4a5568" strokeWidth="1.5"/>
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="#1fa3a6" strokeWidth="1.5" strokeLinejoin="round"/>
             </svg>
           </div>
-          <div className="wa-lbl-d">Add Card</div>
-          <div className="wa-sub-d">Coming soon</div>
-        </div>
+          <div className="wa-lbl-d">Explore</div>
+          <div className="wa-sub-d">Member perks</div>
+        </Link>
       </div>
 
       {/* Transaction History */}

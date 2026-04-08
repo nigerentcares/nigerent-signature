@@ -273,27 +273,31 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
         </div>
       </div>
 
-      {/* ── City filter ── */}
-      <div style={{ display: 'flex', gap: 8, padding: '10px 20px 0' }}>
-        {(['All', 'Lagos', 'Abuja'] as const).map(city => (
-          <button
-            key={city}
-            onClick={() => setCityFilter(city)}
-            style={{
-              padding: '6px 16px', borderRadius: 20, fontSize: 11, fontWeight: 700,
-              border: cityFilter === city ? '1px solid var(--teal)' : '1px solid rgba(201,206,214,.1)',
-              background: cityFilter === city ? 'rgba(31,163,166,.1)' : 'rgba(255,255,255,.03)',
-              color: cityFilter === city ? 'var(--teal)' : 'rgba(201,206,214,.4)',
-              cursor: 'pointer', fontFamily: 'Urbanist, sans-serif', transition: 'all .15s',
-            }}
-          >
-            {city === 'All' ? '🌍 All Cities' : city === 'Lagos' ? '🏙️ Lagos' : '🏛️ Abuja'}
-          </button>
-        ))}
+      {/* ── Filters ── */}
+      <div style={{ padding: '14px 20px 0' }}>
+        <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: 'rgba(201,206,214,.3)', marginBottom: 8 }}>Filter by City</div>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 0 }}>
+          {(['All', 'Lagos', 'Abuja'] as const).map(city => (
+            <button
+              key={city}
+              onClick={() => setCityFilter(city)}
+              style={{
+                padding: '6px 16px', borderRadius: 20, fontSize: 11, fontWeight: 700,
+                border: cityFilter === city ? '1px solid var(--teal)' : '1px solid rgba(201,206,214,.1)',
+                background: cityFilter === city ? 'rgba(31,163,166,.1)' : 'rgba(255,255,255,.03)',
+                color: cityFilter === city ? 'var(--teal)' : 'rgba(201,206,214,.4)',
+                cursor: 'pointer', fontFamily: 'Urbanist, sans-serif', transition: 'all .15s',
+              }}
+            >
+              {city === 'All' ? '🌍 All Cities' : city === 'Lagos' ? '🏙️ Lagos' : '🏛️ Abuja'}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* ── Category pills ── */}
       <div className="cats-outer">
+        <span className="cats-label">Filter by Category</span>
         <div className="cats-row">
           {CAT_PILLS.map(p => (
             <div
