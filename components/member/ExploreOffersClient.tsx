@@ -1,12 +1,32 @@
 'use client'
 /**
  * ExploreOffersClient — renders all offer sections with OfferSheet on tap.
- * Owns the search bar and category pills so both filter reactively.
+ * Owns the AI search bar and category pills so both filter reactively.
  */
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useCallback } from 'react'
 import { useRouter }         from 'next/navigation'
 import OfferSheet from './OfferSheet'
+
+// ── AI Search result type ────────────────────────────────────────────────────
+interface AIResult {
+  id:     string
+  type:   'restaurant' | 'offer'
+  reason: string
+  data:   {
+    name?:          string
+    title?:         string
+    cuisine?:       string
+    area?:          string | null
+    city?:          string
+    priceLevel?:    number
+    memberBenefit?: string | null
+    ambianceTags?:  string[]
+    shortDesc?:     string
+    partnerName?:   string
+    category?:      string
+  }
+}
 
 interface Offer {
   id:              string
@@ -201,6 +221,54 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
   const [activeKey, setActiveKey] = useState<string | null>(null)
   const [cityFilter, setCityFilter] = useState<'All' | 'Lagos' | 'Abuja'>('All')
 
+  // AI Search state
+  const [aiQuery,     setAiQuery]     = useState('')
+  const [aiResults,   setAiResults]   = useState<AIResult[]>([])
+  const [aiSearching, setAiSearching] = useState(false)
+  const [aiSearched,  setAiSearched]  = useState(false)
+  const aiInputRef = useRef<HTMLInputElement>(null)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const runAiSearch = useCallback(async (q: string) => {
+    if (!q.trim()) {
+      setAiResults([])
+      setAiSearched(false)
+      return
+    }
+    setAiSearching(true)
+    setAiSearched(true)
+    try {
+      const res = await fetch('/api/explore/ai-search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: q.trim() }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setAiResults(data.results ?? [])
+      }
+    } catch { /* silent */ }
+    finally { setAiSearching(false) }
+  }, [])
+
+  function handleAiInput(val: string) {
+    setAiQuery(val)
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    if (!val.trim()) {
+      setAiResults([])
+      setAiSearched(false)
+      return
+    }
+    debounceRef.current = setTimeout(() => runAiSearch(val), 800)
+  }
+
+  function clearAiSearch() {
+    setAiQuery('')
+    setAiResults([])
+    setAiSearched(false)
+    if (aiInputRef.current) aiInputRef.current.focus()
+  }
+
   // Filter restaurants by search + city
   const filteredRestaurants = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -255,33 +323,195 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
 
   return (
     <>
-      {/* ── Search bar ── */}
-      <div className="srch-outer">
-        <div className="srch-bar" style={{ display: 'flex', alignItems: 'center' }}>
-          <svg width="22" height="22" fill="none" viewBox="0 0 24 24" style={{ flexShrink: 0 }}>
-            <circle cx="11" cy="11" r="8" stroke="#1fa3a6" strokeWidth="2.2"/>
-            <path d="m21 21-4.35-4.35" stroke="#1fa3a6" strokeWidth="2.2" strokeLinecap="round"/>
-          </svg>
+      {/* ── AI Search bar ── */}
+      <div style={{ padding: '0 20px', marginBottom: 4 }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          background: 'rgba(31,163,166,.06)',
+          border: '1.5px solid rgba(31,163,166,.18)',
+          borderRadius: 16, padding: '12px 16px',
+          transition: 'border-color .2s, box-shadow .2s',
+          ...(aiSearching ? { borderColor: 'rgba(31,163,166,.4)', boxShadow: '0 0 0 3px rgba(31,163,166,.08)' } : {}),
+        }}>
+          {aiSearching ? (
+            <div style={{ width: 20, height: 20, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: 16, height: 16, border: '2px solid rgba(31,163,166,.3)', borderTopColor: '#1fa3a6', borderRadius: '50%', animation: 'spin .7s linear infinite' }} />
+            </div>
+          ) : (
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" style={{ flexShrink: 0 }}>
+              <circle cx="11" cy="11" r="8" stroke="#1fa3a6" strokeWidth="2.2"/>
+              <path d="m21 21-4.35-4.35" stroke="#1fa3a6" strokeWidth="2.2" strokeLinecap="round"/>
+            </svg>
+          )}
           <input
-            type="search"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            placeholder="Restaurants, spas, hospitals, experiences…"
+            ref={aiInputRef}
+            type="text"
+            value={aiQuery}
+            onChange={e => handleAiInput(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') { if (debounceRef.current) clearTimeout(debounceRef.current); runAiSearch(aiQuery) } }}
+            placeholder={'Try "date night spot" or "healthy brunch"…'}
             style={{
               flex: 1, background: 'transparent', border: 'none', outline: 'none',
-              color: 'var(--cream)', fontSize: 14, fontFamily: 'Urbanist, sans-serif',
-              padding: '0 10px',
+              color: 'var(--dark)', fontSize: 14, fontFamily: 'Urbanist, sans-serif',
+              padding: 0,
             }}
           />
-          {query && (
+          {aiQuery && (
             <button
-              onClick={() => setQuery('')}
-              style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', padding: '0 4px', fontSize: 18, lineHeight: 1 }}
+              onClick={clearAiSearch}
+              style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', padding: '0 2px', fontSize: 18, lineHeight: 1 }}
               aria-label="Clear"
             >×</button>
           )}
         </div>
+        {!aiSearched && !aiQuery && (
+          <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
+            {['Date night', 'Healthy food', 'Fun with friends', 'Birthday dinner'].map(s => (
+              <button
+                key={s}
+                onClick={() => { setAiQuery(s); runAiSearch(s) }}
+                style={{
+                  padding: '5px 12px', borderRadius: 20, fontSize: 11, fontWeight: 600,
+                  background: 'rgba(31,163,166,.06)', border: '1px solid rgba(31,163,166,.14)',
+                  color: '#1fa3a6', cursor: 'pointer', fontFamily: 'Urbanist, sans-serif',
+                }}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* ── AI Search Results ── */}
+      {aiSearched && (
+        <div style={{ padding: '8px 20px 4px' }}>
+          {aiSearching ? (
+            <div style={{ textAlign: 'center', padding: '32px 20px' }}>
+              <div style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 600 }}>Finding the best matches…</div>
+            </div>
+          ) : aiResults.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '28px 20px' }}>
+              <div style={{ fontSize: 28, marginBottom: 8 }}>🤔</div>
+              <div style={{ fontSize: 14, color: 'var(--dark)', fontWeight: 700, marginBottom: 4 }}>
+                No great matches found
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 14 }}>
+                Try a different search or browse categories below.
+              </div>
+              <button onClick={clearAiSearch} style={{
+                padding: '8px 20px', borderRadius: 12, fontSize: 12, fontWeight: 700,
+                background: 'rgba(31,163,166,.08)', border: '1px solid rgba(31,163,166,.2)',
+                color: '#1fa3a6', cursor: 'pointer', fontFamily: 'Urbanist, sans-serif',
+              }}>Clear search</button>
+            </div>
+          ) : (
+            <>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', letterSpacing: '.5px', textTransform: 'uppercase', marginBottom: 10 }}>
+                Top matches for &ldquo;{aiQuery}&rdquo;
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
+                {aiResults.map((r, i) => {
+                  const isRest = r.type === 'restaurant'
+                  const color = isRest ? '#d4870f' : (CAT_COLOR[r.data.category ?? ''] ?? '#1fa3a6')
+                  const emoji = isRest ? '🍽️' : (CAT_EMOJI[r.data.category ?? ''] ?? '✦')
+
+                  // Find matching offer for sheet
+                  const matchOffer = !isRest ? offers.find(o => o.id === r.id) : null
+
+                  return (
+                    <div
+                      key={r.id}
+                      onClick={() => {
+                        if (isRest) router.push(`/dining/${r.id}`)
+                        else if (matchOffer) setSelected(matchOffer)
+                      }}
+                      style={{
+                        display: 'flex', gap: 12, padding: '14px 14px',
+                        background: 'rgba(255,255,255,.65)',
+                        border: '1px solid rgba(28,28,28,.08)',
+                        borderRadius: 16, cursor: 'pointer',
+                        transition: 'transform .15s, box-shadow .15s',
+                        position: 'relative', overflow: 'hidden',
+                      }}
+                    >
+                      {/* Rank badge */}
+                      <div style={{
+                        position: 'absolute', top: 0, left: 0,
+                        background: i === 0 ? 'rgba(212,175,55,.12)' : 'rgba(28,28,28,.04)',
+                        borderRadius: '16px 0 12px 0', padding: '4px 10px',
+                        fontSize: 9, fontWeight: 800, color: i === 0 ? '#d4af37' : 'var(--muted)',
+                        letterSpacing: '.3px',
+                      }}>
+                        #{i + 1}
+                      </div>
+
+                      {/* Icon */}
+                      <div style={{
+                        width: 48, height: 48, borderRadius: 14, flexShrink: 0,
+                        background: `${color}12`, border: `1px solid ${color}25`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 22, marginTop: 4,
+                      }}>
+                        {emoji}
+                      </div>
+
+                      {/* Content */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 9, fontWeight: 700, color, letterSpacing: '.5px', textTransform: 'uppercase', marginBottom: 2 }}>
+                          {isRest ? `${r.data.cuisine} · ${r.data.area}` : `${r.data.partnerName} · ${r.data.category}`}
+                        </div>
+                        <div style={{ fontSize: 15, fontWeight: 800, color: 'var(--dark)', lineHeight: 1.3, marginBottom: 4 }}>
+                          {isRest ? r.data.name : r.data.title}
+                        </div>
+                        {/* AI match reason */}
+                        <div style={{
+                          fontSize: 12, color: 'rgba(28,28,28,.55)', lineHeight: 1.45,
+                          fontStyle: 'italic',
+                        }}>
+                          {r.reason}
+                        </div>
+                        {/* Tags */}
+                        <div style={{ display: 'flex', gap: 6, marginTop: 6, flexWrap: 'wrap' }}>
+                          {isRest && r.data.priceLevel && (
+                            <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 6, background: `${color}10`, color, border: `1px solid ${color}20` }}>
+                              {'₦'.repeat(r.data.priceLevel)}
+                            </span>
+                          )}
+                          {isRest && r.data.memberBenefit && (
+                            <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 6, background: 'rgba(31,163,166,.08)', color: '#1fa3a6', border: '1px solid rgba(31,163,166,.15)' }}>
+                              {r.data.memberBenefit}
+                            </span>
+                          )}
+                          {!isRest && r.data.shortDesc && (
+                            <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 6, background: `${color}10`, color, border: `1px solid ${color}20`, maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {r.data.shortDesc.length > 50 ? r.data.shortDesc.slice(0, 50) + '…' : r.data.shortDesc}
+                            </span>
+                          )}
+                          <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 6, background: 'rgba(28,28,28,.04)', color: 'var(--muted)', border: '1px solid rgba(28,28,28,.08)' }}>
+                            {isRest ? 'Restaurant' : 'Offer'} →
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+              <button onClick={clearAiSearch} style={{
+                width: '100%', padding: '10px', borderRadius: 12, fontSize: 12, fontWeight: 700,
+                background: 'rgba(28,28,28,.03)', border: '1px solid rgba(28,28,28,.08)',
+                color: 'var(--muted)', cursor: 'pointer', fontFamily: 'Urbanist, sans-serif',
+                marginBottom: 8,
+              }}>
+                Clear search · Browse all
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* ── Below AI search: filters + content (hidden during AI search) ── */}
+      {!aiSearched && <>
 
       {/* ── Filters ── */}
       <div style={{ padding: '14px 20px 0' }}>
@@ -776,6 +1006,9 @@ export default function ExploreOffersClient({ offers, totalPartners, restaurants
           </div>
         </div>
       )}
+
+      </>}
+      {/* end of !aiSearched */}
 
       <div style={{ height: 36 }} />
 
