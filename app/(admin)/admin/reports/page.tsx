@@ -383,7 +383,7 @@ export default async function ReportsPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
           {[
             { label: 'Total Loaded',  value: fmt(Math.floor(d.walletVolume / 100)),  sub: `${d.walletLoads} transactions`,   color: '#1ea86a' },
-            { label: 'Total Spent',   value: fmt(Math.floor(d.walletSpend / 100)),   sub: `${d.walletSpendAgg ?? ''} spend transactions`, color: '#e74c3c' },
+            { label: 'Total Spent',   value: fmt(Math.floor(d.walletSpend / 100)),   sub: `${d.walletSpend} transactions`, color: '#e74c3c' },
             { label: 'Net Balance',   value: fmt(Math.floor((d.walletVolume - d.walletSpend) / 100)), sub: 'Across all members', color: '#1fa3a6' },
           ].map(w => (
             <div key={w.label} style={{ padding: '16px', background: 'rgba(255,255,255,.03)', borderRadius: 12, border: '1px solid rgba(201,206,214,.07)' }}>
