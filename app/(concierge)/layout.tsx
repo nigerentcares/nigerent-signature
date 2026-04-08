@@ -1,10 +1,10 @@
-import { redirect }     from 'next/navigation'
-import { createClient }  from '@/lib/supabase/server'
-import ConciergeNav      from '@/components/concierge/ConciergeNav'
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import ConciergeNav from '@/components/concierge/ConciergeNav'
 
 /**
- * Concierge layout — verifies session server-side and renders the
- * mobile-first dark shell with the bottom navigation bar.
+ * Concierge layout — mobile app shell with bottom nav.
+ * Belt-and-suspenders session check (middleware also guards these routes).
  */
 export default async function ConciergeLayout({
   children,
@@ -16,8 +16,8 @@ export default async function ConciergeLayout({
   if (!user) redirect('/login?reason=session_expired')
 
   return (
-    <div className="con-shell">
-      {children}
+    <div className="con-app">
+      <main className="con-main">{children}</main>
       <ConciergeNav />
     </div>
   )

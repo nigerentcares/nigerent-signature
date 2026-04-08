@@ -1,353 +1,276 @@
 'use client'
+/**
+ * MembersView — searchable member directory with profile sheet.
+ */
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
-// ─── Mock data ────────────────────────────────────────────────────────────────
-
-const MOCK_MEMBERS = [
-  {
-    id: 'm-001',
-    name:          'Adewale Okonkwo',
-    initials:      'AO',
-    email:         'adewale.okonkwo@email.com',
-    phone:         '+234 802 345 6789',
-    tier:          'Signature Elite',
-    joinedDate:    'Jan 2024',
-    totalBookings: 12,
-    walletNgn:     480000,
-    openRequests:  2,
-    notes:         'Prefers suite-level rooms. Frequent business traveller.',
-  },
-  {
-    id: 'm-002',
-    name:          'Chiamaka Obi',
-    initials:      'CO',
-    email:         'chiamaka.obi@email.com',
-    phone:         '+234 803 456 7890',
-    tier:          'Signature Plus',
-    joinedDate:    'Mar 2024',
-    totalBookings: 7,
-    walletNgn:     275000,
-    openRequests:  1,
-    notes:         'Vegan dietary requirement. Allergic to nuts.',
-  },
-  {
-    id: 'm-003',
-    name:          'Babatunde Adeola',
-    initials:      'BA',
-    email:         'babatunde.adeola@email.com',
-    phone:         '+234 805 678 9012',
-    tier:          'Signature Elite',
-    joinedDate:    'Nov 2023',
-    totalBookings: 18,
-    walletNgn:     900000,
-    openRequests:  1,
-    notes:         'CEO. Corporate bookings often require office equipment.',
-  },
-  {
-    id: 'm-004',
-    name:          'Ngozi Adeyemi',
-    initials:      'NA',
-    email:         'ngozi.adeyemi@email.com',
-    phone:         '+234 806 789 0123',
-    tier:          'Signature Plus',
-    joinedDate:    'Apr 2024',
-    totalBookings: 5,
-    walletNgn:     310000,
-    openRequests:  1,
-    notes:         '',
-  },
-  {
-    id: 'm-005',
-    name:          'Emeka Nwosu',
-    initials:      'EN',
-    email:         'emeka.nwosu@email.com',
-    phone:         '+234 807 890 1234',
-    tier:          'Signature',
-    joinedDate:    'Jun 2024',
-    totalBookings: 3,
-    walletNgn:     120000,
-    openRequests:  1,
-    notes:         '',
-  },
-  {
-    id: 'm-006',
-    name:          'Fatima Bello',
-    initials:      'FB',
-    email:         'fatima.bello@email.com',
-    phone:         '+234 808 901 2345',
-    tier:          'Signature',
-    joinedDate:    'Jul 2024',
-    totalBookings: 4,
-    walletNgn:     95000,
-    openRequests:  1,
-    notes:         '',
-  },
-  {
-    id: 'm-007',
-    name:          'Olumide Fashola',
-    initials:      'OF',
-    email:         'olumide.fashola@email.com',
-    phone:         '+234 809 012 3456',
-    tier:          'Signature Elite',
-    joinedDate:    'Sep 2023',
-    totalBookings: 22,
-    walletNgn:     650000,
-    openRequests:  1,
-    notes:         'Long-stay guest. Prefers east-facing rooms.',
-  },
-  {
-    id: 'm-008',
-    name:          'Kola Martins',
-    initials:      'KM',
-    email:         'kola.martins@email.com',
-    phone:         '+234 810 123 4567',
-    tier:          'Signature Plus',
-    joinedDate:    'Feb 2024',
-    totalBookings: 8,
-    walletNgn:     180000,
-    openRequests:  1,
-    notes:         '',
-  },
-  {
-    id: 'm-009',
-    name:          'Amaka Eze',
-    initials:      'AE',
-    email:         'amaka.eze@email.com',
-    phone:         '+234 811 234 5678',
-    tier:          'Signature Plus',
-    joinedDate:    'May 2024',
-    totalBookings: 6,
-    walletNgn:     220000,
-    openRequests:  0,
-    notes:         '',
-  },
-  {
-    id: 'm-010',
-    name:          'Chukwudi Okafor',
-    initials:      'CK',
-    email:         'chukwudi.okafor@email.com',
-    phone:         '+234 812 345 6789',
-    tier:          'Signature',
-    joinedDate:    'Aug 2024',
-    totalBookings: 2,
-    walletNgn:     50000,
-    openRequests:  0,
-    notes:         '',
-  },
-  {
-    id: 'm-011',
-    name:          'Yewande Coker',
-    initials:      'YC',
-    email:         'yewande.coker@email.com',
-    phone:         '+234 813 456 7890',
-    tier:          'Signature Elite',
-    joinedDate:    'Dec 2023',
-    totalBookings: 15,
-    walletNgn:     720000,
-    openRequests:  0,
-    notes:         'Interior designer. Requests premium linens.',
-  },
-  {
-    id: 'm-012',
-    name:          'Tobi Adesanya',
-    initials:      'TA',
-    email:         'tobi.adesanya@email.com',
-    phone:         '+234 814 567 8901',
-    tier:          'Signature Plus',
-    joinedDate:    'Jan 2025',
-    totalBookings: 4,
-    walletNgn:     195000,
-    openRequests:  0,
-    notes:         '',
-  },
-]
-
-const TIER_CLASS: Record<string, string> = {
-  'Signature':       'con-t-sig',
-  'Signature Plus':  'con-t-plus',
-  'Signature Elite': 'con-t-elite',
+type MemberData = {
+  id:             string
+  name:           string
+  email:          string
+  phone:          string
+  city:           string
+  tier:           string
+  activeRequests: number
+  lastMessage:    { body: string; sentAt: string; fromRole: string } | null
+  preferences:    string[]
+  joinedAt:       string
 }
 
-type Filter = 'all' | 'elite' | 'plus' | 'signature'
-type Member = typeof MOCK_MEMBERS[number]
+const TIER_COLOR: Record<string, string> = {
+  'Signature':       '#b8960f',
+  'Signature Plus':  '#1fa3a6',
+  'Signature Elite': '#c8a84b',
+}
 
-// ─── Member detail sheet ──────────────────────────────────────────────────────
+function timeAgo(iso: string) {
+  const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000)
+  if (diff < 60)    return 'just now'
+  if (diff < 3600)  return `${Math.floor(diff / 60)}m ago`
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+}
 
-function MemberSheet({ m, onClose }: { m: Member; onClose: () => void }) {
+function Avatar({ name, size = 40 }: { name: string; size?: number }) {
   return (
-    <>
-      <div className="con-overlay" onClick={onClose} />
-      <div className="con-sheet">
-        <div className="con-sheet-handle" />
-
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 24 }}>
-          <div className="con-av lg">{m.initials}</div>
-          <div style={{ fontSize: 20, fontWeight: 900, color: '#e6ded5', marginTop: 14, marginBottom: 4 }}>{m.name}</div>
-          <span className={`con-tier ${TIER_CLASS[m.tier] ?? 'con-t-sig'}`}>{m.tier}</span>
-        </div>
-
-        <div className="con-info-row">
-          <span className="con-info-k">Email</span>
-          <span className="con-info-v">{m.email}</span>
-        </div>
-        <div className="con-info-row">
-          <span className="con-info-k">Phone</span>
-          <span className="con-info-v">{m.phone}</span>
-        </div>
-        <div className="con-info-row">
-          <span className="con-info-k">Member Since</span>
-          <span className="con-info-v">{m.joinedDate}</span>
-        </div>
-        <div className="con-info-row">
-          <span className="con-info-k">Total Bookings</span>
-          <span className="con-info-v">{m.totalBookings}</span>
-        </div>
-        <div className="con-info-row">
-          <span className="con-info-k">Wallet Balance</span>
-          <span className="con-info-v" style={{ color: '#1fa3a6' }}>
-            ₦{(m.walletNgn / 1000).toFixed(0)}k
-          </span>
-        </div>
-        <div className="con-info-row">
-          <span className="con-info-k">Open Requests</span>
-          <span className="con-info-v" style={{ color: m.openRequests > 0 ? '#f5a623' : '#e6ded5' }}>
-            {m.openRequests}
-          </span>
-        </div>
-        {m.notes && (
-          <div className="con-info-row">
-            <span className="con-info-k">Notes</span>
-            <span className="con-info-v">{m.notes}</span>
-          </div>
-        )}
-
-        <button className="con-sheet-btn outline" style={{ marginTop: 24 }} onClick={onClose}>Close</button>
-      </div>
-    </>
+    <div
+      className="con-av"
+      style={{ width: size, height: size, fontSize: size * 0.38, borderRadius: size * 0.28 }}
+    >
+      {name.charAt(0).toUpperCase()}
+    </div>
   )
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
-
-export default function MembersView() {
-  const [filter,   setFilter]   = useState<Filter>('all')
-  const [search,   setSearch]   = useState('')
-  const [selected, setSelected] = useState<Member | null>(null)
-
-  const visible = MOCK_MEMBERS.filter(m => {
-    if (filter === 'elite'     && m.tier !== 'Signature Elite') return false
-    if (filter === 'plus'      && m.tier !== 'Signature Plus')  return false
-    if (filter === 'signature' && m.tier !== 'Signature')       return false
-    if (search) {
-      const q = search.toLowerCase()
-      return m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q)
-    }
-    return true
-  })
-
-  const stats = {
-    total:  MOCK_MEMBERS.length,
-    elite:  MOCK_MEMBERS.filter(m => m.tier === 'Signature Elite').length,
-    active: MOCK_MEMBERS.filter(m => m.openRequests > 0).length,
-  }
+function MemberSheet({
+  member,
+  onClose,
+  onNewRequest,
+}: {
+  member:         MemberData
+  onClose:        () => void
+  onNewRequest:   () => void
+}) {
+  const tierColor = TIER_COLOR[member.tier] ?? '#d4af37'
 
   return (
-    <div className="con-page">
-      {/* Top bar */}
-      <div className="con-topbar">
-        <div>
-          <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: 3, textTransform: 'uppercase', color: '#1fa3a6', marginBottom: 4 }}>NSL Concierge</div>
-          <div className="con-topbar-title">Members</div>
-          <div className="con-topbar-sub">{MOCK_MEMBERS.length} registered members</div>
+    <div className="con-sheet">
+      {/* Header */}
+      <div className="con-sheet-hdr">
+        <button className="con-sheet-back" onClick={onClose}>
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+            <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+        <div className="con-sheet-title-wrap">
+          <div className="con-sheet-cat">
+            <span className="con-sheet-cat-name">{member.name}</span>
+          </div>
+          <div className="con-sheet-meta">{member.email}</div>
         </div>
+        <span className="con-tier" style={{ background: `${tierColor}18`, color: tierColor }}>
+          {member.tier}
+        </span>
       </div>
 
-      {/* Stats */}
-      <div className="con-stats">
-        <div className="con-stat">
-          <div className="con-stat-n">{stats.total}</div>
-          <div className="con-stat-l">Total</div>
-        </div>
-        <div className="con-stat">
-          <div className="con-stat-n gold">{stats.elite}</div>
-          <div className="con-stat-l">Elite</div>
-        </div>
-        <div className="con-stat">
-          <div className="con-stat-n teal">{stats.active}</div>
-          <div className="con-stat-l">Active Reqs</div>
-        </div>
-      </div>
+      <div className="con-sheet-body">
 
-      {/* Search */}
-      <div className="con-search-wrap">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style={{ color: 'rgba(230,222,213,.25)', flexShrink: 0 }}>
-          <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="1.8"/>
-          <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-        </svg>
-        <input
-          className="con-search"
-          placeholder="Search by name or email…"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-      </div>
+        {/* Profile card */}
+        <div className="con-info-card">
+          <div className="con-member-row" style={{ marginBottom: 16 }}>
+            <Avatar name={member.name} size={52} />
+            <div className="con-member-info">
+              <div className="con-member-name">{member.name}</div>
+              <div className="con-member-email">{member.email}</div>
+              {member.phone && <div className="con-member-email">{member.phone}</div>}
+            </div>
+          </div>
 
-      {/* Filters */}
-      <div className="con-filters">
-        {[
-          { key: 'all',       label: 'All' },
-          { key: 'elite',     label: 'Elite' },
-          { key: 'plus',      label: 'Plus' },
-          { key: 'signature', label: 'Signature' },
-        ].map(f => (
-          <button
-            key={f.key}
-            className={`con-filter ${filter === f.key ? 'active' : ''}`}
-            onClick={() => setFilter(f.key as Filter)}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
+          <div className="con-kv-list">
+            {member.city && (
+              <div className="con-kv">
+                <span className="con-kv-k">City</span>
+                <span className="con-kv-v">{member.city}</span>
+              </div>
+            )}
+            <div className="con-kv">
+              <span className="con-kv-k">Member since</span>
+              <span className="con-kv-v">
+                {new Date(member.joinedAt).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}
+              </span>
+            </div>
+            <div className="con-kv">
+              <span className="con-kv-k">Active requests</span>
+              <span className="con-kv-v" style={{ color: member.activeRequests > 0 ? '#e74c3c' : 'inherit' }}>
+                {member.activeRequests}
+              </span>
+            </div>
+          </div>
+        </div>
 
-      {/* List */}
-      <div className="con-list">
-        {visible.length === 0 && (
-          <div className="con-empty">
-            <div className="con-empty-icon">👥</div>
-            <div className="con-empty-title">No members found</div>
-            <div className="con-empty-sub">Try a different filter or search</div>
+        {/* Preferences */}
+        {member.preferences.length > 0 && (
+          <div className="con-info-card">
+            <div className="con-info-label">Preferences</div>
+            <div className="con-vendor-tags" style={{ marginTop: 0 }}>
+              {member.preferences.map((p, i) => (
+                <span key={i} className="con-vendor-tag">{p}</span>
+              ))}
+            </div>
           </div>
         )}
-        {visible.map(m => (
-          <div key={m.id} className="con-card" onClick={() => setSelected(m)}>
-            <div className="con-card-row">
-              <div className="con-av sm">{m.initials}</div>
-              <div className="con-card-info">
-                <div className="con-card-name">{m.name}</div>
-                <div className="con-card-meta">{m.email}</div>
-              </div>
-              <div className="con-card-right">
-                <span className={`con-tier ${TIER_CLASS[m.tier] ?? 'con-t-sig'}`}>{m.tier}</span>
-                {m.openRequests > 0 && (
-                  <span className="con-badge con-b-received">{m.openRequests} open</span>
-                )}
-              </div>
-            </div>
-            <div className="con-card-foot" style={{ marginTop: 10 }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(230,222,213,.35)' }}>
-                {m.totalBookings} bookings · Since {m.joinedDate}
-              </span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: '#1fa3a6' }}>
-                ₦{(m.walletNgn / 1000).toFixed(0)}k
-              </span>
+
+        {/* Last interaction */}
+        {member.lastMessage && (
+          <div className="con-info-card">
+            <div className="con-info-label">Last Interaction</div>
+            <div className="con-info-desc" style={{ fontSize: 13 }}>"{member.lastMessage.body}{member.lastMessage.body.length >= 60 ? '…' : ''}"</div>
+            <div style={{ fontSize: 10, color: 'rgba(28,28,28,.35)', marginTop: 6 }}>
+              {member.lastMessage.fromRole === 'MEMBER' ? 'From member' : 'From concierge'}
+              {' · '}
+              {timeAgo(member.lastMessage.sentAt)}
             </div>
           </div>
-        ))}
+        )}
+
+        {/* Quick actions */}
+        <div className="con-actions-card">
+          <div className="con-info-label">Quick Actions</div>
+          <div className="con-action-btns">
+            <button className="con-action-btn primary" onClick={onNewRequest}>
+              + New Request
+            </button>
+            {member.phone && (
+              <a href={`tel:${member.phone}`} className="con-action-btn outline">
+                📞 Call Member
+              </a>
+            )}
+            <a href={`mailto:${member.email}`} className="con-action-btn outline">
+              ✉️ Email Member
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function MembersView({ members }: { members: MemberData[] }) {
+  const [search,   setSearch]   = useState('')
+  const [selected, setSelected] = useState<MemberData | null>(null)
+  const router = useRouter()
+
+  const visible = members.filter(m => {
+    if (!search) return true
+    const q = search.toLowerCase()
+    return (
+      m.name.toLowerCase().includes(q)  ||
+      m.email.toLowerCase().includes(q) ||
+      m.city.toLowerCase().includes(q)
+    )
+  })
+
+  // Group by first letter
+  const grouped = visible.reduce<Record<string, MemberData[]>>((acc, m) => {
+    const letter = m.name.charAt(0).toUpperCase()
+    if (!acc[letter]) acc[letter] = []
+    acc[letter].push(m)
+    return acc
+  }, {})
+
+  const sortedLetters = Object.keys(grouped).sort()
+
+  return (
+    <>
+      <div className="con-page">
+
+        {/* Header */}
+        <div className="con-page-hdr">
+          <div>
+            <div className="con-page-title">Members</div>
+            <div className="con-page-sub">{members.length} members</div>
+          </div>
+        </div>
+
+        {/* Search */}
+        <div className="con-search-wrap">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" style={{ color: 'rgba(201,206,214,.35)', flexShrink: 0 }}>
+            <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="1.8"/>
+            <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+          </svg>
+          <input
+            className="con-search"
+            placeholder="Search by name, email, or city…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          {search && <button className="con-search-clear" onClick={() => setSearch('')}>✕</button>}
+        </div>
+
+        {/* Member list */}
+        <div className="con-member-list">
+          {sortedLetters.map(letter => (
+            <div key={letter} className="con-member-group">
+              <div className="con-member-letter">{letter}</div>
+              {grouped[letter].map(m => {
+                const tierColor = TIER_COLOR[m.tier] ?? '#d4af37'
+                return (
+                  <div
+                    key={m.id}
+                    className="con-member-item"
+                    onClick={() => setSelected(m)}
+                  >
+                    <Avatar name={m.name} size={42} />
+                    <div className="con-member-item-info">
+                      <div className="con-member-item-name">{m.name}</div>
+                      <div className="con-member-item-meta">
+                        {m.city && <span>{m.city} · </span>}
+                        {m.lastMessage
+                          ? <span>{timeAgo(m.lastMessage.sentAt)}</span>
+                          : <span>No messages</span>
+                        }
+                      </div>
+                    </div>
+                    <div className="con-member-item-right">
+                      <span className="con-tier" style={{ background: `${tierColor}18`, color: tierColor }}>
+                        {m.tier.replace('Signature ', '').replace('Signature', 'Sig.')}
+                      </span>
+                      {m.activeRequests > 0 && (
+                        <span className="con-req-badge">{m.activeRequests}</span>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          ))}
+
+          {visible.length === 0 && (
+            <div className="con-empty">
+              <div style={{ fontSize: 32, marginBottom: 10 }}>👥</div>
+              <div className="con-empty-title">No members found</div>
+              <div className="con-empty-sub">Try a different search</div>
+            </div>
+          )}
+        </div>
       </div>
 
-      {selected && <MemberSheet m={selected} onClose={() => setSelected(null)} />}
-    </div>
+      {/* Member profile sheet */}
+      {selected && (
+        <div className="con-sheet-overlay">
+          <MemberSheet
+            member={selected}
+            onClose={() => setSelected(null)}
+            onNewRequest={() => {
+              setSelected(null)
+              router.push('/concierge')
+            }}
+          />
+        </div>
+      )}
+    </>
   )
 }
