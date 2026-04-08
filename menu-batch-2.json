@@ -1,0 +1,338 @@
+[
+  {
+    "restaurantName": "Gaby Lagos",
+    "openingHours": {
+      "monday": {"open": "12:00", "close": "22:00"},
+      "tuesday": {"open": "12:00", "close": "22:00"},
+      "wednesday": {"open": "12:00", "close": "22:00"},
+      "thursday": {"open": "12:00", "close": "22:00"},
+      "friday": {"open": "12:00", "close": "23:00"},
+      "saturday": {"open": "12:00", "close": "23:00"},
+      "sunday": {"open": "12:00", "close": "21:00"}
+    },
+    "menuItems": [
+      {"category": "Starters", "name": "Crispy Calamari with Garlic Aioli", "description": "Tender calamari rings fried to perfection with house-made garlic aioli", "priceNaira": 8500, "displayOrder": 1},
+      {"category": "Starters", "name": "Mediterranean Mezze Platter", "description": "Hummus, baba ganoush, feta cheese, olives, and fresh pita bread", "priceNaira": 9500, "displayOrder": 2},
+      {"category": "Starters", "name": "Pan-Seared Scallops", "description": "Fresh scallops with lemon butter sauce and microgreens", "priceNaira": 10500, "displayOrder": 3},
+      {"category": "Mains", "name": "Grilled Branzino with Herbs", "description": "Fresh Mediterranean sea bass grilled with lemon, rosemary, and olive oil", "priceNaira": 12500, "displayOrder": 4},
+      {"category": "Mains", "name": "Spaghetti Frutti di Mare", "description": "Fresh prawns, mussels, and calamari in a light white wine sauce", "priceNaira": 11500, "displayOrder": 5},
+      {"category": "Mains", "name": "Nigerian Jollof Risotto", "description": "Creamy risotto with tomato, pepper, and local spices", "priceNaira": 10000, "displayOrder": 6},
+      {"category": "Mains", "name": "Lamb Shank with Root Vegetables", "description": "Slow-cooked lamb with seasonal vegetables and thyme jus", "priceNaira": 13000, "displayOrder": 7},
+      {"category": "Salads", "name": "Burrata & Heirloom Tomato Salad", "description": "Creamy burrata cheese with fresh tomatoes, basil, and aged balsamic", "priceNaira": 8500, "displayOrder": 8},
+      {"category": "Salads", "name": "Grilled Chicken Caesar Salad", "description": "Grilled free-range chicken with romaine, parmesan, and house-made dressing", "priceNaira": 9000, "displayOrder": 9},
+      {"category": "Sides", "name": "Sweet Potato & Egg White", "description": "Nigerian breakfast special with spiced egg white sauce", "priceNaira": 5500, "displayOrder": 10},
+      {"category": "Sides", "name": "Garlic & Rosemary Focaccia", "description": "Warm house-baked focaccia bread with infused olive oil", "priceNaira": 3500, "displayOrder": 11},
+      {"category": "Beverages", "name": "House Mocktail", "description": "Fresh fruit, herbs, and artisanal syrups", "priceNaira": 5500, "displayOrder": 12},
+      {"category": "Desserts", "name": "Tiramisu", "description": "Classic Italian tiramisu with mascarpone and espresso", "priceNaira": 6500, "displayOrder": 13},
+      {"category": "Desserts", "name": "Chocolate Mousse", "description": "Rich dark chocolate mousse with fresh berries", "priceNaira": 6000, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "Hard Rock Cafe Lagos",
+    "openingHours": {
+      "monday": {"open": "11:00", "close": "23:00"},
+      "tuesday": {"open": "11:00", "close": "23:00"},
+      "wednesday": {"open": "11:00", "close": "23:00"},
+      "thursday": {"open": "11:00", "close": "23:00"},
+      "friday": {"open": "11:00", "close": "00:30"},
+      "saturday": {"open": "11:00", "close": "00:30"},
+      "sunday": {"open": "11:00", "close": "22:00"}
+    },
+    "menuItems": [
+      {"category": "Burgers", "name": "The Legendary Burger", "description": "Half-pound beef patty with aged cheddar, lettuce, tomato, and special sauce", "priceNaira": 9500, "displayOrder": 1},
+      {"category": "Burgers", "name": "Smokehouse BBQ Burger", "description": "Beef patty with bacon, BBQ sauce, crispy onions, and cheddar", "priceNaira": 10000, "displayOrder": 2},
+      {"category": "Sandwiches", "name": "Grilled Chicken Sandwich", "description": "Marinated grilled chicken breast with fresh lettuce, tomato, and ranch", "priceNaira": 8500, "displayOrder": 3},
+      {"category": "Sandwiches", "name": "Classic Philly Cheesesteak", "description": "Sliced beef, sauteed peppers, onions, and melted provolone", "priceNaira": 9000, "displayOrder": 4},
+      {"category": "Salads", "name": "Grilled Chicken Caesar Salad", "description": "Grilled chicken, romaine lettuce, parmesan, and house-made Caesar dressing", "priceNaira": 8000, "displayOrder": 5},
+      {"category": "Salads", "name": "Garden Fresh Salad", "description": "Mixed greens, vegetables, cherry tomatoes, and choice of dressing", "priceNaira": 6500, "displayOrder": 6},
+      {"category": "Mains", "name": "Twisted Mac & Cheese", "description": "Creamy pasta with three-cheese blend and crispy breadcrumb topping", "priceNaira": 7500, "displayOrder": 7},
+      {"category": "Mains", "name": "Smokehouse BBQ Combo", "description": "BBQ ribs, pulled pork, sausage, with coleslaw and baked beans", "priceNaira": 11500, "displayOrder": 8},
+      {"category": "Sides", "name": "Fries", "description": "Hand-cut fries with sea salt", "priceNaira": 3500, "displayOrder": 9},
+      {"category": "Sides", "name": "Onion Rings", "description": "Golden fried onion rings", "priceNaira": 4000, "displayOrder": 10},
+      {"category": "Sides", "name": "Coleslaw", "description": "Fresh cabbage slaw with creamy dressing", "priceNaira": 3000, "displayOrder": 11},
+      {"category": "Desserts", "name": "New York Cheesecake", "description": "Classic cheesecake with caramel and chocolate sauce, toffee-almond garnish", "priceNaira": 6500, "displayOrder": 12},
+      {"category": "Desserts", "name": "Brownies with Ice Cream", "description": "Warm chocolate brownies served with vanilla ice cream", "priceNaira": 5500, "displayOrder": 13},
+      {"category": "Beverages", "name": "Handcrafted Cocktail", "description": "Selection of signature Hard Rock cocktails", "priceNaira": 7500, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "HSE Gourmet",
+    "openingHours": {
+      "monday": {"open": "10:00", "close": "22:00"},
+      "tuesday": {"open": "10:00", "close": "22:00"},
+      "wednesday": {"open": "10:00", "close": "22:00"},
+      "thursday": {"open": "10:00", "close": "22:00"},
+      "friday": {"open": "10:00", "close": "23:00"},
+      "saturday": {"open": "10:00", "close": "23:00"},
+      "sunday": {"open": "12:00", "close": "22:00"}
+    },
+    "menuItems": [
+      {"category": "Breakfast", "name": "Avocado Toast with Poached Eggs", "description": "Multigrain toast with smashed avocado, poached eggs, and chili flakes", "priceNaira": 4500, "displayOrder": 1},
+      {"category": "Breakfast", "name": "Fluffy Pancakes with Berries", "description": "Stack of pancakes with fresh berries and maple syrup", "priceNaira": 4000, "displayOrder": 2},
+      {"category": "Comfort Food", "name": "Lobster Mac and Cheese", "description": "Creamy pasta with chunks of lobster and sharp cheddar", "priceNaira": 5500, "displayOrder": 3},
+      {"category": "Comfort Food", "name": "Oxtail Chili Fries", "description": "Crispy fries topped with spiced oxtail chili and melted cheese", "priceNaira": 4800, "displayOrder": 4},
+      {"category": "Comfort Food", "name": "Pork Chops with Apple Compote", "description": "Pan-seared pork chops with apple compote and sage butter", "priceNaira": 5000, "displayOrder": 5},
+      {"category": "Pasta", "name": "Seafood Linguine", "description": "Fresh linguine with prawns, mussels, garlic, and white wine sauce", "priceNaira": 5200, "displayOrder": 6},
+      {"category": "Pasta", "name": "Penne Pesto", "description": "Penne pasta with fresh basil pesto, cherry tomatoes, and parmesan", "priceNaira": 4500, "displayOrder": 7},
+      {"category": "Salads", "name": "Grilled Chicken Salad", "description": "Mixed greens with grilled chicken, avocado, and balsamic vinaigrette", "priceNaira": 4200, "displayOrder": 8},
+      {"category": "Sandwiches", "name": "Crispy Fried Chicken Sandwich", "description": "Fried chicken breast with slaw, pickles, and special sauce on brioche", "priceNaira": 4000, "displayOrder": 9},
+      {"category": "Sides", "name": "Parmesan Fries", "description": "Truffle-style fries with parmesan and fresh rosemary", "priceNaira": 3500, "displayOrder": 10},
+      {"category": "Sides", "name": "Steamed Vegetables", "description": "Seasonal vegetables with herb butter", "priceNaira": 2500, "displayOrder": 11},
+      {"category": "Desserts", "name": "Chocolate Lava Cake", "description": "Warm chocolate cake with molten center and ice cream", "priceNaira": 3500, "displayOrder": 12},
+      {"category": "Beverages", "name": "Fresh Juice", "description": "Freshly squeezed orange, carrot, or mixed fruit juice", "priceNaira": 2000, "displayOrder": 13},
+      {"category": "Beverages", "name": "Iced Coffee", "description": "Cold brew coffee with milk and ice", "priceNaira": 2500, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "Kapadocya",
+    "openingHours": {
+      "monday": {"open": "11:00", "close": "23:00"},
+      "tuesday": {"open": "11:00", "close": "23:00"},
+      "wednesday": {"open": "11:00", "close": "23:00"},
+      "thursday": {"open": "11:00", "close": "23:00"},
+      "friday": {"open": "11:00", "close": "00:00"},
+      "saturday": {"open": "11:00", "close": "00:00"},
+      "sunday": {"open": "12:00", "close": "23:00"}
+    },
+    "menuItems": [
+      {"category": "Mezze", "name": "Hummus with Pita", "description": "Creamy chickpea dip with tahini, lemon, and warm pita bread", "priceNaira": 5500, "displayOrder": 1},
+      {"category": "Mezze", "name": "Baba Ganoush", "description": "Roasted eggplant dip with tahini and served with vegetables", "priceNaira": 5000, "displayOrder": 2},
+      {"category": "Mezze", "name": "Mixed Meze Platter", "description": "Selection of hummus, baba ganoush, falafel, olives, and cheeses", "priceNaira": 9000, "displayOrder": 3},
+      {"category": "Kebabs", "name": "Lamb Shish Kebab", "description": "Grilled lamb chunks with peppers, onions, and tomatoes", "priceNaira": 10000, "displayOrder": 4},
+      {"category": "Kebabs", "name": "Chicken Doner Kebab", "description": "Seasoned chicken with yogurt sauce and wrapped in pita", "priceNaira": 7500, "displayOrder": 5},
+      {"category": "Kebabs", "name": "Mixed Grill Kebab Platter", "description": "Selection of lamb, chicken, and beef kebabs with rice", "priceNaira": 11000, "displayOrder": 6},
+      {"category": "Main Courses", "name": "Turkish Lamb Shank", "description": "Slow-cooked lamb shank with spices, served with rice and vegetables", "priceNaira": 10500, "displayOrder": 7},
+      {"category": "Main Courses", "name": "Seafood Pasta", "description": "Fresh pasta with shrimp, calamari, and Mediterranean sauce", "priceNaira": 9500, "displayOrder": 8},
+      {"category": "Main Courses", "name": "Nigerian Jollof Rice with Stew", "description": "Aromatic jollof rice served with turkey and pepper stew", "priceNaira": 6500, "displayOrder": 9},
+      {"category": "Salads", "name": "Turkish Salad", "description": "Tomatoes, cucumbers, onions, and parsley with lemon dressing", "priceNaira": 5500, "displayOrder": 10},
+      {"category": "Breads", "name": "Turkish Flatbread", "description": "Warm pita or lavash bread with herbs", "priceNaira": 2500, "displayOrder": 11},
+      {"category": "Desserts", "name": "Baklava", "description": "Crispy pastry with honey and pistachios", "priceNaira": 4500, "displayOrder": 12},
+      {"category": "Desserts", "name": "Turkish Delight", "description": "Soft confectionery with rose water and pistachios", "priceNaira": 3500, "displayOrder": 13},
+      {"category": "Beverages", "name": "Turkish Coffee", "description": "Traditional Turkish coffee with cardamom", "priceNaira": 3000, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "La Veranda",
+    "openingHours": {
+      "monday": {"open": "12:00", "close": "23:00"},
+      "tuesday": {"open": "12:00", "close": "23:00"},
+      "wednesday": {"open": "12:00", "close": "23:00"},
+      "thursday": {"open": "12:00", "close": "23:00"},
+      "friday": {"open": "12:00", "close": "00:00"},
+      "saturday": {"open": "12:00", "close": "00:00"},
+      "sunday": {"open": "12:00", "close": "22:00"}
+    },
+    "menuItems": [
+      {"category": "Starters", "name": "Burrata and Heirloom Tomato", "description": "Fresh burrata cheese with seasonal tomatoes and basil oil", "priceNaira": 12000, "displayOrder": 1},
+      {"category": "Starters", "name": "Carpaccio di Manzo", "description": "Thin-sliced beef with capers, lemon, and parmesan", "priceNaira": 13000, "displayOrder": 2},
+      {"category": "Starters", "name": "Grilled Octopus", "description": "Tender octopus with lemon, olive oil, and Mediterranean herbs", "priceNaira": 12500, "displayOrder": 3},
+      {"category": "Pizza", "name": "Margherita Pizza", "description": "Classic pizza with tomato, mozzarella, basil, and olive oil", "priceNaira": 11000, "displayOrder": 4},
+      {"category": "Pizza", "name": "Prosciutto and Arugula Pizza", "description": "Thin crust with prosciutto, fresh arugula, and shaved parmesan", "priceNaira": 12500, "displayOrder": 5},
+      {"category": "Pasta", "name": "Spaghetti Frutti di Mare", "description": "Fresh pasta with prawns, mussels, calamari, and white wine sauce", "priceNaira": 16000, "displayOrder": 6},
+      {"category": "Pasta", "name": "Pappardelle with Wild Boar Ragù", "description": "Wide ribbon pasta with slow-cooked wild boar sauce", "priceNaira": 15500, "displayOrder": 7},
+      {"category": "Pasta", "name": "Risotto ai Funghi Porcini", "description": "Creamy risotto with porcini mushrooms and truffle", "priceNaira": 14000, "displayOrder": 8},
+      {"category": "Main Courses", "name": "Branzino al Forno", "description": "Whole roasted Mediterranean sea bass with lemon and herbs", "priceNaira": 17000, "displayOrder": 9},
+      {"category": "Main Courses", "name": "Osso Buco alla Milanese", "description": "Braised veal shank with risotto milanese and gremolata", "priceNaira": 18000, "displayOrder": 10},
+      {"category": "Main Courses", "name": "Grilled Lamb Chops", "description": "Herb-marinated lamb chops with seasonal vegetables", "priceNaira": 16500, "displayOrder": 11},
+      {"category": "Salads", "name": "Insalata di Rucola", "description": "Peppery arugula with aged balsamic, parmesan, and walnuts", "priceNaira": 10000, "displayOrder": 12},
+      {"category": "Desserts", "name": "Panna Cotta", "description": "Silky cream dessert with berry compote", "priceNaira": 7500, "displayOrder": 13},
+      {"category": "Desserts", "name": "Tiramisu Classico", "description": "Traditional Italian tiramisu with mascarpone and espresso", "priceNaira": 8000, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "Mama Cass",
+    "openingHours": {
+      "monday": {"open": "10:00", "close": "22:00"},
+      "tuesday": {"open": "10:00", "close": "22:00"},
+      "wednesday": {"open": "10:00", "close": "22:00"},
+      "thursday": {"open": "10:00", "close": "22:00"},
+      "friday": {"open": "10:00", "close": "23:00"},
+      "saturday": {"open": "10:00", "close": "23:00"},
+      "sunday": {"open": "11:00", "close": "21:00"}
+    },
+    "menuItems": [
+      {"category": "Local Favorites", "name": "Ofada Rice with Turkey", "description": "Aromatic local rice with spiced turkey stew and vegetables", "priceNaira": 3500, "displayOrder": 1},
+      {"category": "Local Favorites", "name": "Moinmoin and Pap", "description": "Steamed bean pudding served with corn pap breakfast", "priceNaira": 2500, "displayOrder": 2},
+      {"category": "Local Favorites", "name": "Jollof Rice with Stew", "description": "Savory tomato rice with meat or chicken stew", "priceNaira": 3000, "displayOrder": 3},
+      {"category": "Local Favorites", "name": "Egusi Soup with Pounded Yam", "description": "Melon seed soup with fresh meats, served with yam fufu", "priceNaira": 3200, "displayOrder": 4},
+      {"category": "Local Favorites", "name": "Pepper Soup (Assorted Meat)", "description": "Spicy broth with beef, tripe, and pepper", "priceNaira": 2800, "displayOrder": 5},
+      {"category": "Proteins", "name": "Grilled Fish", "description": "Fresh grilled fish with lemon and herbs", "priceNaira": 3500, "displayOrder": 6},
+      {"category": "Proteins", "name": "Fried Chicken", "description": "Crispy fried chicken pieces", "priceNaira": 2500, "displayOrder": 7},
+      {"category": "Side Dishes", "name": "Coleslaw", "description": "Fresh cabbage slaw", "priceNaira": 1500, "displayOrder": 8},
+      {"category": "Side Dishes", "name": "Plantain Chips", "description": "Crispy fried plantain slices", "priceNaira": 1800, "displayOrder": 9},
+      {"category": "Side Dishes", "name": "Garri and Soup", "description": "Cassava flour pudding with any choice of soup", "priceNaira": 2200, "displayOrder": 10},
+      {"category": "Bakery", "name": "Fresh Bread", "description": "Baked daily from oven-fresh pastries", "priceNaira": 1000, "displayOrder": 11},
+      {"category": "Beverages", "name": "Fresh Lemonade", "description": "Homemade lemonade with fresh lemons", "priceNaira": 1500, "displayOrder": 12},
+      {"category": "Beverages", "name": "Zobo Drink", "description": "Traditional hibiscus drink", "priceNaira": 1200, "displayOrder": 13},
+      {"category": "Desserts", "name": "Chin Chin", "description": "Crispy fried snack with spices", "priceNaira": 1500, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "Marble Restaurant",
+    "openingHours": {
+      "monday": {"open": "19:00", "close": "23:00"},
+      "tuesday": {"open": "19:00", "close": "23:00"},
+      "wednesday": {"open": "19:00", "close": "23:00"},
+      "thursday": {"open": "19:00", "close": "23:00"},
+      "friday": {"open": "19:00", "close": "00:00"},
+      "saturday": {"open": "19:00", "close": "00:00"},
+      "sunday": "closed"
+    },
+    "menuItems": [
+      {"category": "Amuse Bouche", "name": "Seasonal Tasting Bites", "description": "Chef's selection of petit fours and appetizer samples", "priceNaira": 12000, "displayOrder": 1},
+      {"category": "Starters", "name": "Foie Gras Terrine", "description": "Pan-seared foie gras with brioche and fig compote", "priceNaira": 18000, "displayOrder": 2},
+      {"category": "Starters", "name": "Oyster and Caviar", "description": "Fresh oyster with beluga caviar and champagne foam", "priceNaira": 22000, "displayOrder": 3},
+      {"category": "Starters", "name": "Langoustine Bisque", "description": "Creamy bisque with fresh langoustine and truffle oil", "priceNaira": 16000, "displayOrder": 4},
+      {"category": "Fish Course", "name": "Dover Sole Meunière", "description": "Whole Dover sole with brown butter and capers", "priceNaira": 28000, "displayOrder": 5},
+      {"category": "Fish Course", "name": "Grilled Turbot with Beurre Blanc", "description": "Premium turbot with classical French butter sauce", "priceNaira": 26000, "displayOrder": 6},
+      {"category": "Meat Course", "name": "Japanese Wagyu A5 Steak", "description": "Premium marbled beef with seasonal vegetables and red wine jus", "priceNaira": 35000, "displayOrder": 7},
+      {"category": "Meat Course", "name": "Pan-Seared Duck Breast", "description": "Perfectly cooked duck breast with cherry gastrique and foie gras", "priceNaira": 22000, "displayOrder": 8},
+      {"category": "Meat Course", "name": "Beef Wellington", "description": "Tender beef fillet with mushroom duxelles and pastry", "priceNaira": 28000, "displayOrder": 9},
+      {"category": "Meat Course", "name": "Lamb Cutlets with Herb Crust", "description": "Rosemary and thyme crusted lamb with artichoke and potato", "priceNaira": 24000, "displayOrder": 10},
+      {"category": "Cheese Course", "name": "European Cheese Selection", "description": "Curated selection of aged cheeses with crackers and preserves", "priceNaira": 12000, "displayOrder": 11},
+      {"category": "Desserts", "name": "Grand Marnier Soufflé", "description": "Classically prepared soufflé with orange liqueur", "priceNaira": 10000, "displayOrder": 12},
+      {"category": "Desserts", "name": "Chocolate Sphere with Liquid Center", "description": "Modern presentation with premium dark chocolate", "priceNaira": 9500, "displayOrder": 13},
+      {"category": "Desserts", "name": "Crème Brûlée with Gold Leaf", "description": "Silky vanilla cream with caramelized sugar and gold garnish", "priceNaira": 9000, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "Mezzanine Lagos",
+    "openingHours": {
+      "monday": {"open": "17:00", "close": "23:00"},
+      "tuesday": {"open": "17:00", "close": "23:00"},
+      "wednesday": {"open": "17:00", "close": "23:00"},
+      "thursday": {"open": "17:00", "close": "23:00"},
+      "friday": {"open": "17:00", "close": "00:00"},
+      "saturday": {"open": "17:00", "close": "00:00"},
+      "sunday": {"open": "17:00", "close": "22:00"}
+    },
+    "menuItems": [
+      {"category": "Mezzas", "name": "Hummus Trio", "description": "Classic hummus, roasted red pepper hummus, and spiced chickpea dip", "priceNaira": 10500, "displayOrder": 1},
+      {"category": "Mezzas", "name": "Baba Ganoush", "description": "Roasted eggplant with tahini, lemon, and pomegranate molasses", "priceNaira": 10000, "displayOrder": 2},
+      {"category": "Mezzas", "name": "Mixed Mezze Platter", "description": "Selection of hummus, baba ganoush, falafel, tabbouleh, and cheeses", "priceNaira": 15500, "displayOrder": 3},
+      {"category": "Hot Mezzas", "name": "Falafel", "description": "Crispy chickpea fritters with tahini sauce", "priceNaira": 8500, "displayOrder": 4},
+      {"category": "Hot Mezzas", "name": "Halloumi Cheese Salatah", "description": "Grilled halloumi cheese with roasted vegetables", "priceNaira": 11000, "displayOrder": 5},
+      {"category": "Main Courses", "name": "Lamb Kebab", "description": "Grilled lamb skewers with rice and grilled vegetables", "priceNaira": 14500, "displayOrder": 6},
+      {"category": "Main Courses", "name": "Chicken Shawarma", "description": "Marinated chicken with tahini sauce and fresh vegetables", "priceNaira": 11500, "displayOrder": 7},
+      {"category": "Main Courses", "name": "Seafood Mezze Platter", "description": "Grilled seafood with lemon, herbs, and roasted vegetables", "priceNaira": 16000, "displayOrder": 8},
+      {"category": "Main Courses", "name": "Kibbeh", "description": "Spiced ground lamb and bulgur wheat with yogurt", "priceNaira": 12000, "displayOrder": 9},
+      {"category": "Salads", "name": "Tabbouleh Salad", "description": "Bulgur, parsley, tomato, and lemon dressing", "priceNaira": 9000, "displayOrder": 10},
+      {"category": "Breads", "name": "Warm Pita with Zaatar", "description": "Fresh pita bread with zaatar spice blend and olive oil", "priceNaira": 4500, "displayOrder": 11},
+      {"category": "Desserts", "name": "Baklava", "description": "Crispy phyllo with honey and pistachios", "priceNaira": 6000, "displayOrder": 12},
+      {"category": "Desserts", "name": "Kunafa", "description": "Shredded pastry with cream and honey", "priceNaira": 6500, "displayOrder": 13},
+      {"category": "Beverages", "name": "Lebanese Wine Selection", "description": "Curated Lebanese wines by the glass or bottle", "priceNaira": 8000, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "Nkoyo",
+    "openingHours": {
+      "monday": {"open": "19:00", "close": "23:00"},
+      "tuesday": {"open": "19:00", "close": "23:00"},
+      "wednesday": {"open": "19:00", "close": "23:00"},
+      "thursday": {"open": "19:00", "close": "23:00"},
+      "friday": {"open": "19:00", "close": "00:00"},
+      "saturday": {"open": "19:00", "close": "00:00"},
+      "sunday": "closed"
+    },
+    "menuItems": [
+      {"category": "Starters", "name": "Plantain Chips with Pepper Dip", "description": "Crispy plantain chips served with spiced pepper and herb dip", "priceNaira": 11500, "displayOrder": 1},
+      {"category": "Starters", "name": "Ceviche of Snapper with Yuzu", "description": "Fresh snapper cured in citrus with Nigerian spices", "priceNaira": 13500, "displayOrder": 2},
+      {"category": "Starters", "name": "Smoked Catfish Pâté", "description": "Smoked catfish with cream and bread", "priceNaira": 12000, "displayOrder": 3},
+      {"category": "Starters", "name": "Okra and Prawn Tempura", "description": "Crispy fried okra and prawns with spicy mayo", "priceNaira": 12500, "displayOrder": 4},
+      {"category": "Soup Course", "name": "Peppery Seafood Soup", "description": "Rich broth with assorted seafood and traditional spices", "priceNaira": 10000, "displayOrder": 5},
+      {"category": "Main Courses", "name": "Braised Beef in Red Palm Oil", "description": "Slow-cooked beef with red palm oil, spices, and vegetables", "priceNaira": 24000, "displayOrder": 6},
+      {"category": "Main Courses", "name": "Grilled Barramundi with Jollof Risotto", "description": "Pan-seared fish with fusion risotto and fresh herbs", "priceNaira": 22000, "displayOrder": 7},
+      {"category": "Main Courses", "name": "Guinea Fowl with Mashed Yam", "description": "Roasted guinea fowl with creamy mashed yam and thyme jus", "priceNaira": 21000, "displayOrder": 8},
+      {"category": "Main Courses", "name": "Lamb Leg with Efo Riro", "description": "Roasted lamb leg with classic spinach and vegetable sauce", "priceNaira": 23000, "displayOrder": 9},
+      {"category": "Main Courses", "name": "Shrimp in Suya Spice", "description": "Grilled shrimp with traditional suya seasoning and vegetables", "priceNaira": 20000, "displayOrder": 10},
+      {"category": "Sides", "name": "Creamed Corn and Okra", "description": "Fresh corn and okra in light cream sauce", "priceNaira": 6500, "displayOrder": 11},
+      {"category": "Desserts", "name": "Coconut Panna Cotta", "description": "Silky coconut cream with passion fruit sauce", "priceNaira": 9000, "displayOrder": 12},
+      {"category": "Desserts", "name": "Chocolate Terrine with Mango", "description": "Dark chocolate with mango coulis and gold leaf", "priceNaira": 9500, "displayOrder": 13},
+      {"category": "Desserts", "name": "Plantain Crème Brûlée", "description": "Plantain-infused cream with caramelized sugar", "priceNaira": 9000, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "Hilt Restaurant",
+    "openingHours": {
+      "monday": {"open": "12:00", "close": "23:00"},
+      "tuesday": {"open": "12:00", "close": "23:00"},
+      "wednesday": {"open": "12:00", "close": "23:00"},
+      "thursday": {"open": "12:00", "close": "23:00"},
+      "friday": {"open": "12:00", "close": "00:00"},
+      "saturday": {"open": "12:00", "close": "00:00"},
+      "sunday": {"open": "12:00", "close": "22:00"}
+    },
+    "menuItems": [
+      {"category": "Starters", "name": "Escargot with Herb Butter", "description": "Classic French snails with parsley and garlic butter", "priceNaira": 13000, "displayOrder": 1},
+      {"category": "Starters", "name": "Crab Bisque", "description": "Creamy crab soup with fresh herbs and brandy", "priceNaira": 12500, "displayOrder": 2},
+      {"category": "Starters", "name": "Beef Carpaccio", "description": "Thin-sliced raw beef with capers, lemon, and truffle oil", "priceNaira": 14000, "displayOrder": 3},
+      {"category": "Starters", "name": "Pan-Seared Scallops", "description": "Fresh scallops with lemon beurre blanc", "priceNaira": 13500, "displayOrder": 4},
+      {"category": "Fish Courses", "name": "Sole Meunière", "description": "Delicate sole with brown butter and capers", "priceNaira": 19000, "displayOrder": 5},
+      {"category": "Fish Courses", "name": "Salmon en Papillote", "description": "Salmon baked in parchment with vegetables and herbs", "priceNaira": 17500, "displayOrder": 6},
+      {"category": "Meat Courses", "name": "Filet Mignon with Béarnaise", "description": "Premium beef tenderloin with classical béarnaise sauce", "priceNaira": 26000, "displayOrder": 7},
+      {"category": "Meat Courses", "name": "Coq au Vin", "description": "Classic French braised chicken with red wine", "priceNaira": 18000, "displayOrder": 8},
+      {"category": "Meat Courses", "name": "Veal Piccata", "description": "Thinly pounded veal with lemon and capers", "priceNaira": 19500, "displayOrder": 9},
+      {"category": "Pasta", "name": "Truffle Pasta Carbonara", "description": "Fresh pasta with truffle, egg, and parmesan", "priceNaira": 16500, "displayOrder": 10},
+      {"category": "Vegetables", "name": "Asparagus with Hollandaise", "description": "Fresh asparagus with classic hollandaise sauce", "priceNaira": 8500, "displayOrder": 11},
+      {"category": "Desserts", "name": "Crème Brûlée", "description": "Vanilla cream with caramelized sugar crust", "priceNaira": 7500, "displayOrder": 12},
+      {"category": "Desserts", "name": "Soufflé Grand Marnier", "description": "Light orange liqueur soufflé", "priceNaira": 8000, "displayOrder": 13},
+      {"category": "Desserts", "name": "Chocolate Mousse", "description": "Rich dark chocolate mousse with fresh berries", "priceNaira": 7000, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "Il Padrino",
+    "openingHours": {
+      "monday": {"open": "12:00", "close": "23:00"},
+      "tuesday": {"open": "12:00", "close": "23:00"},
+      "wednesday": {"open": "12:00", "close": "23:00"},
+      "thursday": {"open": "12:00", "close": "23:00"},
+      "friday": {"open": "12:00", "close": "00:00"},
+      "saturday": {"open": "12:00", "close": "00:00"},
+      "sunday": {"open": "12:00", "close": "22:00"}
+    },
+    "menuItems": [
+      {"category": "Antipasti", "name": "Burrata with Heirloom Tomatoes", "description": "Fresh burrata cheese with seasonal tomatoes and basil", "priceNaira": 11000, "displayOrder": 1},
+      {"category": "Antipasti", "name": "Prosciutto and Melon", "description": "Italian cured ham with sweet melon", "priceNaira": 10500, "displayOrder": 2},
+      {"category": "Antipasti", "name": "Calamari Fritti", "description": "Crispy fried squid with lemon and marinara sauce", "priceNaira": 10000, "displayOrder": 3},
+      {"category": "Pizza", "name": "Margherita Pizza", "description": "Classic tomato, mozzarella, basil, and olive oil", "priceNaira": 9500, "displayOrder": 4},
+      {"category": "Pizza", "name": "Quattro Formaggi", "description": "Four cheese pizza with gorgonzola, ricotta, mozzarella, and provolone", "priceNaira": 11000, "displayOrder": 5},
+      {"category": "Pizza", "name": "Prosciutto and Arugula Pizza", "description": "Pizza topped with prosciutto, arugula, and parmesan", "priceNaira": 11500, "displayOrder": 6},
+      {"category": "Pasta", "name": "Spaghetti Carbonara", "description": "Classic pasta with eggs, guanciale, and pecorino cheese", "priceNaira": 10500, "displayOrder": 7},
+      {"category": "Pasta", "name": "Pappardelle alla Bolognese", "description": "Wide ribbon pasta with slow-cooked beef ragu", "priceNaira": 11500, "displayOrder": 8},
+      {"category": "Pasta", "name": "Risotto ai Funghi", "description": "Creamy risotto with mushrooms and truffle", "priceNaira": 11000, "displayOrder": 9},
+      {"category": "Main Courses", "name": "Grilled Branzino", "description": "Whole Mediterranean sea bass with lemon and herbs", "priceNaira": 15500, "displayOrder": 10},
+      {"category": "Main Courses", "name": "Osso Buco", "description": "Braised veal shank with risotto milanese", "priceNaira": 16500, "displayOrder": 11},
+      {"category": "Salads", "name": "Insalata di Rucola", "description": "Peppery arugula with aged balsamic and parmesan", "priceNaira": 8500, "displayOrder": 12},
+      {"category": "Desserts", "name": "Panna Cotta", "description": "Silky cream dessert with berry compote", "priceNaira": 6500, "displayOrder": 13},
+      {"category": "Desserts", "name": "Tiramisu", "description": "Classic Italian tiramisu with mascarpone and espresso", "priceNaira": 7000, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "Ìtàn Test Kitchen",
+    "openingHours": {
+      "monday": {"open": "18:00", "close": "22:00"},
+      "tuesday": {"open": "18:00", "close": "22:00"},
+      "wednesday": {"open": "18:00", "close": "22:00"},
+      "thursday": {"open": "18:00", "close": "22:00"},
+      "friday": {"open": "18:00", "close": "23:00"},
+      "saturday": {"open": "18:00", "close": "23:00"},
+      "sunday": "closed"
+    },
+    "menuItems": [
+      {"category": "Tasting Menu Course 1", "name": "Amala Dumplings with Shrimp", "description": "Innovative yam flour dumplings with spiced shrimp and traditional sauce", "priceNaira": 15000, "displayOrder": 1},
+      {"category": "Tasting Menu Course 2", "name": "Garri Chips with Suya Spice", "description": "Cassava flour reimagined as crispy chips with traditional suya seasoning", "priceNaira": 14000, "displayOrder": 2},
+      {"category": "Tasting Menu Course 3", "name": "Okra Silk with Locust Bean", "description": "Delicate okra preparation with fermented locust bean essence", "priceNaira": 13000, "displayOrder": 3},
+      {"category": "Tasting Menu Course 4", "name": "Braised Beef in Iru Jus", "description": "Slow-cooked beef with traditional fermented locust bean sauce", "priceNaira": 16000, "displayOrder": 4},
+      {"category": "Tasting Menu Course 5", "name": "Guinea Fowl with Efo Nero", "description": "Roasted guinea fowl with dark leafy greens and traditional spices", "priceNaira": 16500, "displayOrder": 5},
+      {"category": "Tasting Menu Course 6", "name": "Seafood in Pepper Broth", "description": "Fresh seafood in aromatic peppery broth with traditional herbs", "priceNaira": 15500, "displayOrder": 6},
+      {"category": "Tasting Menu Course 7", "name": "Palm Oil Risotto", "description": "Creamy risotto infused with red palm oil and spices", "priceNaira": 13500, "displayOrder": 7},
+      {"category": "Tasting Menu Course 8", "name": "Snail with Ginger and Lemongrass", "description": "Tender snail prepared with ginger and aromatic lemongrass", "priceNaira": 14500, "displayOrder": 8},
+      {"category": "Tasting Menu Course 9", "name": "Smoked Fish Fillet", "description": "Cold smoked fish with micro greens and citrus", "priceNaira": 13000, "displayOrder": 9},
+      {"category": "Tasting Menu Course 10", "name": "Bitter Leaf and Coconut", "description": "Bitter leaf prepared with coconut and spices", "priceNaira": 12500, "displayOrder": 10},
+      {"category": "Dessert Course 1", "name": "Plantain Caramel Mousse", "description": "Light mousse infused with roasted plantain and caramel", "priceNaira": 8500, "displayOrder": 11},
+      {"category": "Dessert Course 2", "name": "Cashew and Honey Tart", "description": "Delicate pastry with roasted cashew and local honey", "priceNaira": 9000, "displayOrder": 12},
+      {"category": "Dessert Course 3", "name": "Ginger Panna Cotta", "description": "Silky cream with fresh ginger and local spices", "priceNaira": 8000, "displayOrder": 13},
+      {"category": "Beverages", "name": "Curated Wine Pairing", "description": "Selection of wines paired with tasting menu courses", "priceNaira": 35000, "displayOrder": 14}
+    ]
+  }
+]

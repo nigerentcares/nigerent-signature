@@ -1,0 +1,371 @@
+[
+  {
+    "restaurantName": "Spice Route",
+    "location": "Victoria Island, Lagos",
+    "priceLevel": 3,
+    "openingHours": {
+      "monday": {"open": "12:00", "close": "22:00"},
+      "tuesday": {"open": "12:00", "close": "22:00"},
+      "wednesday": {"open": "12:00", "close": "22:00"},
+      "thursday": {"open": "12:00", "close": "22:00"},
+      "friday": {"open": "12:00", "close": "23:00"},
+      "saturday": {"open": "12:00", "close": "23:00"},
+      "sunday": {"open": "12:00", "close": "21:00"}
+    },
+    "menuItems": [
+      {"category": "Starters", "name": "Samosa Trio", "description": "Crispy pastry with spiced potato and pea filling", "priceNaira": 6500, "displayOrder": 1},
+      {"category": "Starters", "name": "Paneer Tikka", "description": "Marinated cottage cheese grilled with capsicum and onions", "priceNaira": 8500, "displayOrder": 2},
+      {"category": "Starters", "name": "Tandoori Chicken Wings", "description": "Spiced chicken wings cooked in tandoor clay oven", "priceNaira": 7500, "displayOrder": 3},
+      {"category": "Starters", "name": "Seekh Kebab", "description": "Minced meat and spice kebab grilled to perfection", "priceNaira": 8000, "displayOrder": 4},
+      {"category": "Soups", "name": "Tom Yum Soup", "description": "Thai-inspired spicy soup with shrimp and mushrooms", "priceNaira": 7000, "displayOrder": 5},
+      {"category": "Mains", "name": "Lamb Biryani", "description": "Fragrant basmati rice cooked with tender lamb pieces", "priceNaira": 18500, "displayOrder": 6},
+      {"category": "Mains", "name": "Butter Chicken", "description": "Tender chicken in creamy tomato sauce with fenugreek", "priceNaira": 16500, "displayOrder": 7},
+      {"category": "Mains", "name": "Palak Paneer", "description": "Cottage cheese in spinach-based creamy sauce", "priceNaira": 15000, "displayOrder": 8},
+      {"category": "Mains", "name": "Fish Curry", "description": "Fresh fish in coconut curry sauce with aromatic spices", "priceNaira": 17500, "displayOrder": 9},
+      {"category": "Mains", "name": "Tandoori Chicken", "description": "Half chicken marinated and cooked in clay oven", "priceNaira": 16000, "displayOrder": 10},
+      {"category": "Sides", "name": "Naan Bread", "description": "Traditional Indian flatbread baked in tandoor", "priceNaira": 3500, "displayOrder": 11},
+      {"category": "Sides", "name": "Basmati Rice", "description": "Aromatic Indian rice preparation", "priceNaira": 4000, "displayOrder": 12},
+      {"category": "Desserts", "name": "Gulab Jamun", "description": "Milk solids in sugar syrup with cardamom", "priceNaira": 6000, "displayOrder": 13},
+      {"category": "Desserts", "name": "Mango Lassi", "description": "Chilled yogurt-based drink with mango puree", "priceNaira": 5500, "displayOrder": 14},
+      {"category": "Drinks", "name": "Masala Chai", "description": "Traditional spiced tea", "priceNaira": 2500, "displayOrder": 15},
+      {"category": "Drinks", "name": "Indian Mocktail", "description": "House blend of mango, cardamom, and ginger", "priceNaira": 6000, "displayOrder": 16}
+    ]
+  },
+  {
+    "restaurantName": "Stories Lagos",
+    "location": "Lekki, Lagos",
+    "priceLevel": 2,
+    "openingHours": {
+      "monday": {"open": "17:00", "close": "02:00"},
+      "tuesday": {"open": "17:00", "close": "02:00"},
+      "wednesday": {"open": "17:00", "close": "02:00"},
+      "thursday": {"open": "17:00", "close": "03:00"},
+      "friday": {"open": "17:00", "close": "04:00"},
+      "saturday": {"open": "15:00", "close": "04:00"},
+      "sunday": {"open": "15:00", "close": "02:00"}
+    },
+    "menuItems": [
+      {"category": "Appetizers", "name": "Chicken Wings", "description": "Crispy wings with house spice blend", "priceNaira": 6500, "displayOrder": 1},
+      {"category": "Appetizers", "name": "Shrimp Skewers", "description": "Grilled shrimp with roasted peppers", "priceNaira": 8000, "displayOrder": 2},
+      {"category": "Appetizers", "name": "Cheese Platter", "description": "Selection of local and imported cheeses", "priceNaira": 9500, "displayOrder": 3},
+      {"category": "Mains", "name": "Grilled Fish", "description": "Fresh catch with herb butter and vegetables", "priceNaira": 14000, "displayOrder": 4},
+      {"category": "Mains", "name": "Jollof Rice Bowl", "description": "Aromatic rice with seasoned protein", "priceNaira": 10500, "displayOrder": 5},
+      {"category": "Mains", "name": "Pepper Steak", "description": "Tender beef steak with peppercorn sauce", "priceNaira": 15000, "displayOrder": 6},
+      {"category": "Salads", "name": "House Salad", "description": "Mixed greens with house vinaigrette", "priceNaira": 7000, "displayOrder": 7},
+      {"category": "Salads", "name": "Watermelon Feta Salad", "description": "Refreshing watermelon with feta cheese", "priceNaira": 8500, "displayOrder": 8},
+      {"category": "Cocktails", "name": "Spiced Mojito", "description": "White rum with mint, lime, and house spice", "priceNaira": 11000, "displayOrder": 9},
+      {"category": "Cocktails", "name": "Shisha Infusion", "description": "Vodka-based cocktail with fruity notes", "priceNaira": 12000, "displayOrder": 10},
+      {"category": "Cocktails", "name": "Lagos Sunset", "description": "Orange, passion fruit, and rum blend", "priceNaira": 10500, "displayOrder": 11},
+      {"category": "Cocktails", "name": "Ginger Bliss", "description": "Spiced ginger cocktail with whiskey", "priceNaira": 11500, "displayOrder": 12},
+      {"category": "Desserts", "name": "Chocolate Mousse", "description": "Rich dark chocolate with whipped cream", "priceNaira": 6500, "displayOrder": 13},
+      {"category": "Desserts", "name": "Cheesecake", "description": "New York style cheesecake with berry compote", "priceNaira": 7000, "displayOrder": 14},
+      {"category": "Drinks", "name": "Fresh Juice", "description": "Daily seasonal fruit juice", "priceNaira": 5500, "displayOrder": 15}
+    ]
+  },
+  {
+    "restaurantName": "TAJ Restaurant",
+    "location": "Victoria Island, Lagos",
+    "priceLevel": 2,
+    "openingHours": {
+      "monday": {"open": "18:00", "close": "23:00"},
+      "tuesday": {"open": "18:00", "close": "23:00"},
+      "wednesday": {"open": "18:00", "close": "23:00"},
+      "thursday": {"open": "18:00", "close": "00:00"},
+      "friday": {"open": "18:00", "close": "01:00"},
+      "saturday": {"open": "17:00", "close": "01:00"},
+      "sunday": {"open": "17:00", "close": "23:00"}
+    },
+    "menuItems": [
+      {"category": "Starters", "name": "Beef Puff Puff", "description": "Fried dough with minced beef filling", "priceNaira": 5500, "displayOrder": 1},
+      {"category": "Starters", "name": "Spring Rolls", "description": "Crispy rolls with mixed vegetables", "priceNaira": 6000, "displayOrder": 2},
+      {"category": "Starters", "name": "Suya Skewers", "description": "Grilled meat with signature suya spice", "priceNaira": 7500, "displayOrder": 3},
+      {"category": "Mains", "name": "Egusi Soup", "description": "Melon seed soup with choice of protein", "priceNaira": 11000, "displayOrder": 4},
+      {"category": "Mains", "name": "Pepper Soup", "description": "Spicy broth with meat and root vegetables", "priceNaira": 9500, "displayOrder": 5},
+      {"category": "Mains", "name": "Fried Rice Combo", "description": "Fried rice with chicken, shrimp, and vegetables", "priceNaira": 10500, "displayOrder": 6},
+      {"category": "Mains", "name": "Jollof Rice with Stew", "description": "Signature jollof with tomato-based stew", "priceNaira": 9000, "displayOrder": 7},
+      {"category": "Mains", "name": "Grilled Tilapia", "description": "Whole fish grilled with lemon and herbs", "priceNaira": 12500, "displayOrder": 8},
+      {"category": "Sides", "name": "Plantain Chips", "description": "Crispy fried plantain slices", "priceNaira": 4500, "displayOrder": 9},
+      {"category": "Sides", "name": "Coleslaw", "description": "Fresh cabbage slaw with house dressing", "priceNaira": 3500, "displayOrder": 10},
+      {"category": "Drinks", "name": "Zobo Drink", "description": "Traditional hibiscus flower drink", "priceNaira": 3000, "displayOrder": 11},
+      {"category": "Drinks", "name": "Palm Wine", "description": "Traditional fermented palm drink", "priceNaira": 4000, "displayOrder": 12},
+      {"category": "Drinks", "name": "Ginger Beer", "description": "Homemade ginger beer with spice", "priceNaira": 3500, "displayOrder": 13},
+      {"category": "Desserts", "name": "Coconut Pudding", "description": "Creamy coconut dessert", "priceNaira": 5500, "displayOrder": 14},
+      {"category": "Desserts", "name": "Fruit Salad", "description": "Mixed seasonal fruits with honey", "priceNaira": 6000, "displayOrder": 15}
+    ]
+  },
+  {
+    "restaurantName": "Tapa Loca",
+    "location": "Lekki Phase 1, Lagos",
+    "priceLevel": 2,
+    "openingHours": {
+      "monday": {"open": "12:00", "close": "22:00"},
+      "tuesday": {"open": "12:00", "close": "22:00"},
+      "wednesday": {"open": "12:00", "close": "22:00"},
+      "thursday": {"open": "12:00", "close": "23:00"},
+      "friday": {"open": "12:00", "close": "23:00"},
+      "saturday": {"open": "11:00", "close": "23:00"},
+      "sunday": {"open": "11:00", "close": "22:00"}
+    },
+    "menuItems": [
+      {"category": "Tapas", "name": "Patatas Bravas", "description": "Crispy potatoes with spicy tomato sauce", "priceNaira": 5500, "displayOrder": 1},
+      {"category": "Tapas", "name": "Jamón Ibérico", "description": "Iberian ham with fresh bread", "priceNaira": 9000, "displayOrder": 2},
+      {"category": "Tapas", "name": "Gambas Al Ajillo", "description": "Shrimp in garlic and oil sauce", "priceNaira": 8500, "displayOrder": 3},
+      {"category": "Tapas", "name": "Croquetas de Jamón", "description": "Ham croquettes with creamy center", "priceNaira": 7000, "displayOrder": 4},
+      {"category": "Tapas", "name": "Pulpo a la Gallega", "description": "Octopus with paprika and olive oil", "priceNaira": 9500, "displayOrder": 5},
+      {"category": "Tapas", "name": "Mozzarella Sticks", "description": "Fried mozzarella with marinara sauce", "priceNaira": 6500, "displayOrder": 6},
+      {"category": "Mains", "name": "Paella Valenciana", "description": "Traditional Spanish rice with seafood", "priceNaira": 15000, "displayOrder": 7},
+      {"category": "Mains", "name": "Chorizo Cazuela", "description": "Spanish sausage in tomato sauce", "priceNaira": 10500, "displayOrder": 8},
+      {"category": "Salads", "name": "Spanish Green Salad", "description": "Mixed greens with Spanish vinaigrette", "priceNaira": 7500, "displayOrder": 9},
+      {"category": "Drinks", "name": "Sangria Blanca", "description": "White wine sangria with fruits", "priceNaira": 12000, "displayOrder": 10},
+      {"category": "Drinks", "name": "Sangria Roja", "description": "Red wine sangria with citrus", "priceNaira": 12000, "displayOrder": 11},
+      {"category": "Drinks", "name": "Spanish Lemonade", "description": "Fresh lemon drink with mint", "priceNaira": 5000, "displayOrder": 12},
+      {"category": "Desserts", "name": "Flan", "description": "Spanish caramel custard", "priceNaira": 6500, "displayOrder": 13},
+      {"category": "Desserts", "name": "Churros with Chocolate", "description": "Fried dough pastries with hot chocolate", "priceNaira": 7500, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "Terra Kulture Restaurant",
+    "location": "Victoria Island, Lagos",
+    "priceLevel": 2,
+    "openingHours": {
+      "monday": {"open": "12:00", "close": "22:00"},
+      "tuesday": {"open": "12:00", "close": "22:00"},
+      "wednesday": {"open": "12:00", "close": "22:00"},
+      "thursday": {"open": "12:00", "close": "22:00"},
+      "friday": {"open": "12:00", "close": "23:00"},
+      "saturday": {"open": "11:00", "close": "23:00"},
+      "sunday": {"open": "11:00", "close": "21:00"}
+    },
+    "menuItems": [
+      {"category": "Starters", "name": "Meat Pie", "description": "Savory pastry with seasoned minced meat", "priceNaira": 5000, "displayOrder": 1},
+      {"category": "Starters", "name": "Chin Chin", "description": "Crispy fried snack", "priceNaira": 4500, "displayOrder": 2},
+      {"category": "Starters", "name": "Pepper Shrimp", "description": "Shrimp in spicy pepper sauce", "priceNaira": 8500, "displayOrder": 3},
+      {"category": "Soups", "name": "Bitter Leaf Soup", "description": "Traditional soup with bitter leaf and palm oil", "priceNaira": 9500, "displayOrder": 4},
+      {"category": "Soups", "name": "Okra Soup", "description": "Creamy okra soup with fish and meat", "priceNaira": 8500, "displayOrder": 5},
+      {"category": "Mains", "name": "Jollof Rice with Chicken", "description": "Signature jollof with grilled chicken", "priceNaira": 10000, "displayOrder": 6},
+      {"category": "Mains", "name": "Fufu with Egusi", "description": "Pounded yam with melon seed soup", "priceNaira": 10500, "displayOrder": 7},
+      {"category": "Mains", "name": "Afang Soup", "description": "Green leaf soup with meat", "priceNaira": 11000, "displayOrder": 8},
+      {"category": "Mains", "name": "Grilled Fish", "description": "Fresh fish with plantain and salad", "priceNaira": 12500, "displayOrder": 9},
+      {"category": "Sides", "name": "Garri and Egusi", "description": "Cassava granules with melon seed soup", "priceNaira": 6500, "displayOrder": 10},
+      {"category": "Salads", "name": "Green Salad", "description": "Mixed greens with house dressing", "priceNaira": 6000, "displayOrder": 11},
+      {"category": "Desserts", "name": "Puff Puff with Sugar", "description": "Sweet fried dough balls", "priceNaira": 4500, "displayOrder": 12},
+      {"category": "Drinks", "name": "Zobo", "description": "Hibiscus flower drink", "priceNaira": 3000, "displayOrder": 13},
+      {"category": "Drinks", "name": "Fresh Orange Juice", "description": "Freshly squeezed orange juice", "priceNaira": 4500, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "The Blue Velvet",
+    "location": "Victoria Island, Lagos",
+    "priceLevel": 4,
+    "openingHours": {
+      "monday": {"open": "18:00", "close": "23:00"},
+      "tuesday": {"open": "18:00", "close": "23:00"},
+      "wednesday": {"open": "18:00", "close": "23:00"},
+      "thursday": {"open": "18:00", "close": "23:30"},
+      "friday": {"open": "18:00", "close": "00:00"},
+      "saturday": {"open": "17:00", "close": "00:00"},
+      "sunday": {"open": "17:00", "close": "22:00"}
+    },
+    "menuItems": [
+      {"category": "Starters", "name": "Oysters Rockefeller", "description": "Fresh oysters with herb butter", "priceNaira": 15000, "displayOrder": 1},
+      {"category": "Starters", "name": "Foie Gras Terrine", "description": "Duck liver with brioche toast", "priceNaira": 18000, "displayOrder": 2},
+      {"category": "Starters", "name": "Lobster Bisque", "description": "Creamy lobster soup with brandy", "priceNaira": 14000, "displayOrder": 3},
+      {"category": "Starters", "name": "Beef Carpaccio", "description": "Thinly sliced raw beef with capers", "priceNaira": 16500, "displayOrder": 4},
+      {"category": "Mains", "name": "Wagyu Beef Steak", "description": "Premium Japanese beef with truffle sauce", "priceNaira": 55000, "displayOrder": 5},
+      {"category": "Mains", "name": "Lobster Thermidor", "description": "Whole lobster with brandy cream sauce", "priceNaira": 48000, "displayOrder": 6},
+      {"category": "Mains", "name": "Dover Sole Meuniere", "description": "Whole flatfish with lemon butter", "priceNaira": 42000, "displayOrder": 7},
+      {"category": "Mains", "name": "Duck Confit", "description": "Slow-cooked duck leg with cherry gastrique", "priceNaira": 38000, "displayOrder": 8},
+      {"category": "Mains", "name": "Venison Wellington", "description": "Venison loin in mushroom duxelle", "priceNaira": 45000, "displayOrder": 9},
+      {"category": "Sides", "name": "Truffle Mac and Cheese", "description": "Creamy pasta with black truffle", "priceNaira": 18000, "displayOrder": 10},
+      {"category": "Sides", "name": "Roasted Bone Marrow", "description": "Beef marrow bones with herbs", "priceNaira": 16000, "displayOrder": 11},
+      {"category": "Desserts", "name": "Grand Marnier Soufflé", "description": "Hot chocolate soufflé with liqueur", "priceNaira": 14000, "displayOrder": 12},
+      {"category": "Desserts", "name": "Champagne Panna Cotta", "description": "Silky panna cotta with champagne foam", "priceNaira": 13000, "displayOrder": 13},
+      {"category": "Drinks", "name": "Vintage Champagne", "description": "Premium champagne by glass", "priceNaira": 25000, "displayOrder": 14},
+      {"category": "Drinks", "name": "Fine Wine Selection", "description": "Curated wine list from around the world", "priceNaira": 20000, "displayOrder": 15}
+    ]
+  },
+  {
+    "restaurantName": "The Jazzhole Cafe",
+    "location": "Ikoyi, Lagos",
+    "priceLevel": 1,
+    "openingHours": {
+      "monday": {"open": "09:00", "close": "20:00"},
+      "tuesday": {"open": "09:00", "close": "20:00"},
+      "wednesday": {"open": "09:00", "close": "20:00"},
+      "thursday": {"open": "09:00", "close": "22:00"},
+      "friday": {"open": "09:00", "close": "22:00"},
+      "saturday": {"open": "10:00", "close": "22:00"},
+      "sunday": {"open": "10:00", "close": "20:00"}
+    },
+    "menuItems": [
+      {"category": "Breakfast", "name": "Toast and Jam", "description": "Fresh bread with butter and jam", "priceNaira": 2500, "displayOrder": 1},
+      {"category": "Breakfast", "name": "Boiled Eggs", "description": "Eggs with toast", "priceNaira": 2000, "displayOrder": 2},
+      {"category": "Breakfast", "name": "Porridge", "description": "Oat porridge with honey", "priceNaira": 3000, "displayOrder": 3},
+      {"category": "Breakfast", "name": "Pancakes", "description": "Fluffy pancakes with syrup", "priceNaira": 4500, "displayOrder": 4},
+      {"category": "Light Meals", "name": "Akamu and Soup", "description": "Corn pudding with soup", "priceNaira": 3500, "displayOrder": 5},
+      {"category": "Light Meals", "name": "Sandwich", "description": "Grilled sandwich with choice of filling", "priceNaira": 4000, "displayOrder": 6},
+      {"category": "Light Meals", "name": "Pasta", "description": "Simple pasta with sauce", "priceNaira": 5000, "displayOrder": 7},
+      {"category": "Light Meals", "name": "Rice and Beans", "description": "Simple beans and rice", "priceNaira": 4500, "displayOrder": 8},
+      {"category": "Beverages", "name": "Coffee", "description": "Freshly brewed coffee", "priceNaira": 3000, "displayOrder": 9},
+      {"category": "Beverages", "name": "Tea", "description": "Hot or iced tea", "priceNaira": 2500, "displayOrder": 10},
+      {"category": "Beverages", "name": "Fresh Juice", "description": "Orange, mango, or watermelon juice", "priceNaira": 4000, "displayOrder": 11},
+      {"category": "Beverages", "name": "Smoothie", "description": "Fruit smoothie blend", "priceNaira": 5000, "displayOrder": 12},
+      {"category": "Snacks", "name": "Muffin", "description": "Baked muffin with butter", "priceNaira": 3500, "displayOrder": 13},
+      {"category": "Snacks", "name": "Cookies", "description": "Homemade cookies", "priceNaira": 2500, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "The Orchid Bistro",
+    "location": "Ikoyi, Lagos",
+    "priceLevel": 3,
+    "openingHours": {
+      "monday": {"open": "12:00", "close": "22:00"},
+      "tuesday": {"open": "12:00", "close": "22:00"},
+      "wednesday": {"open": "12:00", "close": "22:00"},
+      "thursday": {"open": "12:00", "close": "23:00"},
+      "friday": {"open": "12:00", "close": "23:00"},
+      "saturday": {"open": "11:00", "close": "23:00"},
+      "sunday": {"open": "11:00", "close": "21:00"}
+    },
+    "menuItems": [
+      {"category": "Starters", "name": "Dumplings", "description": "Steamed or fried dumplings with dipping sauce", "priceNaira": 8500, "displayOrder": 1},
+      {"category": "Starters", "name": "Spring Rolls", "description": "Crispy rolls with vegetable filling", "priceNaira": 7500, "displayOrder": 2},
+      {"category": "Starters", "name": "Edamame", "description": "Steamed soybean pods with salt", "priceNaira": 6500, "displayOrder": 3},
+      {"category": "Soups", "name": "Miso Soup", "description": "Traditional soybean soup with tofu", "priceNaira": 8000, "displayOrder": 4},
+      {"category": "Soups", "name": "Tom Kha Gai", "description": "Thai coconut soup with chicken", "priceNaira": 9500, "displayOrder": 5},
+      {"category": "Mains", "name": "Pad Thai", "description": "Stir-fried noodles with shrimp and peanuts", "priceNaira": 14000, "displayOrder": 6},
+      {"category": "Mains", "name": "Teriyaki Salmon", "description": "Glazed salmon fillet with vegetables", "priceNaira": 17000, "displayOrder": 7},
+      {"category": "Mains", "name": "Green Curry", "description": "Thai curry with vegetables and protein", "priceNaira": 15000, "displayOrder": 8},
+      {"category": "Mains", "name": "Peking Duck", "description": "Roasted duck with plum sauce", "priceNaira": 16500, "displayOrder": 9},
+      {"category": "Mains", "name": "Beef Satay", "description": "Grilled beef skewers with peanut sauce", "priceNaira": 15500, "displayOrder": 10},
+      {"category": "Sides", "name": "Sticky Rice", "description": "Glutinous rice", "priceNaira": 4500, "displayOrder": 11},
+      {"category": "Sides", "name": "Vegetable Stir Fry", "description": "Mixed vegetables in wok", "priceNaira": 7000, "displayOrder": 12},
+      {"category": "Desserts", "name": "Mango Sticky Rice", "description": "Mango with sticky rice and coconut cream", "priceNaira": 8500, "displayOrder": 13},
+      {"category": "Drinks", "name": "Thai Iced Tea", "description": "Sweet iced tea with condensed milk", "priceNaira": 5500, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "The Southern Sun",
+    "location": "Ikoyi, Lagos",
+    "priceLevel": 3,
+    "openingHours": {
+      "monday": {"open": "12:00", "close": "22:00"},
+      "tuesday": {"open": "12:00", "close": "22:00"},
+      "wednesday": {"open": "12:00", "close": "22:00"},
+      "thursday": {"open": "12:00", "close": "23:00"},
+      "friday": {"open": "12:00", "close": "23:00"},
+      "saturday": {"open": "11:00", "close": "23:00"},
+      "sunday": {"open": "11:00", "close": "22:00"}
+    },
+    "menuItems": [
+      {"category": "Buffet - Proteins", "name": "Grilled Chicken", "description": "Seasoned grilled chicken", "priceNaira": 0, "displayOrder": 1},
+      {"category": "Buffet - Proteins", "name": "Beef Stew", "description": "Slow-cooked beef in tomato sauce", "priceNaira": 0, "displayOrder": 2},
+      {"category": "Buffet - Proteins", "name": "Fish Fillet", "description": "Pan-seared fish with lemon", "priceNaira": 0, "displayOrder": 3},
+      {"category": "Buffet - Proteins", "name": "Lamb Chops", "description": "Grilled lamb chops", "priceNaira": 0, "displayOrder": 4},
+      {"category": "Buffet - Sides", "name": "Roasted Vegetables", "description": "Mixed vegetables with herbs", "priceNaira": 0, "displayOrder": 5},
+      {"category": "Buffet - Sides", "name": "Mashed Potatoes", "description": "Creamy mashed potatoes", "priceNaira": 0, "displayOrder": 6},
+      {"category": "Buffet - Sides", "name": "Jollof Rice", "description": "Aromatic jollof rice", "priceNaira": 0, "displayOrder": 7},
+      {"category": "Buffet - Sides", "name": "Mac and Cheese", "description": "Creamy pasta with cheese", "priceNaira": 0, "displayOrder": 8},
+      {"category": "Buffet - Salads", "name": "Green Salad", "description": "Mixed green salad", "priceNaira": 0, "displayOrder": 9},
+      {"category": "Buffet - Salads", "name": "Coleslaw", "description": "Fresh cabbage slaw", "priceNaira": 0, "displayOrder": 10},
+      {"category": "Buffet Lunch", "name": "Lunch Buffet (Mon-Fri)", "description": "All you can eat buffet", "priceNaira": 18500, "displayOrder": 11},
+      {"category": "Buffet Dinner", "name": "Dinner Buffet (Daily)", "description": "All you can eat dinner buffet", "priceNaira": 22000, "displayOrder": 12},
+      {"category": "Drinks", "name": "Soft Drinks", "description": "Various soft beverages", "priceNaira": 3500, "displayOrder": 13},
+      {"category": "Desserts", "name": "Dessert Station", "description": "Assorted desserts", "priceNaira": 0, "displayOrder": 14}
+    ]
+  },
+  {
+    "restaurantName": "The Wheatbaker Restaurant",
+    "location": "Ikoyi, Lagos",
+    "priceLevel": 3,
+    "openingHours": {
+      "monday": {"open": "12:00", "close": "22:00"},
+      "tuesday": {"open": "12:00", "close": "22:00"},
+      "wednesday": {"open": "12:00", "close": "22:00"},
+      "thursday": {"open": "12:00", "close": "23:00"},
+      "friday": {"open": "12:00", "close": "23:00"},
+      "saturday": {"open": "10:00", "close": "23:00"},
+      "sunday": {"open": "10:00", "close": "22:00"}
+    },
+    "menuItems": [
+      {"category": "Breakfast", "name": "Continental Breakfast", "description": "Pastries, cereals, fruit, and juice", "priceNaira": 9500, "displayOrder": 1},
+      {"category": "Breakfast", "name": "Eggs Benedict", "description": "Poached eggs with hollandaise sauce", "priceNaira": 8500, "displayOrder": 2},
+      {"category": "Starters", "name": "Prawn Cocktail", "description": "Fresh shrimp in cocktail sauce", "priceNaira": 10000, "displayOrder": 3},
+      {"category": "Starters", "name": "Stuffed Mushroom", "description": "Baked mushroom with herb filling", "priceNaira": 8500, "displayOrder": 4},
+      {"category": "Soups", "name": "French Onion Soup", "description": "Caramelized onion with cheese crust", "priceNaira": 9000, "displayOrder": 5},
+      {"category": "Mains", "name": "Chicken Piccata", "description": "Chicken in lemon caper sauce", "priceNaira": 14500, "displayOrder": 6},
+      {"category": "Mains", "name": "Beef Stroganoff", "description": "Tender beef in creamy mushroom sauce", "priceNaira": 16000, "displayOrder": 7},
+      {"category": "Mains", "name": "Pan-Seared Fish", "description": "Fresh daily catch with seasonal vegetables", "priceNaira": 15500, "displayOrder": 8},
+      {"category": "Mains", "name": "Jollof Chicken", "description": "Chicken with signature jollof rice", "priceNaira": 13000, "displayOrder": 9},
+      {"category": "Sides", "name": "Garlic Bread", "description": "Fresh bread with garlic butter", "priceNaira": 4500, "displayOrder": 10},
+      {"category": "Sides", "name": "Roasted Vegetables", "description": "Seasonal vegetables with herbs", "priceNaira": 6500, "displayOrder": 11},
+      {"category": "Salads", "name": "Caesar Salad", "description": "Romaine with parmesan and croutons", "priceNaira": 9000, "displayOrder": 12},
+      {"category": "Desserts", "name": "Tiramisu", "description": "Italian dessert with mascarpone", "priceNaira": 8000, "displayOrder": 13},
+      {"category": "Desserts", "name": "Chocolate Cake", "description": "Rich chocolate layer cake", "priceNaira": 7500, "displayOrder": 14},
+      {"category": "Drinks", "name": "House Wine", "description": "Selection of red and white wines", "priceNaira": 15000, "displayOrder": 15}
+    ]
+  },
+  {
+    "restaurantName": "Whitestones Lagos",
+    "location": "Victoria Island, Lagos",
+    "priceLevel": 4,
+    "openingHours": {
+      "monday": {"open": "18:00", "close": "23:00"},
+      "tuesday": {"open": "18:00", "close": "23:00"},
+      "wednesday": {"open": "18:00", "close": "23:00"},
+      "thursday": {"open": "18:00", "close": "00:00"},
+      "friday": {"open": "18:00", "close": "01:00"},
+      "saturday": {"open": "17:00", "close": "01:00"},
+      "sunday": {"open": "17:00", "close": "22:00"}
+    },
+    "menuItems": [
+      {"category": "Starters", "name": "Amuse-Bouche", "description": "Chef's selection of small bites", "priceNaira": 12000, "displayOrder": 1},
+      {"category": "Starters", "name": "Scallop Carpaccio", "description": "Thinly sliced scallops with citrus", "priceNaira": 16000, "displayOrder": 2},
+      {"category": "Starters", "name": "Burrata", "description": "Creamy cheese with heirloom tomato", "priceNaira": 14000, "displayOrder": 3},
+      {"category": "Mains", "name": "European Steak", "description": "Prime cut beef with truffle sauce", "priceNaira": 50000, "displayOrder": 4},
+      {"category": "Mains", "name": "Sea Bass", "description": "Whole roasted fish with herb sauce", "priceNaira": 45000, "displayOrder": 5},
+      {"category": "Mains", "name": "Lamb Rack", "description": "Herb-crusted lamb with red wine reduction", "priceNaira": 48000, "displayOrder": 6},
+      {"category": "Mains", "name": "King Crab", "description": "Grilled crab leg with saffron butter", "priceNaira": 52000, "displayOrder": 7},
+      {"category": "Mains", "name": "Duck Breast", "description": "Pan-seared duck with cherry gastrique", "priceNaira": 42000, "displayOrder": 8},
+      {"category": "Sides", "name": "Truffle Risotto", "description": "Creamy risotto with black truffle", "priceNaira": 19000, "displayOrder": 9},
+      {"category": "Sides", "name": "Asparagus Hollandaise", "description": "Seasonal asparagus with sauce", "priceNaira": 14000, "displayOrder": 10},
+      {"category": "Desserts", "name": "Chocolate Sphere", "description": "Warm chocolate with gold leaf", "priceNaira": 15000, "displayOrder": 11},
+      {"category": "Desserts", "name": "Vanilla Panna Cotta", "description": "Silky panna cotta with berry coulis", "priceNaira": 13000, "displayOrder": 12},
+      {"category": "Drinks", "name": "Champagne", "description": "Premium champagne selection", "priceNaira": 28000, "displayOrder": 13},
+      {"category": "Drinks", "name": "Wine Pairing", "description": "Curated wine pairings per course", "priceNaira": 35000, "displayOrder": 14},
+      {"category": "Drinks", "name": "Signature Cocktail", "description": "House-created cocktail", "priceNaira": 18000, "displayOrder": 15}
+    ]
+  },
+  {
+    "restaurantName": "Zuma Bar & Restaurant",
+    "location": "Victoria Island, Lagos",
+    "priceLevel": 4,
+    "openingHours": {
+      "monday": {"open": "17:00", "close": "23:00"},
+      "tuesday": {"open": "17:00", "close": "23:00"},
+      "wednesday": {"open": "17:00", "close": "23:00"},
+      "thursday": {"open": "17:00", "close": "00:00"},
+      "friday": {"open": "17:00", "close": "01:00"},
+      "saturday": {"open": "16:00", "close": "01:00"},
+      "sunday": {"open": "16:00", "close": "23:00"}
+    },
+    "menuItems": [
+      {"category": "Starters", "name": "Gyoza", "description": "Pan-fried pork dumplings with dipping sauce", "priceNaira": 14000, "displayOrder": 1},
+      {"category": "Starters", "name": "Yellowtail Jalapeño", "description": "Sliced yellowtail with spicy jalapeño", "priceNaira": 16000, "displayOrder": 2},
+      {"category": "Starters", "name": "Soft Shell Crab", "description": "Tempura soft shell crab", "priceNaira": 18000, "displayOrder": 3},
+      {"category": "Starters", "name": "Edamame", "description": "Steamed soybean pods", "priceNaira": 10000, "displayOrder": 4},
+      {"category": "Robata Grills", "name": "Wagyu Beef Skewer", "description": "Premium wagyu on skewer", "priceNaira": 48000, "displayOrder": 5},
+      {"category": "Robata Grills", "name": "Chicken Skewer", "description": "Marinated chicken thigh skewer", "priceNaira": 32000, "displayOrder": 6},
+      {"category": "Robata Grills", "name": "Seafood Platter", "description": "Assorted grilled seafood selection", "priceNaira": 52000, "displayOrder": 7},
+      {"category": "Robata Grills", "name": "Lobster", "description": "Whole lobster grilled to perfection", "priceNaira": 50000, "displayOrder": 8},
+      {"category": "Sushi", "name": "Omakase Set", "description": "Chef's selection of premium sushi", "priceNaira": 55000, "displayOrder": 9},
+      {"category": "Sushi", "name": "Premium Sashimi", "description": "Assorted raw fish", "priceNaira": 42000, "displayOrder": 10},
+      {"category": "Sides", "name": "Grilled Vegetables", "description": "Seasonal vegetables from robata", "priceNaira": 18000, "displayOrder": 11},
+      {"category": "Sides", "name": "Rice Bowl", "description": "Steamed Japanese rice", "priceNaira": 5000, "displayOrder": 12},
+      {"category": "Drinks", "name": "Sake Selection", "description": "Premium Japanese sake", "priceNaira": 22000, "displayOrder": 13},
+      {"category": "Drinks", "name": "Japanese Whisky", "description": "Premium Japanese whisky", "priceNaira": 25000, "displayOrder": 14},
+      {"category": "Desserts", "name": "Green Tea Panna Cotta", "description": "Silky green tea dessert", "priceNaira": 12000, "displayOrder": 15},
+      {"category": "Desserts", "name": "Yuzu Tart", "description": "Japanese citrus tart", "priceNaira": 13000, "displayOrder": 16}
+    ]
+  }
+]

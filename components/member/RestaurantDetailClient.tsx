@@ -67,7 +67,9 @@ function formatPrice(kobo: number): string {
   if (kobo === 0) return 'Complimentary'
   const ngn = kobo / 100
   if (ngn >= 1_000_000) return `₦${(ngn / 1_000_000).toFixed(1)}m`
-  return `₦${Math.round(ngn / 1000)}k`
+  if (ngn >= 10_000)    return `₦${Math.round(ngn / 1000)}k`
+  // Below ₦10k — show exact with comma formatting
+  return `₦${ngn.toLocaleString('en-NG')}`
 }
 
 const DAY_ORDER = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
