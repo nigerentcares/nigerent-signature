@@ -658,7 +658,16 @@ export default function ChatPage() {
                         </div>
                       )}
                       <div className={`msg ${isMember ? 'out' : 'in'}`} style={isAI ? { borderLeft: '2px solid rgba(31,163,166,.4)' } : undefined}>
-                        <div className="msg-txt">{msg.body}</div>
+                        <div className="msg-txt" style={{ whiteSpace: 'pre-wrap' }}>
+                          {msg.body.split('\n\n').map((para, pi) => (
+                            <span key={pi}>
+                              {pi > 0 && <><br /><br /></>}
+                              {para.split('\n').map((line, li) => (
+                                <span key={li}>{li > 0 && <br />}{line}</span>
+                              ))}
+                            </span>
+                          ))}
+                        </div>
                         <div className="msg-time">{formatTime(msg.createdAt)}{isMember ? ' · Sent' : ''}</div>
                       </div>
                       {/* Booking status pill */}
@@ -695,10 +704,11 @@ export default function ChatPage() {
                   <span style={{ width: 6, height: 6, borderRadius: 3, background: '#1fa3a6', display: 'inline-block' }} />
                   Nigerent Concierge
                 </div>
-                <div className="msg in" style={{ borderLeft: '2px solid rgba(31,163,166,.4)', display: 'inline-flex', alignItems: 'center', gap: 4, padding: '12px 16px' }}>
-                  <span className="typing-dot" style={{ width: 6, height: 6, borderRadius: 3, background: 'rgba(31,163,166,.7)', animation: 'typingBounce 1.4s ease-in-out infinite', animationDelay: '0s' }} />
-                  <span className="typing-dot" style={{ width: 6, height: 6, borderRadius: 3, background: 'rgba(31,163,166,.7)', animation: 'typingBounce 1.4s ease-in-out infinite', animationDelay: '0.2s' }} />
-                  <span className="typing-dot" style={{ width: 6, height: 6, borderRadius: 3, background: 'rgba(31,163,166,.7)', animation: 'typingBounce 1.4s ease-in-out infinite', animationDelay: '0.4s' }} />
+                <div className="msg in" style={{ borderLeft: '2px solid rgba(31,163,166,.4)', display: 'inline-flex', alignItems: 'center', gap: 6, padding: '12px 16px' }}>
+                  <span style={{ fontSize: 12, color: 'rgba(201,206,214,.5)', marginRight: 2 }}>typing</span>
+                  <span className="typing-dot" style={{ width: 5, height: 5, borderRadius: 3, background: 'rgba(31,163,166,.7)', animation: 'typingBounce 1.4s ease-in-out infinite', animationDelay: '0s' }} />
+                  <span className="typing-dot" style={{ width: 5, height: 5, borderRadius: 3, background: 'rgba(31,163,166,.7)', animation: 'typingBounce 1.4s ease-in-out infinite', animationDelay: '0.2s' }} />
+                  <span className="typing-dot" style={{ width: 5, height: 5, borderRadius: 3, background: 'rgba(31,163,166,.7)', animation: 'typingBounce 1.4s ease-in-out infinite', animationDelay: '0.4s' }} />
                 </div>
               </div>
             )}
