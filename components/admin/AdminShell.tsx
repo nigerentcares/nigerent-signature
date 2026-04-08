@@ -7,7 +7,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-type NavKey = 'dashboard' | 'members' | 'offers' | 'restaurants' | 'concierge' | 'wallet' | 'invites' | 'partners' | 'reports' | 'rewards'
+type NavKey = 'dashboard' | 'members' | 'offers' | 'restaurants' | 'concierge' | 'wallet' | 'invites' | 'partners' | 'reports' | 'rewards' | 'profile'
 
 const NAV: { key: NavKey; label: string; path: string; icon: string }[] = [
   { key: 'dashboard',   label: 'Dashboard',   path: '/admin',                icon: '⬛' },
@@ -20,6 +20,7 @@ const NAV: { key: NavKey; label: string; path: string; icon: string }[] = [
   { key: 'rewards',     label: 'Rewards',      path: '/admin/rewards',        icon: '⭐' },
   { key: 'reports',     label: 'Reports',      path: '/admin/reports',        icon: '📊' },
   { key: 'invites',     label: 'Invites',      path: '/admin/invites',        icon: '✉️' },
+  { key: 'profile',     label: 'Profile',      path: '/admin/profile',        icon: '👤' },
 ]
 
 export default function AdminShell({
