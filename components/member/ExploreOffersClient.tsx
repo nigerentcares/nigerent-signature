@@ -5,6 +5,7 @@
  */
 
 import { useState, useMemo } from 'react'
+import { useRouter }         from 'next/navigation'
 import OfferSheet from './OfferSheet'
 
 interface Offer {
@@ -32,9 +33,23 @@ interface Offer {
   }
 }
 
+interface ExploreRestaurant {
+  id:            string
+  name:          string
+  cuisine:       string
+  city:          string
+  area:          string
+  priceLevel:    number
+  memberBenefit: string | null
+  imageUrls:     string[]
+  isFeatured:    boolean
+  ambianceTags:  string[]
+}
+
 interface Props {
   offers:        Offer[]
   totalPartners: number
+  restaurants?:  ExploreRestaurant[]
   hasDiningBanner?: boolean
 }
 
@@ -149,11 +164,50 @@ function phoneStr(ci: unknown) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function ExploreOffersClient({ offers, totalPartners }: Props) {
+const PRICE_LABEL = ['', '₦', '₦₦', '₦₦₦', '₦₦₦₦']
+
+const CUISINE_PHOTOS: Record<string, string> = {
+  'Nigerian':    'photo-1604329760661-e71dc83f8f26',
+  'Japanese':    'photo-1617196034183-421b4040ed20',
+  'Italian':     'photo-1555396273-367ea4eb4db5',
+  'Continental': 'photo-1517248135467-4c7edcad34c4',
+  'Seafood':     'photo-1484659619207-9165d119dafe',
+  'Steakhouse':  'photo-1432139555190-58524dae6a55',
+  'Pan-Asian':   'photo-1562802378-063ec186a863',
+  'Indian':      'photo-1585937421612-70a008356fbe',
+  'Chinese':     'photo-1563245372-f21724e3856d',
+}
+
+function restaurantImgUrl(r: ExploreRestaurant): string {
+  if (r.imageUrls.length > 0 && r.imageUrls[0]) return r.imageUrls[0]
+  const photoId = CUISINE_PHOTOS[r.cuisine] ?? 'photo-1517248135467-4c7edcad34c4'
+  return `${UNSPLASH}/${photoId}?w=400&q=75&auto=format&fit=crop`
+}
+
+export default function ExploreOffersClient({ offers, totalPartners, restaurants = [] }: Props) {
+  const router = useRouter()
   const [selected,  setSelected]  = useState<Offer | null>(null)
   const [query,     setQuery]     = useState('')
   const [activeKey, setActiveKey] = useState<string | null>(null)
   const [cityFilter, setCityFilter] = useState<'All' | 'Lagos' | 'Abuja'>('All')
+
+  // Filter restaurants by search + city
+  const filteredRestaurants = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    const showDining = !activeKey || activeKey === 'Restaurant'
+    if (!showDining) return []
+    return restaurants.filter(r => {
+      const matchesCity = cityFilter === 'All' || r.city === cityFilter
+      if (!matchesCity) return false
+      if (!q) return true
+      return (
+        r.name.toLowerCase().includes(q) ||
+        r.cuisine.toLowerCase().includes(q) ||
+        r.area.toLowerCase().includes(q) ||
+        r.ambianceTags.some(t => t.toLowerCase().includes(q))
+      )
+    })
+  }, [restaurants, query, activeKey, cityFilter])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -184,9 +238,9 @@ export default function ExploreOffersClient({ offers, totalPartners }: Props) {
 
   const featured  = offers.find(o => o.isFeatured) ?? null
   const hasData   = offers.length > 0
-  const noResults = filtered.length === 0 && (query.trim() !== '' || activeKey !== null)
+  const noResults = filtered.length === 0 && filteredRestaurants.length === 0 && (query.trim() !== '' || activeKey !== null)
 
-  const restaurantCount = offers.filter(o => o.partner.category === 'Restaurant').length
+  const restaurantCount = restaurants.length || offers.filter(o => o.partner.category === 'Restaurant').length
   const healthCount     = offers.filter(o => ['Hospital & Medical', 'Pharmacy'].includes(o.partner.category)).length
 
   return (
@@ -337,6 +391,103 @@ export default function ExploreOffersClient({ offers, totalPartners }: Props) {
       {(query || activeKey) && !noResults && (
         <div style={{ padding: '12px 20px 4px', fontSize: 11, color: 'var(--muted)', fontWeight: 600 }}>
           {filtered.length} result{filtered.length !== 1 ? 's' : ''}{query ? ` for "${query}"` : ''}{activeKey ? ` · ${activeKey}` : ''}
+        </div>
+      )}
+
+      {/* ── Restaurants section (real restaurants → /dining/[id]) ── */}
+      {filteredRestaurants.length > 0 && (
+        <div className="sec">
+          <div className="sh2">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{
+                width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+                background: '#d4870f18', border: '1px solid #d4870f30',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 13,
+              }}>
+                🍽️
+              </div>
+              <div className="sh2-t">Restaurants</div>
+            </div>
+            <div className="sh2-l" style={{ fontSize: 11 }}>
+              {filteredRestaurants.length} restaurant{filteredRestaurants.length !== 1 ? 's' : ''}
+            </div>
+          </div>
+
+          <div className="og">
+            {filteredRestaurants.map(r => (
+              <div
+                key={r.id}
+                className="oc"
+                style={{ cursor: 'pointer' }}
+                onClick={() => router.push(`/dining/${r.id}`)}
+              >
+                <div
+                  className="oc-img"
+                  style={{
+                    height: 120,
+                    backgroundImage: `url(${restaurantImgUrl(r)})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    position: 'relative',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div style={{
+                    position: 'absolute', inset: 0,
+                    background: 'linear-gradient(to bottom, rgba(0,0,0,.04) 0%, rgba(0,0,0,.58) 100%)',
+                  }} />
+                  {r.isFeatured && (
+                    <div style={{
+                      position: 'absolute', top: 8, right: 8, zIndex: 1,
+                      background: 'rgba(212,135,15,.85)', borderRadius: 4,
+                      padding: '2px 6px', fontSize: 8, fontWeight: 700,
+                      color: '#fff', letterSpacing: '0.5px', textTransform: 'uppercase',
+                    }}>
+                      Featured
+                    </div>
+                  )}
+                  <div style={{
+                    position: 'absolute', bottom: 8, left: 8, zIndex: 1,
+                    background: 'rgba(0,0,0,.45)', backdropFilter: 'blur(3px)',
+                    border: '1px solid rgba(255,255,255,.14)',
+                    borderRadius: 5, padding: '2px 7px',
+                    fontSize: 8, fontWeight: 700,
+                    textTransform: 'uppercase', letterSpacing: '0.8px', color: '#fff',
+                  }}>
+                    {r.area}
+                  </div>
+                </div>
+                <div className="oc-body">
+                  <div className="oc-ptnr" style={{ color: '#d4870f' }}>
+                    {r.cuisine} · {PRICE_LABEL[r.priceLevel] || '₦₦'}
+                  </div>
+                  <div className="oc-ttl">{r.name}</div>
+                  <div className="oc-ft">
+                    {r.memberBenefit ? (
+                      <div style={{
+                        fontSize: 9, fontWeight: 700, color: '#1fa3a6',
+                        background: 'rgba(31,163,166,.08)', borderRadius: 4,
+                        padding: '2px 6px', border: '1px solid rgba(31,163,166,.15)',
+                        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%',
+                      }}>
+                        {r.memberBenefit}
+                      </div>
+                    ) : (
+                      <div style={{
+                        fontSize: 9, fontWeight: 700, color: '#d4870f',
+                        background: '#d4870f12', borderRadius: 4,
+                        padding: '2px 6px', border: '1px solid #d4870f20',
+                      }}>
+                        View Menu
+                      </div>
+                    )}
+                    <div style={{ fontSize: 11, color: 'var(--muted)', fontWeight: 600 }}>→</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

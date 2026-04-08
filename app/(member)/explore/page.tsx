@@ -39,7 +39,7 @@ const CAT_COLOR: Record<string, string> = {
 // ─── Data fetcher ─────────────────────────────────────────────────────────────
 
 async function getExploreData() {
-  const [featured, allOffers, totalPartners] = await Promise.all([
+  const [featured, allOffers, totalPartners, restaurants] = await Promise.all([
     prisma.offer.findMany({
       where:   { status: 'ACTIVE', isFeatured: true },
       include: { partner: true },
@@ -53,9 +53,18 @@ async function getExploreData() {
       take:    80,
     }),
     prisma.partner.count({ where: { isActive: true } }),
+    prisma.restaurant.findMany({
+      where:   { isActive: true },
+      orderBy: [{ isFeatured: 'desc' }, { name: 'asc' }],
+      select:  {
+        id: true, name: true, cuisine: true, city: true, area: true,
+        priceLevel: true, memberBenefit: true, imageUrls: true, isFeatured: true,
+        ambianceTags: true,
+      },
+    }),
   ])
 
-  return { featured: featured[0] ?? null, allOffers, totalPartners, hasData: allOffers.length > 0 }
+  return { featured: featured[0] ?? null, allOffers, totalPartners, restaurants, hasData: allOffers.length > 0 || restaurants.length > 0 }
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -94,7 +103,20 @@ export default async function ExplorePage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login?reason=session_expired')
 
-  const { allOffers, totalPartners } = await getExploreData()
+  const { allOffers, totalPartners, restaurants } = await getExploreData()
+
+  const serializedRestaurants = restaurants.map(r => ({
+    id:            r.id,
+    name:          r.name,
+    cuisine:       r.cuisine,
+    city:          r.city,
+    area:          r.area,
+    priceLevel:    r.priceLevel,
+    memberBenefit: r.memberBenefit,
+    imageUrls:     r.imageUrls,
+    isFeatured:    r.isFeatured,
+    ambianceTags:  r.ambianceTags,
+  }))
 
   // Serialize dates + JSON fields for client
   const serializedOffers = allOffers.map(o => ({
@@ -147,7 +169,7 @@ export default async function ExplorePage() {
       </Link>
 
       {/* ── Interactive offer sections (stats, featured, categories, emergency) ── */}
-      <ExploreOffersClient offers={serializedOffers} totalPartners={totalPartners} />
+      <ExploreOffersClient offers={serializedOffers} totalPartners={totalPartners} restaurants={serializedRestaurants} />
 
     </>
   )
