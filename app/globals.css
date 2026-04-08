@@ -35,7 +35,7 @@
 
 html, body {
   font-family: 'Urbanist', sans-serif;
-  background: var(--bg);
+  background: var(--dark);
   color: var(--dark);
   overflow-x: hidden;
   height: 100%;
@@ -2322,20 +2322,20 @@ html, body {
 .adm-shell { background: #f4f1ee; min-height: 100dvh; }
 
 /* New bottom-nav layout */
-.adm-app { background: #f4f1ee; min-height: 100dvh; display: flex; flex-direction: column; }
+.adm-app { background: #f4f1ee; min-height: 100dvh; min-height: 100vh; display: flex; flex-direction: column; }
 .adm-brand-mark { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--teal), var(--teal-dk)); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: #fff; letter-spacing: 1px; flex-shrink: 0; }
 .adm-brand-name { font-size: 13px; font-weight: 800; color: var(--cream); letter-spacing: .3px; }
 .adm-brand-sub { font-size: 9px; font-weight: 600; color: rgba(201,206,214,.35); letter-spacing: 1.5px; text-transform: uppercase; }
 
 /* Top header bar */
-.adm-top-header { display: flex; align-items: center; justify-content: space-between; padding: max(16px, calc(env(safe-area-inset-top) + 10px)) 20px 14px; background: var(--dark); border-bottom: 1px solid rgba(201,206,214,.08); }
+.adm-top-header { display: flex; align-items: center; justify-content: space-between; padding: max(20px, calc(env(safe-area-inset-top) + 14px)) 24px 16px; background: var(--dark); border-bottom: 1px solid rgba(201,206,214,.08); }
 .adm-top-brand { display: flex; align-items: center; gap: 10px; }
 .adm-member-link { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: rgba(201,206,214,.4); text-decoration: none; padding: 7px 12px; border-radius: 8px; border: 1px solid rgba(201,206,214,.1); transition: all .18s; }
 .adm-member-link:hover { color: rgba(201,206,214,.7); border-color: rgba(201,206,214,.2); }
 
 /* Main content area */
-.adm-body { flex: 1; overflow-x: hidden; padding-bottom: 80px; }
-.adm-content { padding: 24px 20px 60px; max-width: 1100px; }
+.adm-body { flex: 1; overflow-x: hidden; padding-bottom: 90px; }
+.adm-content { padding: 28px 24px 60px; max-width: 1100px; }
 
 /* ── Admin Bottom Navigation ── */
 .adm-bnav {
@@ -2604,7 +2604,7 @@ html, body {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .adm-content { padding: 20px 16px 60px; }
+  .adm-content { padding: 24px 20px 60px; }
   .adm-stats-grid { grid-template-columns: 1fr 1fr; }
   .adm-two-col { grid-template-columns: 1fr; }
   .adm-quick-grid { grid-template-columns: 1fr 1fr; }
