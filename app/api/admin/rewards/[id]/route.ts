@@ -38,7 +38,7 @@ export async function PATCH(
     data:  {
       pointsThreshold: parsed.data.pointsThreshold,
       earnMultiplier:  parsed.data.earnMultiplier,
-      benefits:        parsed.data.benefits,
+      benefits:        parsed.data.benefits as any,
     },
   })
 
