@@ -8,7 +8,7 @@
 import { redirect }    from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { prisma }       from '@/lib/prisma'
-import WalletRewardsClient, { WalletData, RewardsData } from '@/components/member/WalletRewardsClient'
+import WalletRewardsClient, { WalletData, RewardsData, CardData } from '@/components/member/WalletRewardsClient'
 
 const TIERS = [
   { name: 'Signature',      slug: 'signature', min: 0,    max: 2499  },
@@ -16,11 +16,12 @@ const TIERS = [
   { name: 'Elite',          slug: 'elite',     min: 5000, max: 99999 },
 ]
 
-async function getData(userId: string): Promise<{ wallet: WalletData; rewards: RewardsData }> {
+async function getData(userId: string): Promise<{ wallet: WalletData; rewards: RewardsData; card: CardData }> {
   const [
     loads, spends, monthLoads, monthSpends,
     walletPtsAgg, transactions,
     pointsAgg, membership, history, expiringAgg,
+    dbUser,
   ] = await Promise.all([
     // Wallet
     prisma.walletTransaction.aggregate({
@@ -76,6 +77,11 @@ async function getData(userId: string): Promise<{ wallet: WalletData; rewards: R
       },
       _sum: { points: true },
     }),
+    // User info for card
+    prisma.user.findUnique({
+      where: { id: userId },
+      include: { membership: { include: { tier: true } } },
+    }),
   ])
 
   const balance     = Math.floor(((loads._sum.amount ?? 0) - (spends._sum.amount ?? 0)) / 100)
@@ -125,7 +131,13 @@ async function getData(userId: string): Promise<{ wallet: WalletData; rewards: R
     })),
   }
 
-  return { wallet, rewards }
+  const card: CardData = {
+    name: dbUser?.name ?? 'Member',
+    memberNumber: membership?.memberNumber ?? '—',
+    tierName,
+  }
+
+  return { wallet, rewards, card }
 }
 
 export default async function WalletPage() {
@@ -133,7 +145,7 @@ export default async function WalletPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login?reason=session_expired')
 
-  const { wallet, rewards } = await getData(user.id)
+  const { wallet, rewards, card } = await getData(user.id)
 
-  return <WalletRewardsClient wallet={wallet} rewards={rewards} />
+  return <WalletRewardsClient wallet={wallet} rewards={rewards} card={card} />
 }

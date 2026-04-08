@@ -21,6 +21,12 @@ export interface PointsEntry {
   adminNote: string | null; createdAt: string
 }
 
+export interface CardData {
+  name:         string
+  memberNumber: string
+  tierName:     string
+}
+
 export interface WalletData {
   balance:     number
   monthLoaded: number
@@ -96,6 +102,113 @@ function icoClass(a: string) {
   if (['CAMPAIGN_BONUS','WELCOME_BONUS','MANUAL_AWARD'].includes(a)) return 'hi-ico bon'
   if (a === 'OFFER_REDEMPTION') return 'hi-ico red'
   return 'hi-ico earn'
+}
+
+// ─── Card helpers ─────────────────────────────────────────────────────────────
+
+function getCVV(memberNumber: string): string {
+  let h = 0
+  for (const c of memberNumber) h = (h * 31 + c.charCodeAt(0)) & 0xffff
+  return String(100 + (h % 900))
+}
+
+function formatCardNumber(memberNumber: string): string {
+  const digits = memberNumber.replace(/\D/g, '').padEnd(16, '0').slice(0, 16)
+  return `${digits.slice(0, 4)} ${digits.slice(4, 8)} ${digits.slice(8, 12)} ${digits.slice(12, 16)}`
+}
+
+function getExpiry(memberNumber: string): string {
+  let h = 0
+  for (const c of memberNumber) h = (h * 17 + c.charCodeAt(0)) & 0xff
+  const month = String(1 + (h % 12)).padStart(2, '0')
+  const year  = String((new Date().getFullYear() + 4 + (h % 3)) % 100).padStart(2, '0')
+  return `${month}/${year}`
+}
+
+// ─── Wallet Card (front: number/exp/CVV, tap flips → rewards) ─────────────────
+
+function WalletCard({ card, onFlip }: { card: CardData; onFlip: () => void }) {
+  const [flipped, setFlipped] = useState(false)
+  const cardNumber = formatCardNumber(card.memberNumber)
+  const expiry     = getExpiry(card.memberNumber)
+  const cvv        = getCVV(card.memberNumber)
+
+  function handleFlip() {
+    if (!flipped) {
+      setFlipped(true)
+      // After flip animation completes, switch to rewards tab
+      setTimeout(() => onFlip(), 500)
+    } else {
+      setFlipped(false)
+    }
+  }
+
+  return (
+    <div className="mc-wrap">
+      <div
+        className={`lc-scene${flipped ? ' lc-flipped' : ''}`}
+        onClick={handleFlip}
+        role="button"
+        aria-label="Tap to flip card and view rewards"
+      >
+        <div className="lc-flipper">
+          {/* ─── FRONT: Card number, exp, CVV ─── */}
+          <div className="lc lc-front">
+            <div className="lo1" />
+            <div className="lo2x" />
+            <div className="ll" />
+            <div className="lin">
+              {/* Top row: UBA logo + tier badge */}
+              <div className="mc-top">
+                <div className="mc-uba-text">UBA</div>
+                <div className="tbadge">
+                  <span style={{ color: 'var(--gold)', fontSize: 11 }}>&#10022;</span>
+                  <span className="tbadge-lbl">{card.tierName}</span>
+                </div>
+              </div>
+
+              {/* Card number */}
+              <div className="wc-card-num">{cardNumber}</div>
+
+              {/* Exp + CVV row */}
+              <div className="wc-card-meta">
+                <div>
+                  <div className="wc-card-lbl">VALID THRU</div>
+                  <div className="wc-card-val">{expiry}</div>
+                </div>
+                <div>
+                  <div className="wc-card-lbl">CVV</div>
+                  <div className="wc-card-val">{cvv}</div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div className="wc-card-lbl">ISSUED BY</div>
+                  <div className="mc-uba-text mc-uba-sm">UBA</div>
+                </div>
+              </div>
+
+              {/* Cardholder name */}
+              <div className="wc-card-holder">{card.name.toUpperCase()}</div>
+
+              {/* Flip hint */}
+              <div className="mc-flip-hint">Tap to view rewards</div>
+            </div>
+          </div>
+
+          {/* ─── BACK: Rewards teaser ─── */}
+          <div className="lc lc-back">
+            <div className="lo1" />
+            <div className="lo2x" />
+            <div className="ll" />
+            <div className="lin" style={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+              <div style={{ fontSize: 28, marginBottom: 8 }}>&#10022;</div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--gold)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>Rewards</div>
+              <div style={{ fontSize: 11, color: 'rgba(201,206,214,.45)' }}>Loading your points &amp; perks...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 // ─── Wallet tab ────────────────────────────────────────────────────────────────
@@ -439,7 +552,7 @@ function RewardsTab({ d }: { d: RewardsData }) {
 
 // ─── Root export ───────────────────────────────────────────────────────────────
 
-export default function WalletRewardsClient({ wallet, rewards }: { wallet: WalletData; rewards: RewardsData }) {
+export default function WalletRewardsClient({ wallet, rewards, card }: { wallet: WalletData; rewards: RewardsData; card: CardData }) {
   const [tab, setTab] = useState<'wallet' | 'rewards'>('wallet')
 
   return (
@@ -447,8 +560,11 @@ export default function WalletRewardsClient({ wallet, rewards }: { wallet: Walle
       {/* Header */}
       <div className="hdr" style={{ paddingBottom: 0 }}>
         <div className="pe">{tab === 'wallet' ? 'Member Wallet' : 'Points & Rewards'}</div>
-        <div className="pt">{tab === 'wallet' ? 'Your Balance' : <><span className="pti">Earn</span> &amp; Redeem</>}</div>
+        <div className="pt">{tab === 'wallet' ? 'Your Card' : <><span className="pti">Earn</span> &amp; Redeem</>}</div>
       </div>
+
+      {/* Member Card — flip switches to rewards tab */}
+      <WalletCard card={card} onFlip={() => setTab('rewards')} />
 
       {/* Tab switcher */}
       <div style={{ display: 'flex', gap: 0, padding: '14px 20px 0', background: 'var(--dark)' }}>

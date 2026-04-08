@@ -796,6 +796,183 @@ html, body {
   color: var(--gold);
 }
 
+/* ── HOME WELCOME ── */
+.home-welcome {
+  padding: 20px 0 0;
+}
+.home-greeting {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(201,206,214,.45);
+  margin-bottom: 2px;
+}
+.home-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--cream);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.home-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.home-id {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.home-id-lbl {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(201,206,214,.3);
+}
+.home-id-val {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(201,206,214,.5);
+  letter-spacing: 1.5px;
+}
+.home-tier-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(212,175,55,.08);
+  border: 1px solid rgba(212,175,55,.15);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.home-date {
+  font-size: 11px;
+  color: rgba(201,206,214,.3);
+  margin-top: 4px;
+}
+.home-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-top: 16px;
+}
+.home-stat {
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 14px;
+  padding: 14px 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.home-stat-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--cream);
+  line-height: 1;
+}
+.home-stat-accent {
+  font-size: 14px;
+  color: var(--teal);
+}
+.home-stat-lbl {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(201,206,214,.35);
+}
+
+/* ── PLACES TO VISIT CARDS ── */
+.pv-card {
+  flex: 0 0 200px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+}
+.pv-img {
+  height: 120px;
+  position: relative;
+}
+.pv-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,.05) 0%, rgba(0,0,0,.45) 100%);
+}
+.pv-tag {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: white;
+  background: rgba(31,163,166,.75);
+  padding: 3px 8px;
+  border-radius: 6px;
+  z-index: 1;
+}
+.pv-body {
+  padding: 10px 12px 12px;
+}
+.pv-title {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.pv-area {
+  font-size: 11px;
+  color: rgba(201,206,214,.4);
+}
+
+/* ── THINGS TO DO GRID ── */
+.ttd-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 20px;
+}
+.ttd-card {
+  border-radius: 14px;
+  padding: 16px 14px;
+  border: 1px solid rgba(255,255,255,.04);
+  transition: transform .15s;
+}
+.ttd-card:active { transform: scale(.97); }
+.ttd-icon {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+.ttd-title {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.ttd-desc {
+  font-size: 11px;
+  color: rgba(201,206,214,.4);
+  line-height: 1.35;
+}
+
 /* ── LOYALTY / MEMBER CARD ── */
 .mc-wrap {
   padding: 0 20px 28px;
@@ -1128,6 +1305,49 @@ html, body {
   font-weight: 600;
   letter-spacing: 2px;
   color: rgba(201,206,214,.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── WALLET CARD (front: number/exp/CVV) ── */
+.wc-card-num {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 3.5px;
+  color: rgba(201,206,214,.7);
+  margin: auto 0 8px;
+  padding-top: 8px;
+}
+.wc-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 8px;
+}
+.wc-card-lbl {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(201,206,214,.25);
+  margin-bottom: 2px;
+}
+.wc-card-val {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(201,206,214,.55);
+  letter-spacing: 1.5px;
+}
+.wc-card-holder {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: rgba(201,206,214,.5);
+  margin-bottom: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -2,17 +2,13 @@
  * /home — Member Dashboard
  *
  * Server Component: fetches live member + content data via Prisma.
- * Renders: MemberCard → UpcomingStay → Restaurants Near You
- *          → Member Discounts → What's On → City Guide → Concierge strip
- *
- * Content sections are populated from the live database (restaurants, partners,
- * offers). Each section falls back to an empty-state card when no data exists.
+ * Renders: Welcome → Restaurants → Experiences → Places to Visit
+ *          → Things to Do → Member Discounts → City Guide → Concierge
  */
 
 import { redirect }   from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { prisma }      from '@/lib/prisma'
-import MemberCard      from '@/components/member/MemberCard'
 import Link            from 'next/link'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -46,7 +42,7 @@ type DashRestaurant = {
 
 async function getMemberData(userId: string) {
   const now = new Date()
-  const [dbUser, pointsAgg, walletLoads, walletSpend, savedCount, unreadCount, upcomingDining] =
+  const [dbUser, pointsAgg, savedCount, unreadCount, upcomingDining] =
     await Promise.all([
       prisma.user.findUnique({
         where:   { id: userId },
@@ -55,14 +51,6 @@ async function getMemberData(userId: string) {
       prisma.pointsLedger.aggregate({
         where: { userId },
         _sum:  { points: true },
-      }),
-      prisma.walletTransaction.aggregate({
-        where: { userId, status: 'COMPLETED', type: { in: ['LOAD', 'REFUND', 'ADJUSTMENT'] } },
-        _sum:  { amount: true },
-      }),
-      prisma.walletTransaction.aggregate({
-        where: { userId, status: 'COMPLETED', type: 'SPEND' },
-        _sum:  { amount: true },
       }),
       prisma.savedItem.count({ where: { userId } }),
       prisma.notification.count({ where: { userId, readAt: null } }),
@@ -75,17 +63,13 @@ async function getMemberData(userId: string) {
 
   if (!dbUser) return null
 
-  const points        = pointsAgg._sum.points ?? 0
-  const walletBalance = Math.floor(
-    ((walletLoads._sum.amount ?? 0) - (walletSpend._sum.amount ?? 0)) / 100
-  )
+  const points = pointsAgg._sum.points ?? 0
 
-  return { dbUser, points, walletBalance, savedCount, unreadCount, upcomingDining }
+  return { dbUser, points, savedCount, unreadCount, upcomingDining }
 }
 
 async function getDashboardContent(city: string) {
   const [allRestaurants, discountOffers, experienceOffers] = await Promise.all([
-    // Restaurants: featured first, user city preferred
     prisma.restaurant.findMany({
       where:   { isActive: true },
       orderBy: [{ isFeatured: 'desc' }, { name: 'asc' }],
@@ -97,7 +81,6 @@ async function getDashboardContent(city: string) {
       },
     }),
 
-    // Lifestyle / discount offers
     prisma.offer.findMany({
       where: {
         status:   'ACTIVE',
@@ -108,7 +91,6 @@ async function getDashboardContent(city: string) {
       take: 6,
     }),
 
-    // Experience / events offers
     prisma.offer.findMany({
       where: {
         status:   'ACTIVE',
@@ -120,11 +102,10 @@ async function getDashboardContent(city: string) {
     }),
   ])
 
-  // City-preferred sort: member's city first, then rest
   const restaurants: DashRestaurant[] = [
     ...allRestaurants.filter(r => r.city === city),
     ...allRestaurants.filter(r => r.city !== city),
-  ].slice(0, 4)
+  ].slice(0, 6)
 
   return {
     restaurants,
@@ -135,40 +116,6 @@ async function getDashboardContent(city: string) {
 
 // ─── Render helpers ───────────────────────────────────────────────────────────
 
-const CUISINE_EMOJI: Record<string, string> = {
-  'nigerian':        '🍽️',
-  'african':         '🍽️',
-  'japanese':        '🍱',
-  'asian':           '🥢',
-  'chinese':         '🥡',
-  'italian':         '🍝',
-  'continental':     '🍴',
-  'mediterranean':   '🫒',
-  'seafood':         '🦐',
-  'grill':           '🥩',
-  'steakhouse':      '🥩',
-  'pizza':           '🍕',
-  'bar':             '🥂',
-  'cocktail':        '🍸',
-  'fine dining':     '🥂',
-  'brunch':          '☕',
-  'cafe':            '☕',
-  'indian':          '🍛',
-  'lebanese':        '🧆',
-  'sushi':           '🍣',
-}
-
-function cuisineEmoji(cuisine: string): string {
-  const key = cuisine.toLowerCase()
-  for (const [k, v] of Object.entries(CUISINE_EMOJI)) {
-    if (key.includes(k)) return v
-  }
-  return '🍽️'
-}
-
-const CARD_IMG_CLASSES = ['ri1', 'ri2', 'ri3', 'ri4'] as const
-
-// ── Unsplash photo fallback per cuisine (same pool as DiningClient) ───────────
 const CUISINE_PHOTOS: Record<string, string[]> = {
   'Nigerian':    ['photo-1604329760661-e71dc83f8f26', 'photo-1567188040759-fb8a883dc6d8'],
   'Japanese':    ['photo-1617196034183-421b4040ed20', 'photo-1562802378-063ec186a863', 'photo-1611143669185-af224c5e3252'],
@@ -198,8 +145,6 @@ function dashRestaurantPhoto(r: DashRestaurant, index: number): string {
   }
   return `https://images.unsplash.com/${ids[index % ids.length]}?w=400&q=75&auto=format&fit=crop`
 }
-const DISC_CARD_CLASSES = ['db1', 'db2', 'db3'] as const
-const EXP_CARD_CLASSES  = ['ei1', 'ei2', 'ei3'] as const
 
 const CAT_TAG: Record<string, { label: string; style?: React.CSSProperties; cls?: string }> = {
   'Wellness & Spa':     { label: 'Wellness',  cls: 'stb st-t' },
@@ -222,6 +167,9 @@ const EXP_EMOJI: Record<string, string> = {
   'Fitness & Sports':   '💪',
 }
 
+const DISC_CARD_CLASSES = ['db1', 'db2', 'db3'] as const
+const EXP_CARD_CLASSES  = ['ei1', 'ei2', 'ei3'] as const
+
 function formatExpiry(d: Date | null): string {
   if (!d) return 'Ongoing'
   return `Ends ${d.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}`
@@ -230,6 +178,36 @@ function formatExpiry(d: Date | null): string {
 function formatEventDate(d: Date): string {
   return d.toLocaleDateString('en-GB', { weekday: 'short', month: 'short', day: 'numeric' })
 }
+
+function getGreeting(): string {
+  const h = new Date().getHours()
+  if (h < 12) return 'Good morning'
+  if (h < 17) return 'Good afternoon'
+  return 'Good evening'
+}
+
+function getInitials(name: string): string {
+  return name.split(' ').slice(0, 2).map(w => w[0]?.toUpperCase() ?? '').join('')
+}
+
+// ── Curated "Places to Visit" with Unsplash photos ─────────────────────────
+const PLACES_TO_VISIT = [
+  { title: 'Lekki Conservation Centre', area: 'Lekki, Lagos', img: 'photo-1516026672322-bc52d61a55d5', tag: 'Nature' },
+  { title: 'Nike Art Gallery', area: 'Lekki, Lagos', img: 'photo-1577720643272-265f09367456', tag: 'Arts' },
+  { title: 'Jabi Lake', area: 'Abuja', img: 'photo-1507525428034-b723cf961d3e', tag: 'Leisure' },
+  { title: 'Olumo Rock', area: 'Abeokuta', img: 'photo-1501785888041-af3ef285b470', tag: 'Adventure' },
+  { title: 'Tarkwa Bay Beach', area: 'Lagos Island', img: 'photo-1519046904884-53103b34b206', tag: 'Beach' },
+]
+
+// ── Curated "Things to Do" ─────────────────────────────────────────────────
+const THINGS_TO_DO = [
+  { title: 'Book a Spa Day', desc: 'Unwind at a member-exclusive wellness retreat', icon: '🧖', color: 'rgba(31,163,166,.12)', accent: '#1fa3a6' },
+  { title: 'Private Dining', desc: 'Reserve a chef\'s table experience', icon: '🍷', color: 'rgba(212,175,55,.12)', accent: '#d4af37' },
+  { title: 'Weekend Getaway', desc: 'Curated short stays outside the city', icon: '🏡', color: 'rgba(39,174,96,.12)', accent: '#27ae60' },
+  { title: 'Art & Culture', desc: 'Gallery tours and live performances', icon: '🎭', color: 'rgba(155,89,182,.12)', accent: '#9b59b6' },
+  { title: 'Fitness Class', desc: 'Exclusive access to premium gyms & studios', icon: '🏋️', color: 'rgba(52,152,219,.12)', accent: '#3498db' },
+  { title: 'Nightlife', desc: 'VIP tables and member-only events', icon: '🥂', color: 'rgba(232,68,58,.12)', accent: '#e8443a' },
+]
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -242,30 +220,86 @@ export default async function HomePage() {
   const data = await getMemberData(user.id)
   if (!data) redirect('/login?reason=session_expired')
 
-  const { dbUser, points, walletBalance, savedCount, unreadCount, upcomingDining } = data
+  const { dbUser, points, savedCount, unreadCount, upcomingDining } = data
   const tier         = dbUser.membership?.tier
   const tierName     = tier?.name ?? 'Signature'
   const memberNumber = dbUser.membership?.memberNumber ?? '—'
   const city         = dbUser.city ?? 'Lagos'
+  const firstName    = (dbUser.name ?? 'Member').split(' ')[0]
 
   const { restaurants, discountOffers, experienceOffers } =
     await getDashboardContent(city)
 
+  const today = new Date().toLocaleDateString('en-GB', {
+    weekday: 'long', day: 'numeric', month: 'long',
+  })
+
   return (
     <>
-      {/* ══ MEMBER CARD ══ */}
-      <MemberCard
-        name={dbUser.name ?? 'Member'}
-        memberNumber={memberNumber}
-        tierName={tierName}
-        points={points}
-        walletBalance={walletBalance}
-        savedCount={savedCount}
-        city={city}
-        unreadCount={unreadCount}
-      />
+      {/* ══ WELCOME HEADER ══ */}
+      <div className="hdr" style={{ paddingBottom: 20 }}>
+        {/* Brand Row */}
+        <div className="brand-row">
+          <div>
+            <div className="brand-name">Signature Lifestyle</div>
+            <div className="brand-by">by Nigerent</div>
+          </div>
+          <div className="hdr-r">
+            <Link href="/notifications" style={{ textDecoration: 'none' }}>
+              <div className="nb2">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+                  <path
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                    stroke="rgba(201,206,214,.5)"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                {unreadCount > 0 && <div className="npip" />}
+              </div>
+            </Link>
+            <Link href="/profile" style={{ textDecoration: 'none' }}>
+              <div className="av">{getInitials(dbUser.name ?? 'Member')}</div>
+            </Link>
+          </div>
+        </div>
 
-      {/* ══ UPCOMING RESERVATION ══ (only shown when a confirmed dining request exists) */}
+        {/* Welcome message */}
+        <div className="home-welcome">
+          <div className="home-greeting">{getGreeting()},</div>
+          <div className="home-name">{firstName}</div>
+          <div className="home-meta-row">
+            <div className="home-id">
+              <span className="home-id-lbl">Member ID</span>
+              <span className="home-id-val">{memberNumber}</span>
+            </div>
+            <div className="home-tier-pill">
+              <span style={{ color: 'var(--gold)', fontSize: 10 }}>&#10022;</span>
+              <span>{tierName}</span>
+            </div>
+          </div>
+          <div className="home-date">{today}</div>
+        </div>
+
+        {/* Quick stats */}
+        <div className="home-stats">
+          <Link href="/wallet" className="home-stat" style={{ textDecoration: 'none' }}>
+            <div className="home-stat-val">{points.toLocaleString()}</div>
+            <div className="home-stat-lbl">Points</div>
+          </Link>
+          <Link href="/explore" className="home-stat" style={{ textDecoration: 'none' }}>
+            <div className="home-stat-val">{savedCount}</div>
+            <div className="home-stat-lbl">Saved</div>
+          </Link>
+          <Link href="/chat" className="home-stat" style={{ textDecoration: 'none' }}>
+            <div className="home-stat-val home-stat-accent">Online</div>
+            <div className="home-stat-lbl">Concierge</div>
+          </Link>
+        </div>
+      </div>
+
+      {/* ══ UPCOMING RESERVATION ══ */}
       {upcomingDining && (
         <div className="sec">
           <div className="res-card">
@@ -293,11 +327,11 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* ══ RESTAURANTS NEAR YOU ══ */}
+      {/* ══ RESTAURANTS ══ */}
       <div className="sec">
         <div className="sh2">
-          <div className="sh2-t">Restaurants Near You</div>
-          <Link href="/dining" className="sh2-l" style={{ textDecoration: 'none' }}>View All →</Link>
+          <div className="sh2-t">Restaurants</div>
+          <Link href="/dining" className="sh2-l" style={{ textDecoration: 'none' }}>View All &#8594;</Link>
         </div>
         <div className="hscr">
           {restaurants.length === 0 ? (
@@ -320,7 +354,6 @@ export default async function HomePage() {
                       overflow: 'hidden',
                     }}
                   >
-                    {/* scrim for text legibility */}
                     <div style={{
                       position: 'absolute', inset: 0,
                       background: 'linear-gradient(to bottom, rgba(0,0,0,.05) 0%, rgba(0,0,0,.5) 100%)',
@@ -336,7 +369,7 @@ export default async function HomePage() {
                     <div className="rc-n">{r.name}</div>
                     <div className="rc-cu">{r.cuisine}</div>
                     <div className="rc-f">
-                      <div className="rc-dist">📍 {r.area}{r.city !== city ? `, ${r.city}` : ''}</div>
+                      <div className="rc-dist">&#128205; {r.area}{r.city !== city ? `, ${r.city}` : ''}</div>
                       {r.memberBenefit && (
                         <div className="rc-ben">{r.memberBenefit}</div>
                       )}
@@ -350,11 +383,97 @@ export default async function HomePage() {
         </div>
       </div>
 
+      {/* ══ EXPERIENCES ══ */}
+      <div className="sec">
+        <div className="sh2">
+          <div className="sh2-t">Experiences</div>
+          <Link href="/explore" className="sh2-l" style={{ textDecoration: 'none' }}>View All &#8594;</Link>
+        </div>
+        <div className="hscr">
+          {experienceOffers.length === 0 ? (
+            <div style={{ padding: '20px 0', color: 'rgba(201,206,214,.35)', fontSize: 13 }}>
+              Member experiences coming soon.
+            </div>
+          ) : (
+            experienceOffers.slice(0, 4).map((offer, i) => {
+              const tagInfo = CAT_TAG[offer.category] ?? { label: offer.category, cls: 'stb' }
+              return (
+                <Link key={offer.id} href="/explore" style={{ textDecoration: 'none' }}>
+                  <div className="ecard">
+                    <div className={`ecard-img ${EXP_CARD_CLASSES[i % 3]}`}>
+                      <div className="e-em">{EXP_EMOJI[offer.category] ?? '&#10022;'}</div>
+                      <div className="e-dc">{formatEventDate(offer.validFrom)}</div>
+                    </div>
+                    <div className="ecard-body">
+                      <div className="ec-t">{offer.title}</div>
+                      <div className="ec-v">
+                        {offer.partner.name}{offer.partner.area ? `, ${offer.partner.area}` : ''}
+                      </div>
+                      <div className="ec-f">
+                        <div className="ec-p">{offer.shortDesc}</div>
+                        <div className="ec-tag" style={tagInfo.style}>{tagInfo.label}</div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              )
+            })
+          )}
+        </div>
+      </div>
+
+      {/* ══ PLACES TO VISIT ══ */}
+      <div className="sec">
+        <div className="sh2">
+          <div className="sh2-t">Places to Visit</div>
+          <Link href="/explore" className="sh2-l" style={{ textDecoration: 'none' }}>View All &#8594;</Link>
+        </div>
+        <div className="hscr">
+          {PLACES_TO_VISIT.map((place, i) => (
+            <div key={i} className="pv-card">
+              <div
+                className="pv-img"
+                style={{
+                  backgroundImage: `url(https://images.unsplash.com/${place.img}?w=320&q=75&auto=format&fit=crop)`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
+                <div className="pv-scrim" />
+                <div className="pv-tag">{place.tag}</div>
+              </div>
+              <div className="pv-body">
+                <div className="pv-title">{place.title}</div>
+                <div className="pv-area">&#128205; {place.area}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ══ THINGS TO DO ══ */}
+      <div className="sec">
+        <div className="sh2">
+          <div className="sh2-t">Things to Do</div>
+        </div>
+        <div className="ttd-grid">
+          {THINGS_TO_DO.map((item, i) => (
+            <Link key={i} href="/explore" style={{ textDecoration: 'none' }}>
+              <div className="ttd-card" style={{ background: item.color }}>
+                <div className="ttd-icon">{item.icon}</div>
+                <div className="ttd-title" style={{ color: item.accent }}>{item.title}</div>
+                <div className="ttd-desc">{item.desc}</div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
       {/* ══ MEMBER DISCOUNTS ══ */}
       <div className="sec">
         <div className="sh2">
           <div className="sh2-t">Member Discounts</div>
-          <Link href="/explore" className="sh2-l" style={{ textDecoration: 'none' }}>View All →</Link>
+          <Link href="/explore" className="sh2-l" style={{ textDecoration: 'none' }}>View All &#8594;</Link>
         </div>
         <div className="hscr">
           {discountOffers.length === 0 ? (
@@ -388,58 +507,19 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* ══ WHAT'S ON ══ */}
-      <div className="sec">
-        <div className="sh2">
-          <div className="sh2-t">What&apos;s On This Weekend</div>
-          <Link href="/explore" className="sh2-l" style={{ textDecoration: 'none' }}>View All →</Link>
-        </div>
-        <div className="hscr">
-          {experienceOffers.length === 0 ? (
-            <div style={{ padding: '20px 0', color: 'rgba(201,206,214,.35)', fontSize: 13 }}>
-              Member events coming soon.
-            </div>
-          ) : (
-            experienceOffers.slice(0, 3).map((offer, i) => {
-              const tagInfo = CAT_TAG[offer.category] ?? { label: offer.category, cls: 'stb' }
-              return (
-                <Link key={offer.id} href="/explore" style={{ textDecoration: 'none' }}>
-                  <div className="ecard">
-                    <div className={`ecard-img ${EXP_CARD_CLASSES[i % 3]}`}>
-                      <div className="e-em">{EXP_EMOJI[offer.category] ?? '✦'}</div>
-                      <div className="e-dc">{formatEventDate(offer.validFrom)}</div>
-                    </div>
-                    <div className="ecard-body">
-                      <div className="ec-t">{offer.title}</div>
-                      <div className="ec-v">
-                        {offer.partner.name}{offer.partner.area ? `, ${offer.partner.area}` : ''}
-                      </div>
-                      <div className="ec-f">
-                        <div className="ec-p">{offer.shortDesc}</div>
-                        <div className="ec-tag" style={tagInfo.style}>{tagInfo.label}</div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              )
-            })
-          )}
-        </div>
-      </div>
-
       {/* ══ CITY GUIDE STRIP ══ */}
       <div className="sec">
         <div className="guide-strip">
           <div className="guide-g" />
-          <div className="guide-ico">🗺️</div>
+          <div className="guide-ico">&#128506;</div>
           <div className="guide-txt">
             <div className="guide-eye">Member Guide</div>
             <div className="guide-ttl">
               {city}: The insider&apos;s edit
             </div>
-            <div className="guide-sub">Curated spots · Updated this week</div>
+            <div className="guide-sub">Curated spots &middot; Updated this week</div>
           </div>
-          <div style={{ fontSize: 20, color: 'rgba(201,206,214,.25)' }}>›</div>
+          <div style={{ fontSize: 20, color: 'rgba(201,206,214,.25)' }}>&#8250;</div>
         </div>
       </div>
 
@@ -447,12 +527,12 @@ export default async function HomePage() {
       <div className="sec">
         <Link href="/chat" style={{ textDecoration: 'none' }}>
           <div className="conc-strip2">
-            <div className="conc-av2">👋</div>
+            <div className="conc-av2">&#128075;</div>
             <div className="conc-txt2">
               <div className="conc-n2">Your concierge is available</div>
               <div className="conc-s2">Reservations, transport, anything you need</div>
             </div>
-            <div className="conc-cta2">Chat →</div>
+            <div className="conc-cta2">Chat &#8594;</div>
           </div>
         </Link>
       </div>
