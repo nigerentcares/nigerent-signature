@@ -801,30 +801,67 @@ html, body {
   padding: 0 20px 28px;
   background: var(--dark);
 }
+
+/* 3-D flip scene */
+.lc-scene {
+  perspective: 1200px;
+  cursor: pointer;
+  /* Enforce standard credit-card aspect ratio 85.6 × 53.98 mm */
+  aspect-ratio: 85.6 / 53.98;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+.lc-flipper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+.lc-scene.lc-flipped .lc-flipper {
+  transform: rotateY(180deg);
+}
+.lc-front,
+.lc-back {
+  position: absolute;
+  inset: 0;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.lc-back {
+  transform: rotateY(180deg);
+}
+
+/* Shared card shell */
 .lc {
   background: linear-gradient(130deg, #0a1a1a 0%, #142828 35%, #0d2020 65%, #081414 100%);
   border-radius: 22px;
-  padding: 24px;
+  padding: 18px 20px 14px;
   position: relative;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 .lo1 {
   position: absolute;
   top: -50px;
   right: -35px;
-  width: 240px;
-  height: 240px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(212,175,55,.13), transparent 65%);
   pointer-events: none;
 }
 .lo2x {
   position: absolute;
-  bottom: -60px;
+  bottom: -55px;
   left: -25px;
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(31,163,166,.11), transparent 65%);
   pointer-events: none;
@@ -842,71 +879,84 @@ html, body {
   border-radius: 22px;
   pointer-events: none;
 }
-.lin { position: relative; z-index: 2; }
+.lin {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 .mc-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
 }
+
+/* UBA branding — red accent */
 .mc-uba-text {
   font-family: 'Urbanist', sans-serif;
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 900;
-  letter-spacing: 3.5px;
-  color: rgba(201,206,214,.35);
+  letter-spacing: 3px;
+  color: #e8443a;
   flex-shrink: 0;
-  border: 1.5px solid rgba(201,206,214,.2);
-  border-radius: 8px;
-  padding: 5px 14px;
+  border: 1.5px solid rgba(232,68,58,.45);
+  border-radius: 7px;
+  padding: 4px 12px;
+  text-shadow: 0 0 18px rgba(232,68,58,.35);
+}
+.mc-uba-sm {
+  font-size: 13px;
+  letter-spacing: 2px;
+  padding: 3px 9px;
 }
 .mc-cardno {
   font-family: 'Urbanist', sans-serif;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: 2.5px;
+  letter-spacing: 2px;
   color: rgba(201,206,214,.35);
 }
 .mc-mid {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 .mc-mid .tbadge {
   flex-shrink: 0;
   align-self: center;
 }
-.mc-num {
-  display: none;
-}
+.mc-num { display: none; }
 .mc-gr {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 300;
   font-style: italic;
   color: rgba(201,206,214,.4);
-  margin-bottom: 3px;
+  margin-bottom: 1px;
 }
 .mc-name {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 400;
   color: var(--cream);
   letter-spacing: .5px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+  line-height: 1.1;
 }
 .mc-sub {
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 600;
-  letter-spacing: 1.8px;
+  letter-spacing: 1.6px;
   text-transform: uppercase;
-  color: rgba(201,206,214,.25);
+  color: rgba(201,206,214,.22);
 }
 .mc-card-meta {
   display: flex;
   gap: 28px;
-  margin: 2px 0 16px;
+  margin: 2px 0 14px;
 }
 .mc-meta-item {
   display: flex;
@@ -930,16 +980,16 @@ html, body {
 .mc-dv {
   height: 1px;
   background: rgba(201,206,214,.08);
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 .mc-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; }
-.mcs { display: flex; flex-direction: column; gap: 5px; }
+.mcs { display: flex; flex-direction: column; gap: 3px; }
 .mcs + .mcs {
   border-left: 1px solid rgba(201,206,214,.08);
-  padding-left: 16px;
+  padding-left: 14px;
 }
 .mcs-l {
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -947,15 +997,140 @@ html, body {
 }
 .mcs-v {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 400;
   color: var(--cream);
   line-height: 1;
 }
 .mcs-s {
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 600;
   color: rgba(31,163,166,.8);
+}
+
+/* Flip hint */
+.mc-flip-hint {
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: rgba(201,206,214,.2);
+  text-align: center;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+/* ── CARD BACK ── */
+/* Magnetic stripe */
+.mc-stripe {
+  position: absolute;
+  top: 26px;
+  left: 0;
+  right: 0;
+  height: 38px;
+  background: #0a0a0a;
+  z-index: 3;
+}
+
+/* Signature + CVV strip */
+.mc-sig-row {
+  margin-bottom: 10px;
+}
+.mc-sig-strip {
+  display: flex;
+  align-items: stretch;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 32px;
+}
+.mc-sig-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #e8e4dc;
+  padding: 4px 8px;
+}
+.mc-sig-line {
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(100,80,60,.4) 0px,
+    rgba(100,80,60,.4) 4px,
+    transparent 4px,
+    transparent 7px
+  );
+  border-radius: 1px;
+}
+.mc-cvv-box {
+  background: #f5f1e8;
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  min-width: 56px;
+}
+.mc-cvv-lbl {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #555;
+  text-transform: uppercase;
+}
+.mc-cvv-val {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+  letter-spacing: 2px;
+}
+
+/* Card number on back */
+.mc-back-number {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  color: rgba(201,206,214,.7);
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+/* Expiry / issuer row */
+.mc-back-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 6px;
+}
+.mc-back-lbl {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(201,206,214,.3);
+  margin-bottom: 3px;
+}
+.mc-back-val {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(201,206,214,.75);
+  letter-spacing: 2px;
+}
+
+/* Cardholder name */
+.mc-back-name {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: rgba(201,206,214,.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ── QUICK ACTIONS ── */
